@@ -1,0 +1,22 @@
+{
+  "name": "enju",
+  "version": "0.0.0",
+  "description": "An elasticsearch on node.js written in CoffeeScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kelp404/enju.git"
+  },
+  "keywords": [
+    "elasticsearch"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kelp404/enju/issues"
+  },
+  "homepage": "https://github.com/kelp404/enju#readme"
+}
