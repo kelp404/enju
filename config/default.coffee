@@ -1,3 +1,3 @@
 module.exports =
-    host: '127.0.0.1'
-    port: 9200
+    enjuElasticsearchHost: 'http://localhost:9200'
+    enjuIndexPrefix: ''
