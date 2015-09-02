@@ -1,6 +1,3 @@
-QueryCell = require './query_cell'
-
-
 class QueryOperation
     @unequal = 'unequal'
     @equal = 'equal'
