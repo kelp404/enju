@@ -5,14 +5,30 @@ Query = require './query'
 
 
 module.exports = class Document
+    ###
+    @property _index: {string} You can set index name by this attribute.
+    @property _settings: {object} You can set index settings by this attribute.
+    @property _id: {string}
+    @property _version: {number}
+    @property _properties: {object|null} {'property_name': {Property}}
+    ###
     constructor: ->
 
     # -----------------------------------------------------
     # private methods
     # -----------------------------------------------------
     @getIndexName = ->
+        ###
+        Get the index name with prefix.
+        @returns: {string}
+        ###
         "#{utils.getIndexPrefix()}#{@_index}"
+
     @getProperties = ->
+        ###
+        Get properties of this document.
+        @returns: {object} {'property_name': {Property}}
+        ###
         if '_properties' not of @
             @_properties = do =>
                 result = {}
