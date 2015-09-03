@@ -36,7 +36,7 @@ module.exports = class Query
     intersect: (field, operation) ->
         ###
         Append a query as intersect.
-        @param field: {string, function}
+        @param field: {string|function}
             string: The field name of the document.
             function: The sub query.
         @param operation: {object}
@@ -52,6 +52,6 @@ module.exports = class Query
                 'contains'
                 'exclude'
             ]
-        @return Query
+        @returns {Query}
         ###
         @
