@@ -1,7 +1,8 @@
 config = require 'config'
-q = requre 'q'
+q = require 'q'
 utils = require './utils'
 Query = require './query'
+properties = require './properties'
 
 
 module.exports = class Document
@@ -40,6 +41,9 @@ module.exports = class Document
     # -----------------------------------------------------
     # public methods
     # -----------------------------------------------------
+    @define = (data) ->
+        console.log 'add'
+
     @get = (ids, fetchReference=yes) ->
         ###
         Fetch the document with id or ids.
