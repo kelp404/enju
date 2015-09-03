@@ -28,5 +28,30 @@ module.exports = class Query
             QueryCell(QueryOperation.all)
         ]
 
+    where: (field, operation) ->
+        ###
+        It is intersect.
+        ###
+        @intersect field, operation
     intersect: (field, operation) ->
+        ###
+        Append a query as intersect.
+        @param field: {string, function}
+            string: The field name of the document.
+            function: The sub query.
+        @param operation: {object}
+            key: [
+                '!='
+                '=='
+                '<'
+                '<='
+                '>'
+                '>='
+                'like'
+                'unlike'
+                'contains'
+                'exclude'
+            ]
+        @return Query
+        ###
         @
