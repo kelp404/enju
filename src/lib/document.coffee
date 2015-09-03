@@ -19,6 +19,25 @@ module.exports = class Document
                     result[key] = value
         return @_properties
 
+    
+    # -----------------------------------------------------
+    # public methods
+    # -----------------------------------------------------
     @where = (field, operation) ->
+        ###
+        @param field: {string} The field name of the document.
+        @param operation: {object}
+            key: [
+                unequal
+                equal
+                less
+                lessEqual
+                greater
+                greaterEqual
+                like
+                unlike
+                contains
+            ]
+        ###
         query = new Query(@)
         query.intersect field, operation
