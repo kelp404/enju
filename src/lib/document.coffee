@@ -15,6 +15,7 @@ module.exports = class Document
     @property version: {number}
     @property _properties: {object} {'property_name': {Property}}
     @property _es: {Elasticsearch.Client}
+    @property _className: {string}
     ###
     @_properties =
         id: new properties.StringProperty(dbField: '_id')
@@ -112,6 +113,7 @@ module.exports = class Document
                     deferred.resolve response
                 , 1000
             deferred.promise
+
         closeIndex = =>
             deferred = q.defer()
             @_es.indices.close
@@ -122,6 +124,87 @@ module.exports = class Document
                     return
                 deferred.resolve response
             deferred.promise
+
+        putSettings = =>
+            deferred = q.defer()
+            if not @_settings
+                deferred.resolve()
+                return deferred.promise
+            @_es.indices.putSettings
+                index: @getIndexName()
+                body:
+                    settings:
+                        index: @_settings
+            , (error, response) ->
+                if error
+                    deferred.reject error
+                    return
+                deferred.resolve response
+            deferred.promise
+
+        putMapping = =>
+            deferred = q.defer()
+            mapping = {}
+            for name, property of @_properties
+                if property.dbField in ['_id', '_version']
+                    # don't set the mapping to _id and _version
+                    continue
+                if property.mapping
+                    # there is an object in this field
+                    mapping[name] =
+                        properties: property.mapping
+                    continue
+
+                field = {}
+                switch property.constructor
+                    when properties.StringProperty
+                        field['type'] = 'string'
+                    when properties.BooleanProperty
+                        field['type'] = 'boolean'
+                    when properties.IntegerProperty
+                        field['type'] = 'long'
+                    when properties.FloatProperty
+                        field['type'] = 'double'
+                    when properties.DateProperty
+                        field['type'] = 'date'
+                        field['format'] = 'dateOptionalTime'
+                    when properties.ReferenceProperty
+                        field['type'] = 'string'
+                        field['analyzer'] = 'keyword'
+                    when properties.ListProperty
+                        switch property.itemClass
+                            when properties.StringProperty
+                                field['type'] = 'string'
+                            when properties.BooleanProperty
+                                field['type'] = 'boolean'
+                            when properties.IntegerProperty
+                                field['type'] = 'long'
+                            when properties.FloatProperty
+                                field['type'] = 'double'
+                            when properties.DateProperty
+                                field['type'] = 'date'
+                                field['format'] = 'dateOptionalTime'
+                            when properties.ReferenceProperty
+                                field['type'] = 'string'
+                                field['analyzer'] = 'keyword'
+
+                if property.analyzer
+                    field['analyzer'] = property.analyzer
+
+                if Object.keys(field).length
+                    mapping[name] = field
+            @_es.indices.putMapping
+                index: @getIndexName()
+                type: @_className ? @name
+                body:
+                    properties: mapping
+            , (error, response) ->
+                if error
+                    deferred.reject error
+                    return
+                deferred.resolve response
+            deferred.promise
+
         openIndex = =>
             deferred = q.defer()
             @_es.indices.open
@@ -135,6 +218,8 @@ module.exports = class Document
 
         createIndex()
         .then closeIndex
+        .then putSettings
+        .then putMapping
         .then openIndex
         .then =>
             console.log "updated mapping [#{@getIndexName()}]"
