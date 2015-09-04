@@ -14,11 +14,14 @@ module.exports = class Document
     @property id: {string}
     @property version: {number}
     @property _properties: {object} {'property_name': {Property}}
+    @property _es: {Elasticsearch.Client}
     ###
     @_properties =
         id: new properties.StringProperty(dbField: '_id')
         version: new properties.IntegerProperty(dbField: '_version')
+    @_es = utils.getElasticsearch()
     constructor: ->
+
 
     # -----------------------------------------------------
     # private methods
@@ -90,3 +93,52 @@ module.exports = class Document
         ###
         query = new Query(@)
         query.intersect field, operation
+
+    @updateMapping = ->
+        ###
+        Update the index mapping.
+        https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
+        https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-put-mapping.html
+        ###
+        createIndex = =>
+            deferred = q.defer()
+            @_es.indices.create
+                index: @getIndexName()
+            , (error, response) ->
+                if error and error.status isnt '400'
+                    deferred.reject error
+                    return
+                setTimeout ->
+                    deferred.resolve response
+                , 1000
+            deferred.promise
+        closeIndex = =>
+            deferred = q.defer()
+            @_es.indices.close
+                index: @getIndexName()
+            , (error, response) ->
+                if error
+                    deferred.reject error
+                    return
+                deferred.resolve response
+            deferred.promise
+        openIndex = =>
+            deferred = q.defer()
+            @_es.indices.open
+                index: @getIndexName()
+            , (error, response) ->
+                if error
+                    deferred.reject error
+                    return
+                deferred.resolve response
+            deferred.promise
+
+        createIndex()
+        .then closeIndex
+        .then openIndex
+        .then =>
+            console.log "updated mapping [#{@getIndexName()}]"
+        , (error) ->
+            console.error error
+            throw error
+
