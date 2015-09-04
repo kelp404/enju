@@ -16,8 +16,8 @@ module.exports = class Document
     @property _properties: {object} {'property_name': {Property}}
     ###
     @_properties =
-        id: new properties.StringProperty()
-        version: new properties.NumberProperty()
+        id: new properties.StringProperty(dbField: '_id')
+        version: new properties.IntegerProperty(dbField: '_version')
     constructor: ->
 
     # -----------------------------------------------------
