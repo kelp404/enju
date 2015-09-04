@@ -1,18 +1,23 @@
 config = require 'config'
 q = require 'q'
+
 utils = require './utils'
 Query = require './query'
 properties = require './properties'
+exceptions = require './exceptions'
 
 
 module.exports = class Document
     ###
     @property _index: {string} You can set index name by this attribute.
     @property _settings: {object} You can set index settings by this attribute.
-    @property _id: {string}
-    @property _version: {number}
-    @property _properties: {object|null} {'property_name': {Property}}
+    @property id: {string}
+    @property version: {number}
+    @property _properties: {object} {'property_name': {Property}}
     ###
+    @_properties =
+        id: new properties.StringProperty()
+        version: new properties.NumberProperty()
     constructor: ->
 
     # -----------------------------------------------------
@@ -25,24 +30,27 @@ module.exports = class Document
         ###
         "#{utils.getIndexPrefix()}#{@_index}"
 
-    @getProperties = ->
-        ###
-        Get properties of this document.
-        @returns: {object} {'property_name': {Property}}
-        ###
-        if '_properties' not of @
-            @_properties = do =>
-                result = {}
-                for key, value of @ when key and key[0] isnt '_' and typeof(@[key]) isnt 'function'
-                    result[key] = value
-        return @_properties
-
 
     # -----------------------------------------------------
     # public methods
     # -----------------------------------------------------
-    @define = (data) ->
-        console.log 'add'
+    @define = ->
+        ###
+        1. define properties with class name.
+            @param className: {string}
+            @param properties: {object}
+            @returns {constructor}
+        2. define properties for this document.
+            @param properties: {object}
+        ###
+        if arguments.length is 2 and typeof(arguments[0]) is 'string' and typeof(arguments[1]) is 'object'
+            # 1. define properties with class name.
+        else if arguments.length is 1 and typeof(arguments[0]) is 'object'
+            # 2. define properties for this document.
+            for key, value of arguments[0]
+                @_properties[key] = value
+            return
+        throw exceptions.ArgumentError('Argument error for enju.Document.define()')
 
     @get = (ids, fetchReference=yes) ->
         ###
