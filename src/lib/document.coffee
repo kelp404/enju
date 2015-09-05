@@ -61,13 +61,17 @@ module.exports = class Document
 
         else if arguments.length is 1 and typeof(arguments[0]) is 'object'
             # 2. define properties for this document.
-            if '_index' of arguments[0]
-                @_index = arguments[0]['_index']
-                delete arguments[0]['_index']
-            if '_settings' of arguments[0]
-                @_settings = arguments[0]['_settings']
-                delete arguments[0]['_settings']
-            for propertyName, property of arguments[0]
+            defined = arguments[0]
+            if '_index' of defined
+                @_index = defined._index
+                delete defined._index
+            if '_settings' of defined
+                @_settings = defined._settings
+                delete defined._settings
+            if '_type' of defined
+                @_type = defined._type
+                delete defined._type
+            for propertyName, property of defined
                 property.propertyName = propertyName
                 @_properties[propertyName] = property
             return
