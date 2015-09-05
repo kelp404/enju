@@ -57,7 +57,7 @@ module.exports = class Document
             return
         throw exceptions.ArgumentError('Argument error for enju.Document.define()')
 
-    @get = (ids, fetchReference=yes) =>
+    @get = (ids, fetchReference=yes) ->
         ###
         Fetch the document with id or ids.
         If the document is not exist, it will return null.
@@ -84,7 +84,11 @@ module.exports = class Document
             type: @name
             id: ids
         , (error, response) ->
-
+            if error
+                deferred.reject error
+                return
+            console.log response
+            deferred.resolve(response)
 
         deferred.promise
 

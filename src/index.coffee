@@ -1,7 +1,6 @@
 exports.Document = require './lib/document'
 
 properties = require './lib/properties'
-exports.Property = properties.Property
 exports.StringProperty = properties.StringProperty
 exports.IntegerProperty = properties.IntegerProperty
 exports.FloatProperty = properties.FloatProperty
@@ -25,9 +24,29 @@ class UserModel extends enju.Document
                     type: 'custom'
                     tokenizer: 'uax_url_email'
     @define
-        name: new enju.StringProperty(default: 'x')
-        email: new enju.StringProperty(analyzer: 'email_url')
+        name: new enju.StringProperty
+            required: yes
+        email: new enju.StringProperty
+            required: yes
+            analyzer: 'email_url'
 
 user = new UserModel()
-#console.log UserModel._properties
-UserModel.updateMapping()
+#UserModel.updateMapping()
+#.then ->
+#    console.log 'success'
+
+#user.name = 'Kelp'
+#user.email = 'kelp@phate.org'
+#user.save()
+#.then (user) ->
+#    console.log 'success'
+#    console.log user
+#, (error) ->
+#    console.log 'error'
+#    console.log error
+
+UserModel.get('AU-dgutLZbrIxICNGvk-')
+.then (user) ->
+    console.log user
+, (error) ->
+    console.log error
