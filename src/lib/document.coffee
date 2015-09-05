@@ -21,7 +21,12 @@ module.exports = class Document
         id: new properties.StringProperty(dbField: '_id')
         version: new properties.IntegerProperty(dbField: '_version')
     @_es = utils.getElasticsearch()
-    constructor: ->
+    constructor: (args) ->
+        for propertyName, property of @constructor._properties
+            if propertyName of args
+
+        console.log '- x -'
+        console.log @constructor
 
 
     # -----------------------------------------------------
