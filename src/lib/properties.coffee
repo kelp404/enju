@@ -95,16 +95,16 @@ exports.DateProperty = class DateProperty extends Property
             return null
         value.toJSON()
 
-
-# not imprement --------------------------------------------------
-
-exports.ListProperty = class DateProperty extends Property
+exports.ListProperty = class ListProperty extends Property
     constructor: (args={}) ->
         {@itemClass} = args
         super args
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
+            if @default?
+                classInstance[@propertyName] = @default
+                return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
             return null
@@ -115,6 +115,9 @@ exports.ObjectProperty = class ObjectProperty extends Property
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
+            if @default?
+                classInstance[@propertyName] = @default
+                return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
             return null
@@ -126,6 +129,9 @@ exports.ReferenceProperty = class ReferenceProperty extends Property
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
+            if @default?
+                classInstance[@propertyName] = @default
+                return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
             return null
