@@ -57,7 +57,7 @@ module.exports = class Document
             return
         throw exceptions.ArgumentError('Argument error for enju.Document.define()')
 
-    @get = (ids, fetchReference=yes) ->
+    @get = (ids, fetchReference=yes) =>
         ###
         Fetch the document with id or ids.
         If the document is not exist, it will return null.
@@ -76,13 +76,12 @@ module.exports = class Document
             deferred.resolve []
             return deferred.promise
 
-        es = utils.getElasticsearch()
         # fetch documents
 
         # fetch the document
-        es.get
-            index: @constructor.getIndexName()
-            type: @constructor.name
+        @_es.get
+            index: @getIndexName()
+            type: @name
             id: ids
         , (error, response) ->
 
@@ -228,19 +227,19 @@ module.exports = class Document
             console.error error
             throw error
 
-    save: (synchronized=no) ->
+    save: (refresh=no) ->
+        ###
+        Save the document.
+        @param refresh: {bool} Refresh the index after performing the operation.
+        @returns {promise}(document)
+        ###
         deferred = q.defer()
         if not @version?
             # fix version
             @version = 0
 
         document = {}  # it will be written to database
-        for propertyName, property of @constructor._properties
-            if property.constructor is properties.DateProperty
-                # assign now to autoNow DateProperty
-                if property.autoNow and not @[propertyName]
-                    @[propertyName] = new Date()
-
+        for propertyName, property of @constructor._properties when property.dbField not in ['_id', '_version']
             dbFieldName = property.dbField ? propertyName
             try
                 document[dbFieldName] = property.toDb @
@@ -248,5 +247,18 @@ module.exports = class Document
                 deferred.reject error
                 return deferred.promise
 
-        deferred.resolve document
+        @constructor._es.index
+            index: @constructor.getIndexName()
+            type: @constructor.name
+            refresh: refresh
+            id: @id
+            version: @version
+            body: document
+        , (error, response) =>
+            if error
+                deferred.reject error
+                return
+            @id = response._id
+            @version = response._version
+            deferred.resolve @
         deferred.promise
