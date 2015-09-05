@@ -23,7 +23,25 @@ class Property
 class StringProperty extends Property
     constructor: (args) ->
         super args
+    toJs: (value) ->
+        ###
+        Convert value for initial Document.
+        @param classInstance: {Document} The instance of the document.
+        @returns {string}
+        ###
+        if not value?
+            if @default?
+                return @default.toString()
+            if @required
+                throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
+            return null
+        value.toString()
     toDb: (classInstance) ->
+        ###
+        Convert value for writing database.
+        @param classInstance: {Document} The instance of the document.
+        @returns {string}
+        ###
         value = classInstance[@propertyName]
         if not value?
             if @default?

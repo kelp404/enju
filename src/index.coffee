@@ -45,8 +45,14 @@ user = new UserModel()
 #    console.log 'error'
 #    console.log error
 
-UserModel.get('AU-dgutLZbrIxICNGvk-')
-.then (user) ->
-    console.log user
-, (error) ->
-    console.log error
+#UserModel.get('AU-dgutLZbrIxICNGvk-')
+#.then (user) ->
+#    console.log user
+#, (error) ->
+#    console.log error
+#{ _index: 'test_users',
+#  _type: 'UserModel',
+#  _id: 'AU-dgutLZbrIxICNGvk-',
+#  _version: 1,
+#  found: true,
+#  _source: { name: 'Kelp', email: 'kelp@phate.org' } }

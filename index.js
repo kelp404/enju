@@ -7,8 +7,6 @@
 
   properties = require('./lib/properties');
 
-  exports.Property = properties.Property;
-
   exports.StringProperty = properties.StringProperty;
 
   exports.IntegerProperty = properties.IntegerProperty;
@@ -49,9 +47,10 @@
 
     UserModel.define({
       name: new enju.StringProperty({
-        "default": 'x'
+        required: true
       }),
       email: new enju.StringProperty({
+        required: true,
         analyzer: 'email_url'
       })
     });
@@ -61,7 +60,5 @@
   })(enju.Document);
 
   user = new UserModel();
-
-  UserModel.updateMapping();
 
 }).call(this);
