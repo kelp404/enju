@@ -10,12 +10,12 @@ exceptions = require './exceptions'
 module.exports = class Document
     ###
     @property _index: {string} You can set index name by this attribute.
+    @property _type: {string} You can set type of the document. The default is class name.
     @property _settings: {object} You can set index settings by this attribute.
     @property id: {string}
     @property version: {number}
-    @property _properties: {object} {'property_name': {Property}}
+    @property _properties: {object} {'propertyName': {Property}}
     @property _es: {Elasticsearch.Client}
-    @property _className: {string}
     ###
     @_properties =
         id: new properties.StringProperty(dbField: '_id')
@@ -36,6 +36,13 @@ module.exports = class Document
         ###
         "#{utils.getIndexPrefix()}#{@_index}"
 
+    @getDocumentType = ->
+        ###
+        Get the document type.
+        @returns {string}
+        ###
+        @_type ? @name
+
 
     # -----------------------------------------------------
     # public methods
@@ -51,8 +58,15 @@ module.exports = class Document
         ###
         if arguments.length is 2 and typeof(arguments[0]) is 'string' and typeof(arguments[1]) is 'object'
             # 1. define properties with class name.
+
         else if arguments.length is 1 and typeof(arguments[0]) is 'object'
             # 2. define properties for this document.
+            if '_index' of arguments[0]
+                @_index = arguments[0]['_index']
+                delete arguments[0]['_index']
+            if '_settings' of arguments[0]
+                @_settings = arguments[0]['_settings']
+                delete arguments[0]['_settings']
             for propertyName, property of arguments[0]
                 property.propertyName = propertyName
                 @_properties[propertyName] = property
@@ -83,16 +97,19 @@ module.exports = class Document
         # fetch the document
         @_es.get
             index: @getIndexName()
-            type: @name
+            type: @getDocumentType()
             id: ids
         , (error, response) =>
             if error
+                if error.status is '404'
+                    deferred.resolve null
+                    return
                 deferred.reject error
                 return
             args = response._source
             args.id = response._id
             args.version = response._version
-            deferred.resolve(new @(args))
+            deferred.resolve new @(args)
 
         deferred.promise
 
@@ -205,7 +222,7 @@ module.exports = class Document
                     mapping[propertyName] = field
             @_es.indices.putMapping
                 index: @getIndexName()
-                type: @_className ? @name
+                type: @getDocumentType()
                 body:
                     properties: mapping
             , (error, response) ->
@@ -263,7 +280,7 @@ module.exports = class Document
 
         @constructor._es.index
             index: @constructor.getIndexName()
-            type: @constructor.name
+            type: @constructor.getDocumentType()
             refresh: refresh
             id: @id
             version: @version

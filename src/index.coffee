@@ -29,6 +29,20 @@ class UserModel extends enju.Document
         email: new enju.StringProperty
             required: yes
             analyzer: 'email_url'
+#UserModel = enju.Document.define 'UserMode',
+#    _index: 'test_users'
+#    _settings:
+#        analysis:
+#            analyzer:
+#                email_url:
+#                    type: 'custom'
+#                    tokenizer: 'uax_url_email'
+#    name: new enju.StringProperty
+#        required: yes
+#    email: new enju.StringProperty
+#        required: yes
+#        analyzer: 'email_url'
+
 
 #user = new UserModel()
 #UserModel.updateMapping()
