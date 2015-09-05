@@ -56,6 +56,14 @@ exports.StringProperty = StringProperty
 class IntegerProperty extends Property
     constructor: (args) ->
         super args
+    toJs: (value) ->
+        if not value?
+            if @default?
+                return parseInt @default
+            if @required
+                throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
+            return null
+        parseInt value
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
@@ -71,6 +79,14 @@ exports.IntegerProperty = IntegerProperty
 class FloatProperty extends Property
     constructor: (args) ->
         super args
+    toJs: (value) ->
+        if not value?
+            if @default?
+                return parseFloat @default
+            if @required
+                throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
+            return null
+        parseFloat value
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
@@ -86,6 +102,14 @@ exports.FloatProperty = FloatProperty
 class BooleanProperty extends Property
     constructor: (args) ->
         super args
+    toJs: (value) ->
+        if not value?
+            if @default?
+                return Boolean @default
+            if @required
+                throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
+            return null
+        Boolean value
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
@@ -102,6 +126,16 @@ class DateProperty extends Property
     constructor: (args={}) ->
         {@autoNow} = args
         super args
+    toJs: (value) ->
+        if not value?
+            if @autoNow
+                return new Date()
+            else if @default?
+                return new Date(@default)
+            if @required
+                throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
+            return null
+        new Date(value)
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
@@ -122,17 +156,15 @@ class ListProperty extends Property
     constructor: (args={}) ->
         {@itemClass} = args
         super args
-    toDb: (classInstance) ->
-        value = classInstance[@propertyName]
+    toJs: (value) ->
         if not value?
             if @default?
-                classInstance[@propertyName] = @default
-                return classInstance[@propertyName]
+                return @default
             if @required
-                throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
+                throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
         if @itemClass?
-            switch itemClass
+            switch @itemClass
                 when StringProperty
                     value = [if x? then x.toString() else null for x in value]
                 when IntegerProperty
@@ -147,14 +179,46 @@ class ListProperty extends Property
                     value = [if x? then x else null for x in value]
                 else
                     value = [if x? then new itemClass(x) else null for x in value]
-            value
-        else
-            value
+        value
+    toDb: (classInstance) ->
+        value = classInstance[@propertyName]
+        if not value?
+            if @default?
+                classInstance[@propertyName] = @default
+                return classInstance[@propertyName]
+            if @required
+                throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
+            return null
+        if @itemClass?
+            switch @itemClass
+                when StringProperty
+                    value = [if x? then x.toString() else null for x in value]
+                when IntegerProperty
+                    value = [if x? then parseInt(x) else null for x in value]
+                when FloatProperty
+                    value = [if x? then parseFloat(x) else null for x in value]
+                when BooleanProperty
+                    value = [if x? then Boolean(x) else null for x in value]
+                when DateProperty
+                    value = [if x? then x.toJSON() else null for x in value]
+                when ListProperty, ObjectProperty, ReferenceProperty
+                    value = [if x? then x else null for x in value]
+                else
+                    value = [if x? then new itemClass(x) else null for x in value]
+        value
 exports.ListProperty = ListProperty
 
 class ObjectProperty extends Property
     constructor: (args) ->
         super args
+    toJs: (value) ->
+        if not value?
+            if @default?
+                return @default
+            if @required
+                throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
+            return null
+        value
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
@@ -171,6 +235,19 @@ class ReferenceProperty extends Property
     constructor: (args={}) ->
         {@referenceClass} = args
         super args
+    toJs: (value) ->
+        if not value?
+            if @default?
+                return @default
+            if @required
+                throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
+            return null
+        if typeof(value) is 'string'
+            value
+        else if typeof(value) is 'object' and value.constructor is @referenceClass
+            value
+        else
+            throw new exceptions.TypeError("#{@propertyName} has wrong type.")
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
