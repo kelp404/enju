@@ -51,8 +51,9 @@ module.exports = class Document
             # 1. define properties with class name.
         else if arguments.length is 1 and typeof(arguments[0]) is 'object'
             # 2. define properties for this document.
-            for key, value of arguments[0]
-                @_properties[key] = value
+            for propertyName, property of arguments[0]
+                property.propertyName = propertyName
+                @_properties[propertyName] = property
             return
         throw exceptions.ArgumentError('Argument error for enju.Document.define()')
 
@@ -145,13 +146,13 @@ module.exports = class Document
         putMapping = =>
             deferred = q.defer()
             mapping = {}
-            for name, property of @_properties
+            for propertyName, property of @_properties
                 if property.dbField in ['_id', '_version']
                     # don't set the mapping to _id and _version
                     continue
                 if property.mapping
                     # there is an object in this field
-                    mapping[name] =
+                    mapping[propertyName] =
                         properties: property.mapping
                     continue
 
@@ -192,7 +193,7 @@ module.exports = class Document
                     field['analyzer'] = property.analyzer
 
                 if Object.keys(field).length
-                    mapping[name] = field
+                    mapping[propertyName] = field
             @_es.indices.putMapping
                 index: @getIndexName()
                 type: @_className ? @name
@@ -227,3 +228,25 @@ module.exports = class Document
             console.error error
             throw error
 
+    save: (synchronized=no) ->
+        deferred = q.defer()
+        if not @version?
+            # fix version
+            @version = 0
+
+        document = {}  # it will be written to database
+        for propertyName, property of @constructor._properties
+            if property.constructor is properties.DateProperty
+                # assign now to autoNow DateProperty
+                if property.autoNow and not @[propertyName]
+                    @[propertyName] = new Date()
+
+            dbFieldName = property.dbField ? propertyName
+            try
+                document[dbFieldName] = property.toDb @
+            catch error
+                deferred.reject error
+                return deferred.promise
+
+        deferred.resolve document
+        deferred.promise
