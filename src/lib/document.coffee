@@ -85,12 +85,14 @@ module.exports = class Document
             index: @getIndexName()
             type: @name
             id: ids
-        , (error, response) ->
+        , (error, response) =>
             if error
                 deferred.reject error
                 return
-            console.log response
-            deferred.resolve(response)
+            args = response._source
+            args.id = response._id
+            args.version = response._version
+            deferred.resolve(new @(args))
 
         deferred.promise
 

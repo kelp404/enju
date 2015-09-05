@@ -1,5 +1,5 @@
 (function() {
-  var UserModel, enju, properties, user,
+  var UserModel, enju, properties,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
@@ -59,6 +59,10 @@
 
   })(enju.Document);
 
-  user = new UserModel();
+  UserModel.get('AU-dgutLZbrIxICNGvk-').then(function(user) {
+    return console.log(user);
+  }, function(error) {
+    return console.log(error);
+  });
 
 }).call(this);

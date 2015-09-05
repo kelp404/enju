@@ -30,7 +30,7 @@ class UserModel extends enju.Document
             required: yes
             analyzer: 'email_url'
 
-user = new UserModel()
+#user = new UserModel()
 #UserModel.updateMapping()
 #.then ->
 #    console.log 'success'
@@ -45,11 +45,11 @@ user = new UserModel()
 #    console.log 'error'
 #    console.log error
 
-#UserModel.get('AU-dgutLZbrIxICNGvk-')
-#.then (user) ->
-#    console.log user
-#, (error) ->
-#    console.log error
+UserModel.get('AU-dgutLZbrIxICNGvk-')
+.then (user) ->
+    console.log user
+, (error) ->
+    console.log error
 #{ _index: 'test_users',
 #  _type: 'UserModel',
 #  _id: 'AU-dgutLZbrIxICNGvk-',
