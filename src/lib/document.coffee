@@ -260,7 +260,7 @@ module.exports = class Document
 
     save: (refresh=no) ->
         ###
-        Save the document.
+        Save this document.
         @param refresh: {bool} Refresh the index after performing the operation.
         @returns {promise} (Document)
         ###
@@ -291,6 +291,25 @@ module.exports = class Document
                 return
             @id = response._id
             @version = response._version
+            deferred.resolve @
+
+        deferred.promise
+
+    delete: (refresh=no) ->
+        ###
+        Delete this document.
+        ###
+        deferred = q.defer()
+
+        @constructor._es.delete
+            index: @constructor.getIndexName()
+            type: @constructor.getDocumentType()
+            refresh: refresh
+            id: @id
+        , (error) =>
+            if error
+                deferred.reject error
+                return
             deferred.resolve @
 
         deferred.promise

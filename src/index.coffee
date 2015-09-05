@@ -44,26 +44,23 @@ class UserModel extends enju.Document
 #        analyzer: 'email_url'
 
 
-#user = new UserModel()
 #UserModel.updateMapping()
 #.then ->
 #    console.log 'success'
 
-#user.name = 'Kelp'
-#user.email = 'kelp@phate.org'
-#user.save()
-#.then (user) ->
-#    console.log 'success'
+#user = new UserModel
+#    name: 'Kelp'
+#    email: 'kelp@phate.org'
+#user.save().then (user) ->
 #    console.log user
-#, (error) ->
-#    console.log 'error'
-#    console.log error
 
-UserModel.get('AU-dgutLZbrIxICNGvk-')
+UserModel.get('AU-f6Pw3SByHNzSJXm22')
 .then (user) ->
     console.log user
 , (error) ->
     console.log error
+
+
 #{ _index: 'test_users',
 #  _type: 'UserModel',
 #  _id: 'AU-dgutLZbrIxICNGvk-',

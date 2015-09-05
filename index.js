@@ -59,7 +59,7 @@
 
   })(enju.Document);
 
-  UserModel.get('AU-dgutLZbrIxICNGvk-').then(function(user) {
+  UserModel.get('AU-f6Pw3SByHNzSJXm22').then(function(user) {
     return console.log(user);
   }, function(error) {
     return console.log(error);
