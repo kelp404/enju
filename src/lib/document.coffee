@@ -85,6 +85,7 @@ module.exports = class Document
             id: ids
         , (error, response) ->
 
+
         deferred.promise
 
     @where = (field, operation) ->
@@ -100,6 +101,7 @@ module.exports = class Document
         Update the index mapping.
         https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
         https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-put-mapping.html
+        @returns {promise}
         ###
         createIndex = =>
             deferred = q.defer()
@@ -216,6 +218,7 @@ module.exports = class Document
                 deferred.resolve response
             deferred.promise
 
+        deferred = q.defer()
         createIndex()
         .then closeIndex
         .then putSettings
@@ -223,15 +226,18 @@ module.exports = class Document
         .then openIndex
         .then =>
             console.log "updated mapping [#{@getIndexName()}]"
+            deferred.resolve()
         , (error) ->
             console.error error
-            throw error
+            deferred.reject error
+
+        deferred.promise
 
     save: (refresh=no) ->
         ###
         Save the document.
         @param refresh: {bool} Refresh the index after performing the operation.
-        @returns {promise}(document)
+        @returns {promise} (Document)
         ###
         deferred = q.defer()
         if not @version?
@@ -261,4 +267,5 @@ module.exports = class Document
             @id = response._id
             @version = response._version
             deferred.resolve @
+
         deferred.promise
