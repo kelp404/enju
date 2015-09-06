@@ -198,7 +198,9 @@ module.exports = class Query
                         id: hit._id
                         version: hit._version
                     for propertyName, property of @documentClass._properties
-                        item[propertyName] = hit._source[property.dbField ? propertyName]
+                        dbField = property.dbField ? propertyName
+                        if dbField of hit._source
+                            item[propertyName] = hit._source[dbField]
                     result.push new @documentClass(item)
                 result
             total = response.hits.total
