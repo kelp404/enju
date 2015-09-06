@@ -75,11 +75,11 @@ module.exports = class Query
     intersect: (field, operation) ->
         ###
         Append a query as intersect.
-        @param field: {Property|string|function}
+        @param field {Property|string|function}
             Property: The property of the document.
             string: The property name of the document.
             function: The sub query.
-        @param operation: {object}
+        @param operation {object}
             key: [
                 '!='
                 '=='
@@ -116,11 +116,11 @@ module.exports = class Query
     union: (field, operation) ->
         ###
         Append a query as intersect.
-        @param field: {Property|string|function}
+        @param field {Property|string|function}
             Property: The property of the document.
             string: The property name of the document.
             function: The sub query.
-        @param operation: {object}
+        @param operation {object}
             key: [
                 '!='
                 '=='
@@ -137,6 +137,26 @@ module.exports = class Query
         ###
         @
 
+    orderBy: (field, descending=no) ->
+        ###
+        Append the order query.
+        @param member: {Property|string} The property name of the document.
+        @param descending: {bool} Is sorted by descending?
+        @returns {Query}
+        ###
+        if descending
+            operationCode = QueryOperation.orderDESC
+        else
+            operationCode = QueryOperation.orderASC
+        if typeof(field) is 'string'
+            dbField = @documentClass._properties[field].dbField ? field
+        else
+            dbField = field.dbField ? field.propertyName
+        @queryCells.push new QueryCell
+            dbField: dbField
+            operation: operationCode
+        @
+
     fetch: (args={}) ->
         ###
         Fetch documents by this query.
@@ -144,9 +164,7 @@ module.exports = class Query
             limit: {number} The size of the pagination. (The limit of the result items.) default is 1000
             skip: {number} The offset of the pagination. (Skip x items.) default is 0
             fetchReference: {bool} Fetch documents of reference properties. default is true.
-        @returns {promise} (object)
-            items: [Document, ...]
-            total: {number}
+        @returns {promise} ([Document, ...], {number})
         ###
         args.limit ?= 1000
         args.skip ?= 0
@@ -164,25 +182,27 @@ module.exports = class Query
             index: @documentClass.getIndexName()
             body:
                 query: queryObject.query
+                sort: queryObject.sort
             from: args.skip
             size: args.limit
-            sort: queryObject.sort
             fields: ['_source']
             version: yes
         , (error, response) =>
             if error
                 deferred.reject error
                 return
-            deferred.resolve
-                items: do =>
-                    result = []
-                    for hit in response.hits.hits
-                        item = hit._source
-                        item.id = hit._id
-                        item.version = hit._version
-                        result.push new @documentClass(item)
-                    result
-                total: response.hits.total
+            items = do =>
+                result = []
+                for hit in response.hits.hits
+                    item =
+                        id: hit._id
+                        version: hit._version
+                    for propertyName, property of @documentClass._properties
+                        item[propertyName] = hit._source[property.dbField ? propertyName]
+                    result.push new @documentClass(item)
+                result
+            total = response.hits.total
+            deferred.resolve items, total
 
         deferred.promise
 
@@ -212,9 +232,17 @@ module.exports = class Query
                 break
             switch queryCell.operation
                 when QueryOperation.orderASC
-                    console.log '-'
+                    sort.push
+                        "#{queryCell.dbField}":
+                            order: 'asc'
+                            ignore_unmapped: yes
+                            missing: '_first'
                 when QueryOperation.orderDESC
-                    console.log '-'
+                    sort.push
+                        "#{queryCell.dbField}":
+                            order: 'desc'
+                            ignore_unmapped: yes
+                            missing: '_last'
                 else
                     query.push @compileQuery queryCell
 
