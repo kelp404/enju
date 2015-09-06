@@ -103,6 +103,28 @@ module.exports = class Document
                 return deferred.promise
 
         # fetch documents
+        if ids.constructor is Array
+            @_es.mget
+                index: @getIndexName()
+                type: @getDocumentType()
+                body:
+                    ids: ids
+            , (error, response) =>
+                if error
+                    deferred.reject error
+                    return
+                result = []
+                for doc in response.docs
+                    item =
+                        id: doc._id
+                        version: doc._version
+                    for propertyName, property of @_properties
+                        dbField = property.dbField ? propertyName
+                        if dbField of doc._source
+                            item[propertyName] = doc._source[dbField]
+                    result.push new @(item)
+                deferred.resolve result
+            return deferred.promise
 
         # fetch the document
         @_es.get
