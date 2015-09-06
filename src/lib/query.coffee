@@ -13,8 +13,8 @@ class QueryOperation
     @contains = 'contains'  # it is mean `in`
     @exclude = 'exclude'
 
-    @intersection = 'intersection'
-    @union = 'union'
+    @orderASC = 'orderASC'
+    @orderDESC = 'orderDESC'
 
     @convertOperation = (value) ->
         switch value
@@ -38,22 +38,28 @@ class QueryOperation
                 QueryOperation.contains
             when QueryOperation.exclude
                 QueryOperation.exclude
+            when QueryOperation.orderASC
+                QueryOperation.orderASC
+            when QueryOperation.orderDESC
+                QueryOperation.orderDESC
             else
                 throw new exceptions.OperationError("There is no [#{value}] operation.")
 
 
 class QueryCell
     constructor: (args) ->
-        {@dbField, @operation, @value, @subQueries} = args
+        {@dbField, @operation, @value} = args
+        # if there is a query like .where('field', contains: []) it will be true.
+        @isContainsEmpty = @operation is QueryOperation.contains and not @value.length
+
 
 module.exports = class Query
     constructor: (documentClass) ->
         ###
         @param documentClass {constructor} The document's constructor.
         ###
-        @isContainsEmpty = no  # if there is a query like .where('field', contains: []) it will be true.
         @documentClass = documentClass
-        @items = []
+        @queryCells = []
 
 
     # -----------------------------------------------------
@@ -96,7 +102,7 @@ module.exports = class Query
             for operation, value of operation
                 break
             dbField = if typeof(field) is 'string' then field else field.dbField ? field.propertyName
-            @items.push new QueryCell
+            @queryCells.push new QueryCell
                 dbField: dbField
                 operation: QueryOperation.convertOperation operation
                 value: value
@@ -140,3 +146,40 @@ module.exports = class Query
         args.limit ?= 1000
         args.skip ?= 0
         args.fetchReference ?= yes
+
+
+    # -----------------------------------------------------
+    # private methods
+    # -----------------------------------------------------
+    compileQueries: ->
+        ###
+        Compile query cells to elasticsearch query object.
+        @returns {object}
+            query: {object}
+            sort: {list}
+            isContainsEmpty: {bool}
+        ###
+        query = []
+        sort = []
+        isContainsEmpty = no
+        for queryCell in @queryCells
+            if queryCell.constructor is Array
+                # there are sub queries at this query
+                continue
+
+            if queryCell.isContainsEmpty
+                isContainsEmpty = yes
+                break
+            switch queryCell.operation
+                when QueryOperation.orderASC
+                when QueryOperation.orderDESC
+                else
+                    query.push @compileQuery queryCell
+
+    compileQuery: (queryCell) ->
+        ###
+        @param queryCell: {QueryCell}
+        @returns {object}
+        ###
+        
+
