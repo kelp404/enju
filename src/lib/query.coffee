@@ -50,7 +50,7 @@ class QueryOperation
 
 class QueryCell
     constructor: (args) ->
-        {@dbField, @operation, @value} = args
+        {@dbField, @operation, @value, @isIntersect, @isUnion} = args
         # if there is a query like .where('field', contains: []) it will be true.
         @isContainsEmpty = @operation is QueryOperation.contains and not @value.length
 
@@ -94,12 +94,27 @@ module.exports = class Query
             ]
         @returns {Query}
         ###
+        refactorQueryCells = ->
+            ###
+            If the last query cell is union query cell, then we append the intersect query cell.
+            We should let previous query cells be the sub query, the append this query cell.
+            ###
+            queryCells = []
+            for index in [@queryCells..0] by -1
+                queryCells.unshift @queryCells[index].pop()
+                break if @queryCells[index].isIntersect
+            @queryCells.push queryCells
+
         if typeof(field) is 'function'
             # .where (query) ->
             subQuery = field(new Query(@documentClass))
             @queryCells.push subQuery.queryCells
         else
             # .where Document.name, '==': 'Enju'
+            previousQueryCell = if @queryCells.length then @queryCells[@queryCells.length - 1] else null
+            if previousQueryCell and previousQueryCell.constructor isnt Array and previousQueryCell.isUnion
+                refactorQueryCells()
+
             firstOperation = null
             value = null
             for firstOperation, value of operation
@@ -112,15 +127,15 @@ module.exports = class Query
                 dbField: dbField
                 operation: QueryOperation.convertOperation firstOperation
                 value: value
+                isIntersect: yes
         @
 
     union: (field, operation) ->
         ###
         Append a query as intersect.
-        @param field {Property|string|function}
+        @param field {Property|string}
             Property: The property of the document.
             string: The property name of the document.
-            function: The sub query.
         @param operation {object}
             key: [
                 '!='
@@ -136,23 +151,22 @@ module.exports = class Query
             ]
         @returns {Query}
         ###
-        if typeof(field) is 'function'
-            # .union (query) ->
+        if not @queryCells.length
+            throw new exceptions.SyntaxError('Can not use .union() at the first query.')
 
+        firstOperation = null
+        value = null
+        for firstOperation, value of operation
+            break
+        if typeof(field) is 'string'
+            dbField = @documentClass._properties[field].dbField ? field
         else
-            # .union Document.name, '==': 'Enju'
-            firstOperation = null
-            value = null
-            for firstOperation, value of operation
-                break
-            if typeof(field) is 'string'
-                dbField = @documentClass._properties[field].dbField ? field
-            else
-                dbField = field.dbField ? field.propertyName
-            @queryCells.push new QueryCell
-                dbField: dbField
-                operation: QueryOperation.convertOperation firstOperation
-                value: value
+            dbField = field.dbField ? field.propertyName
+        @queryCells.push new QueryCell
+            dbField: dbField
+            operation: QueryOperation.convertOperation firstOperation
+            value: value
+            isUnion: yes
         @
 
     orderBy: (field, descending=no) ->
@@ -286,7 +300,8 @@ module.exports = class Query
             result.query =
                 bool:
                     should: queries
-                    minimum_should_match: queries.length
+            if @queryCells[@queryCells.length - 1].isIntersect
+                result.query.bool.minimum_should_match = queries.length
         result
 
     compileQuery: (queryCell) ->
