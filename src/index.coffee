@@ -29,7 +29,7 @@ class UserModel extends enju.Document
         email: new enju.StringProperty
             required: yes
             analyzer: 'email_url'
-#UserModel = enju.Document.define 'UserMode',
+#UserModel = enju.Document.define 'UserModel',
 #    _index: 'test_users'
 #    _settings:
 #        analysis:
