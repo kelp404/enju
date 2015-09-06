@@ -111,6 +111,13 @@ module.exports = class Query
             @queryCells.push subQuery.queryCells
         else
             # .where Document.name, '==': 'Enju'
+            allFields = []
+            for propertyName, property of @documentClass._properties
+                allFields.push propertyName
+                allFields.push(property.dbField) if property.dbField
+            if typeof(field) is 'string' and field.split('.', 1)[0] not in allFields
+                throw new exceptions.SyntaxError("#{field} not in #{@documentClass.name}")
+
             previousQueryCell = if @queryCells.length then @queryCells[@queryCells.length - 1] else null
             if previousQueryCell and previousQueryCell.constructor isnt Array and previousQueryCell.isUnion
                 refactorQueryCells()
@@ -153,6 +160,12 @@ module.exports = class Query
         ###
         if not @queryCells.length
             throw new exceptions.SyntaxError('Can not use .union() at the first query.')
+        allFields = []
+        for propertyName, property of @documentClass._properties
+            allFields.push propertyName
+            allFields.push(property.dbField) if property.dbField
+        if typeof(field) is 'string' and field.split('.', 1)[0] not in allFields
+            throw new exceptions.SyntaxError("#{field} not in #{@documentClass.name}")
 
         firstOperation = null
         value = null
@@ -176,6 +189,13 @@ module.exports = class Query
         @param descending: {bool} Is sorted by descending?
         @returns {Query}
         ###
+        allFields = []
+        for propertyName, property of @documentClass._properties
+            allFields.push propertyName
+            allFields.push(property.dbField) if property.dbField
+        if typeof(field) is 'string' and field.split('.', 1)[0] not in allFields
+            throw new exceptions.SyntaxError("#{field} not in #{@documentClass.name}")
+
         if descending
             operationCode = QueryOperation.orderDESC
         else
