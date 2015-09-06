@@ -286,3 +286,40 @@ module.exports = class Query
             when QueryOperation.contains
                 bool:
                     should: ({match: {"#{queryCell.dbField}": {query: x, operator: 'and'}}} for x in queryCell.value)
+            when QueryOperation.exclude
+                bool:
+                    minimum_should_match: queryCell.value.length
+                    should: ({bool: {must_not: {match: {"#{queryCell.dbField}": {query: x, operator: 'and'}}}}} for x in queryCell.value)
+            when QueryOperation.like
+                bool:
+                    should: [
+                        {
+                            match:
+                                "#{queryCell.dbField}":
+                                    query: queryCell.value
+                                    operator: 'and'
+                        }
+                        {
+                            regexp:
+                                "#{queryCell.dbField}": '.*%s.*' % queryCell.value
+                        }
+                    ]
+            when QueryOperation.unlike
+                bool:
+                    minimum_should_match: 2
+                    should: [
+                        {
+                            bool:
+                                must_not:
+                                    match:
+                                        "#{queryCell.dbField}":
+                                            query: queryCell.value
+                                            operator: 'and'
+                        }
+                        {
+                            bool:
+                                must_not:
+                                    regexp:
+                                        "#{queryCell.dbField}": '.*%s.*' % queryCell.value
+                        }
+                    ]
