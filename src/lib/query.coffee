@@ -16,8 +16,6 @@ class QueryOperation
     @intersection = 'intersection'
     @union = 'union'
 
-    @all = 'all'
-
     @convertOperation = (value) ->
         switch value
             when '!=', QueryOperation.unequal
@@ -45,8 +43,8 @@ class QueryOperation
 
 
 class QueryCell
-    constructor: (@operation, @field, @value, @subQueries) ->
-
+    constructor: (args) ->
+        {@dbField, @operation, @value, @subQueries} = args
 
 module.exports = class Query
     constructor: (documentClass) ->
@@ -55,10 +53,12 @@ module.exports = class Query
         ###
         @isContainsEmpty = no  # if there is a query like .where('field', contains: []) it will be true.
         @documentClass = documentClass
-        @items = [
-            QueryCell(QueryOperation.all)
-        ]
+        @items = []
 
+
+    # -----------------------------------------------------
+    # public methods
+    # -----------------------------------------------------
     where: (field, operation) ->
         ###
         It is intersect.
@@ -86,6 +86,20 @@ module.exports = class Query
             ]
         @returns {Query}
         ###
+        if typeof(field) is 'function'
+            # .where (query) ->
+
+        else
+            # .where Document.name, '==': 'Enju'
+            operation = null
+            value = null
+            for operation, value of operation
+                break
+            dbField = if typeof(field) is 'string' then field else field.dbField ? field.propertyName
+            @items.push new QueryCell
+                dbField: dbField
+                operation: QueryOperation.convertOperation operation
+                value: value
         @
 
     union: (field, operation) ->
