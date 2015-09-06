@@ -29,6 +29,9 @@ class UserModel extends enju.Document
         email: new enju.StringProperty
             required: yes
             analyzer: 'email_url'
+        createTime: new enju.DateProperty
+            autoNow: yes
+            dbField: 'create_time'
 #UserModel = enju.Document.define 'UserModel',
 #    _index: 'test_users'
 #    _settings:
@@ -54,9 +57,16 @@ class UserModel extends enju.Document
 #user.save().then (user) ->
 #    console.log user
 
-UserModel.get('AU-f6Pw3SByHNzSJXm22')
-.then (user) ->
-    console.log user
+#UserModel.get('AU-f6Pw3SByHNzSJXm22')
+#.then (user) ->
+#    console.log user
+#, (error) ->
+#    console.log error
+
+query = UserModel.all()
+query.fetch()
+.then (result) ->
+    console.log result
 , (error) ->
     console.log error
 

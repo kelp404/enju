@@ -1,5 +1,5 @@
 (function() {
-  var UserModel, enju, properties,
+  var UserModel, enju, properties, query,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
@@ -63,12 +63,10 @@
 
   })(enju.Document);
 
-  UserModel.updateMapping().then(function() {
-    return console.log('success');
-  });
+  query = UserModel.all();
 
-  UserModel.get('AU-f6Pw3SByHNzSJXm22').then(function(user) {
-    return console.log(user);
+  query.fetch().then(function(result) {
+    return console.log(result);
   }, function(error) {
     return console.log(error);
   });

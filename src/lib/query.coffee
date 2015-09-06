@@ -1,3 +1,5 @@
+q = require 'q'
+
 exceptions = require './exceptions'
 
 
@@ -147,6 +149,40 @@ module.exports = class Query
         args.skip ?= 0
         args.fetchReference ?= yes
 
+        deferred = q.defer()
+        queryObject = @compileQueries()
+        if queryObject.isContainsEmpty
+            deferred.resolve
+                items: []
+                total: 0
+            return deferred.promise
+
+        @documentClass._es.search
+            index: @documentClass.getIndexName()
+            body:
+                query: queryObject.query
+            from: args.skip
+            size: args.limit
+            sort: queryObject.sort
+            fields: ['_source']
+            version: yes
+        , (error, response) =>
+            if error
+                deferred.reject error
+                return
+            deferred.resolve
+                items: do =>
+                    result = []
+                    for hit in response.hits.hits
+                        item = hit._source
+                        item.id = hit._id
+                        item.version = hit._version
+                        result.push new @documentClass(item)
+                    result
+                total: response.hits.total
+
+        deferred.promise
+
 
     # -----------------------------------------------------
     # private methods
@@ -162,6 +198,7 @@ module.exports = class Query
         query = []
         sort = []
         isContainsEmpty = no
+
         for queryCell in @queryCells
             if queryCell.constructor is Array
                 # there are sub queries at this query
@@ -172,14 +209,58 @@ module.exports = class Query
                 break
             switch queryCell.operation
                 when QueryOperation.orderASC
+                    console.log '-'
                 when QueryOperation.orderDESC
+                    console.log '-'
                 else
                     query.push @compileQuery queryCell
+
+        result =
+            sort: sort
+        # append query
+        if isContainsEmpty
+            result.isContainsEmpty = yes
+        else if query.length is 0
+            result.query =
+                match_all: {}
+        else if query.length is 1
+            result.query = query[0]
+        else
+            result.query =
+                bool:
+                    should: query
+                    minimum_should_match: query.length
+        result
 
     compileQuery: (queryCell) ->
         ###
         @param queryCell: {QueryCell}
         @returns {object}
         ###
-        
-
+        switch queryCell.operation
+            when QueryOperation.equal
+                if queryCell.value?
+                    match:
+                        "#{queryCell.dbField}":
+                            query: queryCell.value
+                            operator: 'and'
+                else
+                    filtered:
+                        filter:
+                            missing:
+                                field: queryCell.dbField
+            when QueryOperation.unequal
+                if queryCell.value?
+                    bool:
+                        must_not:
+                            match:
+                                "#{queryCell.dbField}":
+                                    query: queryCell.value
+                                    operator: 'and'
+                else
+                    bool:
+                        must_not:
+                            filtered:
+                                filter:
+                                    missing:
+                                        field: queryCell.dbField
