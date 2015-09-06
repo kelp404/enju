@@ -234,7 +234,7 @@ module.exports = class Document
                     field['analyzer'] = property.analyzer
 
                 if Object.keys(field).length
-                    mapping[propertyName] = field
+                    mapping[property.dbField ? propertyName] = field
             @_es.indices.putMapping
                 index: @getIndexName()
                 type: @getDocumentType()

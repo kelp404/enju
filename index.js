@@ -52,12 +52,20 @@
       email: new enju.StringProperty({
         required: true,
         analyzer: 'email_url'
+      }),
+      createTime: new enju.DateProperty({
+        autoNow: true,
+        dbField: 'create_time'
       })
     });
 
     return UserModel;
 
   })(enju.Document);
+
+  UserModel.updateMapping().then(function() {
+    return console.log('success');
+  });
 
   UserModel.get('AU-f6Pw3SByHNzSJXm22').then(function(user) {
     return console.log(user);
