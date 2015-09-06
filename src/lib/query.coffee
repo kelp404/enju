@@ -56,12 +56,12 @@ class QueryCell
 
 
 module.exports = class Query
-    constructor: (documentClass) ->
+    constructor: (documentClass, queryCells=[]) ->
         ###
         @param documentClass {constructor} The document's constructor.
         ###
         @documentClass = documentClass
-        @queryCells = []
+        @queryCells = queryCells
 
 
     # -----------------------------------------------------
@@ -96,7 +96,8 @@ module.exports = class Query
         ###
         if typeof(field) is 'function'
             # .where (query) ->
-
+            subQuery = field(new Query(@documentClass))
+            @queryCells.push subQuery.queryCells
         else
             # .where Document.name, '==': 'Enju'
             firstOperation = null
@@ -135,6 +136,23 @@ module.exports = class Query
             ]
         @returns {Query}
         ###
+        if typeof(field) is 'function'
+            # .union (query) ->
+
+        else
+            # .union Document.name, '==': 'Enju'
+            firstOperation = null
+            value = null
+            for firstOperation, value of operation
+                break
+            if typeof(field) is 'string'
+                dbField = @documentClass._properties[field].dbField ? field
+            else
+                dbField = field.dbField ? field.propertyName
+            @queryCells.push new QueryCell
+                dbField: dbField
+                operation: QueryOperation.convertOperation firstOperation
+                value: value
         @
 
     orderBy: (field, descending=no) ->
@@ -220,15 +238,21 @@ module.exports = class Query
             sort: {list}
             isContainsEmpty: {bool}
         ###
-        query = []
+        queries = []
         sort = []
         isContainsEmpty = no
 
         for queryCell in @queryCells
             if queryCell.constructor is Array
                 # there are sub queries at this query
+                subQuery = new Query(@documentClass, queryCell)
+                elasticsearchQuery = subQuery.compileQueries()
+                if elasticsearchQuery.isContainsEmpty
+                    continue
+                queries.push elasticsearchQuery.query
                 continue
 
+            # compile query cell to elasticsearch query object and append into queries
             if queryCell.isContainsEmpty
                 isContainsEmpty = yes
                 break
@@ -246,23 +270,23 @@ module.exports = class Query
                             ignore_unmapped: yes
                             missing: '_last'
                 else
-                    query.push @compileQuery queryCell
+                    queries.push @compileQuery queryCell
 
         result =
             sort: sort
-        # append query
+        # append queries
         if isContainsEmpty
             result.isContainsEmpty = yes
-        else if query.length is 0
+        else if queries.length is 0
             result.query =
                 match_all: {}
-        else if query.length is 1
-            result.query = query[0]
+        else if queries.length is 1
+            result.query = queries[0]
         else
             result.query =
                 bool:
-                    should: query
-                    minimum_should_match: query.length
+                    should: queries
+                    minimum_should_match: queries.length
         result
 
     compileQuery: (queryCell) ->
