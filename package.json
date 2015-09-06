@@ -30,6 +30,6 @@
     "coffee-script": "1.9.3",
     "config": "1.15.0",
     "elasticsearch": "8.0.1",
-    "q": "^1.4.1"
+    "q": "1.4.1"
   }
 }
