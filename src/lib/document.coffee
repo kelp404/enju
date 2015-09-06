@@ -121,6 +121,13 @@ module.exports = class Document
 
         deferred.promise
 
+    @all = ->
+        ###
+        Generate a query for this document.
+        @returns {Query}
+        ###
+        new Query(@)
+
     @where = (field, operation) ->
         ###
         Generate the query for this document.
@@ -306,6 +313,7 @@ module.exports = class Document
     delete: (refresh=no) ->
         ###
         Delete this document.
+        @returns {promise} (Document)
         ###
         deferred = q.defer()
 
