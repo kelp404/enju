@@ -96,9 +96,11 @@ module.exports = class Document
             deferred.resolve null
             return deferred.promise
         # empty documents
-        if ids.constructor is Array and ids.length is 0
-            deferred.resolve []
-            return deferred.promise
+        if ids.constructor is Array
+            ids = (x for x in ids when x)
+            if ids.length is 0
+                deferred.resolve []
+                return deferred.promise
 
         # fetch documents
 
