@@ -99,14 +99,17 @@ module.exports = class Query
 
         else
             # .where Document.name, '==': 'Enju'
-            operation = null
+            firstOperation = null
             value = null
-            for operation, value of operation
+            for firstOperation, value of operation
                 break
-            dbField = if typeof(field) is 'string' then field else field.dbField ? field.propertyName
+            if typeof(field) is 'string'
+                dbField = @documentClass._properties[field].dbField ? field
+            else
+                dbField = field.dbField ? field.propertyName
             @queryCells.push new QueryCell
                 dbField: dbField
-                operation: QueryOperation.convertOperation operation
+                operation: QueryOperation.convertOperation firstOperation
                 value: value
         @
 
@@ -264,3 +267,22 @@ module.exports = class Query
                                 filter:
                                     missing:
                                         field: queryCell.dbField
+            when QueryOperation.greater
+                range:
+                    "#{queryCell.dbField}":
+                        gt: queryCell.value
+            when QueryOperation.greaterEqual
+                range:
+                    "#{queryCell.dbField}":
+                        gte: queryCell.value
+            when QueryOperation.less
+                range:
+                    "#{queryCell.dbField}":
+                        lt: queryCell.value
+            when QueryOperation.lessEqual
+                range:
+                    "#{queryCell.dbField}":
+                        lte: queryCell.value
+            when QueryOperation.contains
+                bool:
+                    should: ({match: {"#{queryCell.dbField}": {query: x, operator: 'and'}}} for x in queryCell.value)
