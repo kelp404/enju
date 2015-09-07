@@ -106,7 +106,10 @@ module.exports = class Query
                 documentClasses[documentClassName].get(Object.keys(items), no).then (referenceDocuments) ->
                     for referenceDocument in referenceDocuments
                         dataTable[documentClassName][referenceDocument.id] = referenceDocument
-        q.all(funcs).done ->
+        q.all(funcs)
+        .catch (error) ->
+            deferred.reject error
+        .done ->
             # update reference properties of documents
             for document in documents
                 for property in referenceProperties  # loop all reference properties in the document
@@ -317,6 +320,26 @@ module.exports = class Query
                     deferred.resolve items, total
             else
                 deferred.resolve items, total
+
+        deferred.promise
+
+    first: (fetchReference=yes) ->
+        ###
+        Fetch the first document by this query.
+        @param fetchReference {bool}
+        @returns {promise} ({Document|null})
+        ###
+        deferred = q.defer()
+
+        args =
+            limit: 1
+            skip: 0
+            fetchReference: fetchReference
+        @fetch(args)
+        .then (documents) ->
+            deferred.resolve if documents.length then documents[0] else null
+        .catch (error) ->
+            deferred.reject error
 
         deferred.promise
 

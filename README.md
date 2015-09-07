@@ -341,6 +341,14 @@ fetch: (args={}) ->
     @returns {promise} ([Document, ...], {number})
     ###
 ```
+```coffee
+first: (fetchReference=yes) ->
+    ###
+    Fetch the first document by this query.
+    @param fetchReference {bool}
+    @returns {promise} ({Document|null})
+    ###
+```
 
 
 
