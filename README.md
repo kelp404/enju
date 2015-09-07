@@ -8,7 +8,7 @@ An elasticsearch client on node.js written in CoffeeScript.
 
 ## Config
 >
-enju use [node-config](https://github.com/lorenwest/node-config).
+enju use [node-config](https://github.com/lorenwest/node-config).  
 `/your_project/config/default.cson`
 ```cson
 enjuElasticsearchHost: 'http://localhost:9200'
@@ -59,11 +59,11 @@ var UserModel = enju.Document.define('UserModel', {
             required: true
         }),
         email: new enju.StringProperty({
-            required: yes,
+            required: true,
             analyzer: 'email_url'
         }),
         createTime: new enju.DateProperty({
-            autoNow: yes,
+            autoNow: true,
             dbField: 'create_time'
         })
     });
