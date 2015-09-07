@@ -17,6 +17,73 @@ enjuIndexPrefix: ''
 
 
 
+## Quick start
+>
+### 1. Define models
+```coffee
+enju = require 'enju'
+class UserModel extends enju.Document
+    @_index = 'users'  # your index name
+    @_settings =
+        analysis:
+            analyzer:
+                email_url:
+                    type: 'custom'
+                    tokenizer: 'uax_url_email'
+    @define
+        name: new enju.StringProperty
+            required: yes
+        email: new enju.StringProperty
+            required: yes
+            analyzer: 'email_url'
+        createTime: new enju.DateProperty
+            autoNow: yes
+            dbField: 'create_time'
+class ProductModel extends enju.Document
+    @_index = 'products'
+    @define
+        user: new enju.ReferenceProperty
+            referenceClass: UserModel
+            required: yes
+        title: new enju.StringProperty
+            required: yes
+```
+### 2. Update elasticsearch mapping
+```coffee
+UserModel.updateMapping()
+ProductModel.updateMapping()
+```
+### 3. Insert documents
+```coffee
+user = new UserModel
+    name: 'Kelp'
+    email: 'kelp@phate.org'
+user.save().then (user) ->
+    product = new ProductModel
+        user: user
+        title: 'title'
+    product.save()
+```
+### 4. Fetch documents
+```coffee
+ProductModel.all().fetch().then (products, total) ->
+    console.log JSON.stringify(products, null, 4)
+    # [{
+    #     "id": "AU-mMiIwtrhIjlPeQBbT",
+    #     "version": 1,
+    #     "user": {
+    #         "id": "AU-mMiIOtrhIjlPeQBbS",
+    #         "version": 1,
+    #         "name": "Kelp",
+    #         "email": "kelp@phate.org",
+    #         "createTime": "2015-09-07T05:05:47.500Z"
+    #     },
+    #     "title": "title"
+    # }]
+```
+
+
+
 ## Document
 >
 ```coffee
@@ -67,6 +134,15 @@ var UserModel = enju.Document.define('UserModel', {
         dbField: 'create_time'
     })
 });
+```
+
+**Properties**
+>```coffee
+_index: {string} You can set index name by this attribute.
+_type: {string} You can set type of the document. The default is class name.
+_settings: {object} You can set index settings by this attribute.
+id: {string}
+version: {number}
 ```
 
 
