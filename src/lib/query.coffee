@@ -137,12 +137,12 @@ module.exports = class Query
             function: The sub query.
         @param operation {object}
             key: [
-                '!='
-                '=='
-                '<'
-                '<='
-                '>'
-                '>='
+                '!=', 'unequal'
+                '==', 'equal'
+                '<', 'less'
+                '<=', 'lessEqual'
+                '>', 'greater',
+                '>=', 'greaterEqual'
                 'like'
                 'unlike'
                 'contains'
@@ -201,12 +201,12 @@ module.exports = class Query
             string: The property name of the document.
         @param operation {object}
             key: [
-                '!='
-                '=='
-                '<'
-                '<='
-                '>'
-                '>='
+                '!=', 'unequal'
+                '==', 'equal'
+                '<', 'less'
+                '<=', 'lessEqual'
+                '>', 'greater',
+                '>=', 'greaterEqual'
                 'like'
                 'unlike'
                 'contains'
