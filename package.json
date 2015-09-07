@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kelp404/enju.git"
+    "url": "git+ssh://git@github.com/kelp404/enju.git"
   },
   "keywords": [
     "elasticsearch",
