@@ -87,8 +87,8 @@ module.exports = class Document
         ###
         Fetch the document with id or ids.
         If the document is not exist, it will return null.
-        @param ids: {string|list}
-        @param fetchReference: {bool} Fetch reference data of this document.
+        @param ids {string|list}
+        @param fetchReference {bool} Fetch reference data of this document.
         @returns {promise} (Document|null|list)
         ###
         deferred = q.defer()
@@ -315,7 +315,7 @@ module.exports = class Document
     save: (refresh=no) ->
         ###
         Save this document.
-        @param refresh: {bool} Refresh the index after performing the operation.
+        @param refresh {bool} Refresh the index after performing the operation.
         @returns {promise} (Document)
         ###
         deferred = q.defer()

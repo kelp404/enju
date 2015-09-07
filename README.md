@@ -160,8 +160,8 @@ version: {number}
     ###
     Fetch the document with id or ids.
     If the document is not exist, it will return null.
-    @param ids: {string|list}
-    @param fetchReference: {bool} Fetch reference data of this document.
+    @param ids {string|list}
+    @param fetchReference {bool} Fetch reference data of this document.
     @returns {promise} ({items: {Document}, total: {number})
     ###
 # ex: Document.get('MQ-ULRSJ291RG_eEwSfQ').then (result) ->
@@ -215,7 +215,7 @@ version: {number}
 save: (refresh=no) ->
     ###
     Save this document.
-    @param refresh: {bool} Refresh the index after performing the operation.
+    @param refresh {bool} Refresh the index after performing the operation.
     @returns {promise} (Document)
     ###
 ```
@@ -234,12 +234,12 @@ delete: (refresh=no) ->
 ```coffee
 class Property
     ###
-    @property default: {bool}
-    @property required: {bool}
-    @property dbField: {string}
-    @property analyzer: {string}
-    @property mapping: {object}
-    @property propertyName: {string} The property name in the document. It will be set at Document.define()
+    @property default {bool}
+    @property required {bool}
+    @property dbField {string}
+    @property analyzer {string}
+    @property mapping {object}
+    @property propertyName {string} The property name in the document. It will be set at Document.define()
     ###
 ```
 ```coffee
@@ -257,13 +257,13 @@ class BooleanProperty extends Property
 ```coffee
 class DateProperty extends Property
     ###
-    @property autoNow: {bool}
+    @property autoNow {bool}
     ###
 ```
 ```coffee
 class ListProperty extends Property
     ###
-    @property itemClass: {constructor}
+    @property itemClass {constructor}
     ###
 ```
 ```coffee
@@ -272,7 +272,7 @@ class ObjectProperty extends Property
 ```coffee
 class ReferenceProperty extends Property
     ###
-    @property referenceClass: {Property}
+    @property referenceClass {Property}
     ###
 ```
 
@@ -316,12 +316,12 @@ union: (field, operation) ->
         string: The property name of the document.
     @param operation {object}
         key: [
-            '!='
-            '=='
-            '<'
-            '<='
-            '>'
-            '>='
+            '!=', 'unequal'
+            '==', 'equal'
+            '<', 'less'
+            '<=', 'lessEqual'
+            '>', 'greater',
+            '>=', 'greaterEqual'
             'like'
             'unlike'
             'contains'
@@ -334,8 +334,8 @@ union: (field, operation) ->
 orderBy: (field, descending=no) ->
     ###
     Append the order query.
-    @param member: {Property|string} The property name of the document.
-    @param descending: {bool} Is sorted by descending?
+    @param member {Property|string} The property name of the document.
+    @param descending {bool} Is sorted by descending?
     @returns {Query}
     ###
 ```
@@ -343,7 +343,7 @@ orderBy: (field, descending=no) ->
 fetch: (args={}) ->
     ###
     Fetch documents by this query.
-    @param args: {object}
+    @param args {object}
         limit: {number} The size of the pagination. (The limit of the result items.) default is 1000
         skip: {number} The offset of the pagination. (Skip x items.) default is 0
         fetchReference: {bool} Fetch documents of reference properties. default is true.

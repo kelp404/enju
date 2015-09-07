@@ -244,8 +244,8 @@ module.exports = class Query
     orderBy: (field, descending=no) ->
         ###
         Append the order query.
-        @param member: {Property|string} The property name of the document.
-        @param descending: {bool} Is sorted by descending?
+        @param member {Property|string} The property name of the document.
+        @param descending {bool} Is sorted by descending?
         @returns {Query}
         ###
         allFields = []
@@ -271,7 +271,7 @@ module.exports = class Query
     fetch: (args={}) ->
         ###
         Fetch documents by this query.
-        @param args: {object}
+        @param args {object}
             limit: {number} The size of the pagination. (The limit of the result items.) default is 1000
             skip: {number} The offset of the pagination. (Skip x items.) default is 0
             fetchReference: {bool} Fetch documents of reference properties. default is true.
