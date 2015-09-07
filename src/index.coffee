@@ -38,6 +38,19 @@ class UserModel extends enju.Document
         createTime: new enju.DateProperty
             autoNow: yes
             dbField: 'create_time'
+
+class ProductModel extends enju.Document
+    @_index = 'test_products'
+    @define
+        user: new enju.ReferenceProperty
+            referenceClass: UserModel
+            required: yes
+        title: new enju.StringProperty
+            required: yes
+        createTime: new enju.DateProperty
+            autoNow: yes
+            dbField: 'create_time'
+
 #UserModel = enju.Document.define 'UserModel',
 #    _index: 'test_users'
 #    _settings:
@@ -52,11 +65,6 @@ class UserModel extends enju.Document
 #        required: yes
 #        analyzer: 'email_url'
 
-
-#UserModel.updateMapping()
-#.then ->
-#    console.log 'success'
-
 #user = new UserModel
 #    name: 'Kelp'
 #    email: 'kelp@phate.org'
@@ -69,13 +77,19 @@ class UserModel extends enju.Document
 #, (error) ->
 #    console.log error
 
-query = UserModel.all()
-query.fetch()
-.then (result) ->
-    console.log result
-, (error) ->
-    console.log error
+#query = UserModel.all()
+#query.fetch()
+#.then (result) ->
+#    console.log result
+#.catch (error) ->
+#    console.log error
 
+#ProductModel.all().fetch()
+#.then (products) ->
+#    console.log products
+
+ProductModel.get('AU-mAh1-trhIjlPeQBbM').then (product) ->
+    console.log product
 
 #{ _index: 'test_users',
 #  _type: 'UserModel',

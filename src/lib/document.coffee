@@ -125,7 +125,13 @@ module.exports = class Document
                         if dbField of doc._source
                             item[propertyName] = doc._source[dbField]
                     result.push new @(item)
-                deferred.resolve result
+
+                # call resolve()
+                if fetchReference
+                    Query.updateReferenceProperties(result).then ->
+                        deferred.resolve result
+                else
+                    deferred.resolve result
             return deferred.promise
 
         # fetch the document
@@ -143,7 +149,14 @@ module.exports = class Document
             args = response._source
             args.id = response._id
             args.version = response._version
-            deferred.resolve new @(args)
+
+            # call resolve()
+            document = new @(args)
+            if fetchReference
+                Query.updateReferenceProperties([document]).then ->
+                    deferred.resolve document
+            else
+                deferred.resolve document
 
         deferred.promise
 

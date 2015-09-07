@@ -1,6 +1,7 @@
 q = require 'q'
 
 exceptions = require './exceptions'
+properties = require './properties'
 
 
 class QueryOperation
@@ -71,8 +72,52 @@ module.exports = class Query
         ###
         Update reference properties of documents.
         @param documents {list} (Document)
+        @returns {promise}
         ###
-        console.log @
+        deferred = q.defer()
+        if not documents or not documents.length
+            deferred.resolve()
+            return
+
+        dataTable = {}  # {documentClassName: {documentId: {Document}}}
+        documentClasses = {}  # {documentClassName: documentClass}
+        referenceProperties = []  # all reference properties in documents
+
+        # scan what kind of documents should be fetched
+        for propertyName, property of documents[0].constructor._properties
+            if property.constructor isnt properties.ReferenceProperty
+                continue
+            if property.referenceClass.name not of dataTable
+                dataTable[property.referenceClass.name] = {}
+                documentClasses[property.referenceClass.name] = property.referenceClass
+            referenceProperties.push property
+
+        # scan what id of documents should be fetched
+        for document in documents
+            for property in referenceProperties  # loop all reference properties in the document
+                documentId = document[property.propertyName]
+                if documentId
+                    dataTable[property.referenceClass.name][documentId] = null
+
+        # fetch documents
+        funcs = []
+        for documentClassName, items of dataTable
+            funcs.push do (documentClassName, items) ->
+                documentClasses[documentClassName].get(Object.keys(items), no).then (referenceDocuments) ->
+                    for referenceDocument in referenceDocuments
+                        dataTable[documentClassName][referenceDocument.id] = referenceDocument
+        q.all(funcs).done ->
+            # update reference properties of documents
+            for document in documents
+                for property in referenceProperties  # loop all reference properties in the document
+                    resolveDocument = dataTable[property.referenceClass.name][document[property.propertyName]]
+                    if property.required and not resolveDocument
+                        console.warning("There are a reference class can't mapping")
+                        continue
+                    document[property.propertyName] = resolveDocument
+            deferred.resolve()
+
+        deferred.promise
 
 
     # -----------------------------------------------------
@@ -267,7 +312,11 @@ module.exports = class Query
                     result.push new @documentClass(item)
                 result
             total = response.hits.total
-            deferred.resolve items, total
+            if args.fetchReference
+                Query.updateReferenceProperties(items).then ->
+                    deferred.resolve items, total
+            else
+                deferred.resolve items, total
 
         deferred.promise
 
