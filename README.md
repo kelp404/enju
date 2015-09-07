@@ -1,8 +1,17 @@
 # enju
 
-An elasticsearch client on node.js written in CoffeeScript.
+An elasticsearch client on node.js written in CoffeeScript.  
+[tina](https://github.com/kelp404/tina) is the Python version.
 
 ![tina](_enju.gif)
+
+
+
+## Installation
+>
+```bash
+$ npm install enju --save
+```
 
 
 
