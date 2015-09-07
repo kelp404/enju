@@ -66,8 +66,8 @@ user.save().then (user) ->
 ```
 ### 4. Fetch documents
 ```coffee
-ProductModel.where('title', '==': 'enju').fetch().then (products, total) ->
-    console.log JSON.stringify(products, null, 4)
+ProductModel.where('title', '==': 'enju').fetch().then (result) ->
+    console.log JSON.stringify(result.items, null, 4)
     # [{
     #     "id": "AU-mMiIwtrhIjlPeQBbT",
     #     "version": 1,
@@ -153,10 +153,10 @@ version: {number}
     If the document is not exist, it will return null.
     @param ids: {string|list}
     @param fetchReference: {bool} Fetch reference data of this document.
-    @returns {promise} (Document|null|list)
+    @returns {promise} ({items: {Document}, total: {number})
     ###
-# ex: Document.get('MQ-ULRSJ291RG_eEwSfQ').then (document) ->
-# ex: Document.get(['MQ-ULRSJ291RG_eEwSfQ']).then (documents) ->
+# ex: Document.get('MQ-ULRSJ291RG_eEwSfQ').then (result) ->
+# ex: Document.get(['MQ-ULRSJ291RG_eEwSfQ']).then (result) ->
 ```
 ```coffee
 @all = ->
@@ -338,7 +338,7 @@ fetch: (args={}) ->
         limit: {number} The size of the pagination. (The limit of the result items.) default is 1000
         skip: {number} The offset of the pagination. (Skip x items.) default is 0
         fetchReference: {bool} Fetch documents of reference properties. default is true.
-    @returns {promise} ([Document, ...], {number})
+    @returns {promise} ({items: {Document}, total: {number})
     ###
 ```
 ```coffee
@@ -349,6 +349,13 @@ first: (fetchReference=yes) ->
     @returns {promise} ({Document|null})
     ###
 ```
+```coffee
+count: ->
+    ###
+    Count documents by the query.
+    @returns {number}
+    ###
+```
 
 
 
@@ -357,7 +364,7 @@ first: (fetchReference=yes) ->
 select * from "ExampleModel" where "name" = "tina"
 ```
 ```coffee
-ExampleModel.where('name', equal: 'tina').fetch().then (models, total) ->
+ExampleModel.where('name', equal: 'tina').fetch().then (result) ->
 ```
 
 ---
@@ -367,7 +374,7 @@ select * from "ExampleModel" where "name" = "tina" and "email" = "kelp@phate.org
 ```coffee
 ExampleModel.where('name', equal: 'enju')
     .where('email', equal='kelp@phate.org')
-    .fetch().then (models, total) ->
+    .fetch().then (result) ->
 ```
 
 ---
@@ -377,7 +384,7 @@ select * from "ExampleModel" where "name" like "%tina%" or "email" like "%tina%"
 ```coffee
 ExampleModel.where (query) ->
     query.where('name', like: 'tina').union('email', like: 'tina')
-.fetch().then (models, total) ->
+.fetch().then (result) ->
 ```
 
 ---
@@ -388,7 +395,7 @@ select * from "ExampleModel" where "category" = 1 or "category" = 3
 ```coffee
 ExampleModel.where('category', contains: [1, 3])
     .orderBy('created_at')
-    .fetch(20, 20).then (models, total) ->
+    .fetch(20, 20).then (result) ->
 ```
 
 ---

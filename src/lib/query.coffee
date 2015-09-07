@@ -275,7 +275,7 @@ module.exports = class Query
             limit: {number} The size of the pagination. (The limit of the result items.) default is 1000
             skip: {number} The offset of the pagination. (Skip x items.) default is 0
             fetchReference: {bool} Fetch documents of reference properties. default is true.
-        @returns {promise} ([Document, ...], {number})
+        @returns {promise} ({items: {Document}, total: {number})
         ###
         args.limit ?= 1000
         args.skip ?= 0
@@ -317,9 +317,13 @@ module.exports = class Query
             total = response.hits.total
             if args.fetchReference
                 Query.updateReferenceProperties(items).then ->
-                    deferred.resolve items, total
+                    deferred.resolve
+                        items: items
+                        total: total
             else
-                deferred.resolve items, total
+                deferred.resolve
+                    items: items
+                    total: total
 
         deferred.promise
 
@@ -336,10 +340,31 @@ module.exports = class Query
             skip: 0
             fetchReference: fetchReference
         @fetch(args)
-        .then (documents) ->
-            deferred.resolve if documents.length then documents[0] else null
+        .then (result) ->
+            deferred.resolve if result.items.length then result.items[0] else null
         .catch (error) ->
             deferred.reject error
+
+        deferred.promise
+
+    count: ->
+        ###
+        Count documents by the query.
+        @returns {number}
+        ###
+        deferred = q.defer()
+
+        queryObject = @compileQueries()
+        @documentClass._es.count
+            index: @documentClass.getIndexName()
+            body:
+                query: queryObject.query
+            size: 0
+        , (error, response) ->
+            if error
+                deferred.reject error
+                return
+            deferred.resolve response.count
 
         deferred.promise
 
