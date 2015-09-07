@@ -11,7 +11,10 @@
     "url": "git+https://github.com/kelp404/enju.git"
   },
   "keywords": [
-    "elasticsearch"
+    "elasticsearch",
+    "NoSQL",
+    "database",
+    "ORM"
   ],
   "author": "",
   "license": "MIT",
