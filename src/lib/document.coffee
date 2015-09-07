@@ -160,6 +160,27 @@ module.exports = class Document
 
         deferred.promise
 
+    @exists = (id) ->
+        ###
+        Is the document exists?
+        @param id {string} The documents' id.
+        @returns {promise} (bool)
+        ###
+        deferred = q.defer()
+
+        @_es.exists
+            index: @getIndexName()
+            type: @getDocumentType()
+            id: id
+        , (error, response) ->
+            if error
+                deferred.reject error
+                return
+            deferred.resolve response
+
+        deferred.promise
+
+
     @all = ->
         ###
         Generate a query for this document.

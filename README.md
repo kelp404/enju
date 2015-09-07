@@ -168,6 +168,14 @@ version: {number}
 # ex: Document.get(['MQ-ULRSJ291RG_eEwSfQ']).then (result) ->
 ```
 ```coffee
+@exists = (id) ->
+    ###
+    Is the document exists?
+    @param id {string} The documents' id.
+    @returns {promise} (bool)
+    ###
+```
+```coffee
 @all = ->
     ###
     Generate a query for this document.
