@@ -320,8 +320,10 @@ module.exports = class Query
             result.query =
                 bool:
                     should: queries
-            if @queryCells[@queryCells.length - 1].isIntersect
-                result.query.bool.minimum_should_match = queries.length
+            for index in [@queryCells.length - 1..0] by -1
+                if @queryCells[index].constructor is Array or @queryCells[index].isIntersect
+                    result.query.bool.minimum_should_match = queries.length
+                    break
         result
 
     compileQuery: (queryCell) ->
