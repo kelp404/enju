@@ -44,29 +44,29 @@ class UserModel extends enju.Document
 // JavaScript
 var enju = require('enju');
 var UserModel = enju.Document.define('UserModel', {
-        _index: 'users',
-        _settings: {
-            analysis: {
-                analyzer: {
-                    email_url: {
-                        type: 'custom',
-                        tokenizer: 'uax_url_email'
-                    }
+    _index: 'users',
+    _settings: {
+        analysis: {
+            analyzer: {
+                email_url: {
+                    type: 'custom',
+                    tokenizer: 'uax_url_email'
                 }
             }
-        },
-        name: new enju.StringProperty({
-            required: true
-        }),
-        email: new enju.StringProperty({
-            required: true,
-            analyzer: 'email_url'
-        }),
-        createTime: new enju.DateProperty({
-            autoNow: true,
-            dbField: 'create_time'
-        })
-    });
+        }
+    },
+    name: new enju.StringProperty({
+        required: true
+    }),
+    email: new enju.StringProperty({
+        required: true,
+        analyzer: 'email_url'
+    }),
+    createTime: new enju.DateProperty({
+        autoNow: true,
+        dbField: 'create_time'
+    })
+});
 ```
 
 
