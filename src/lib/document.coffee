@@ -9,6 +9,7 @@ exceptions = require './exceptions'
 
 module.exports = class Document
     ###
+    You have to call define() to define your document.
     @property _index: {string} You can set index name by this attribute.
     @property _type: {string} You can set type of the document. The default is class name.
     @property _settings: {object} You can set index settings by this attribute.
@@ -17,10 +18,6 @@ module.exports = class Document
     @property _properties: {object} {'propertyName': {Property}}
     @property _es: {Elasticsearch.Client}
     ###
-    @_properties =
-        id: new properties.StringProperty(dbField: '_id')
-        version: new properties.IntegerProperty(dbField: '_version')
-    @_es = utils.getElasticsearch()
     constructor: (args={}) ->
         for propertyName, property of @constructor._properties
             @[propertyName] = property.toJs args[propertyName]
@@ -56,6 +53,11 @@ module.exports = class Document
         2. define properties for this document.
             @param properties: {object}
         ###
+        @_properties =
+            id: new properties.StringProperty(dbField: '_id')
+            version: new properties.IntegerProperty(dbField: '_version')
+        @_es = utils.getElasticsearch()
+
         if arguments.length is 2 and typeof(arguments[0]) is 'string' and typeof(arguments[1]) is 'object'
             # 1. define properties with class name.
             defined = arguments[1]
