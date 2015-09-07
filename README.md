@@ -274,7 +274,7 @@ class ReferenceProperty extends Property
 The enju query.
 
 **Methods**
-```coffee
+>```coffee
 where: (field, operation) ->
     ###
     Append a query as intersect.
