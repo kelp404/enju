@@ -147,11 +147,11 @@ var UserModel = enju.Document.define('UserModel', {
 
 **Properties**
 >```coffee
-_index: {string} You can set index name by this attribute.
-_type: {string} You can set type of the document. The default is class name.
-_settings: {object} You can set index settings by this attribute.
-id: {string}
-version: {number}
+_index {string} You can set index name by this attribute.
+_type {string} You can set type of the document. The default is class name.
+_settings {object} You can set index settings by this attribute.
+id {string}
+version {number}
 ```
 
 **Class method**

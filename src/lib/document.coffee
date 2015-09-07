@@ -10,13 +10,13 @@ exceptions = require './exceptions'
 module.exports = class Document
     ###
     You have to call define() to define your document.
-    @property _index: {string} You can set index name by this attribute.
-    @property _type: {string} You can set type of the document. The default is class name.
-    @property _settings: {object} You can set index settings by this attribute.
-    @property id: {string}
-    @property version: {number}
-    @property _properties: {object} {'propertyName': {Property}}
-    @property _es: {Elasticsearch.Client}
+    @property _index {string} You can set index name by this attribute.
+    @property _type {string} You can set type of the document. The default is class name.
+    @property _settings {object} You can set index settings by this attribute.
+    @property id {string}
+    @property version {number}
+    @property _properties {object} {'propertyName': {Property}}
+    @property _es {Elasticsearch.Client}
     ###
     constructor: (args={}) ->
         for propertyName, property of @constructor._properties
