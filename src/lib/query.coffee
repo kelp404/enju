@@ -65,6 +65,17 @@ module.exports = class Query
 
 
     # -----------------------------------------------------
+    # class methods
+    # -----------------------------------------------------
+    @updateReferenceProperties = (documents) ->
+        ###
+        Update reference properties of documents.
+        @param documents {list} (Document)
+        ###
+        console.log @
+
+
+    # -----------------------------------------------------
     # public methods
     # -----------------------------------------------------
     where: (field, operation) ->
