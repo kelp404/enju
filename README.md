@@ -1,5 +1,5 @@
-# enju ![circle-ci](https://circleci.com/gh/kelp404/enju.png?circle-token=55c92edca67c45f7e79d9d9bc6ffce340a462878) 
-![npm version](https://badge.fury.io/js/enju.svg)
+# enju [![circle-ci](https://circleci.com/gh/kelp404/enju.png?circle-token=55c92edca67c45f7e79d9d9bc6ffce340a462878)](https://circleci.com/gh/kelp404/enju) 
+[![npm version](https://badge.fury.io/js/enju.svg)](https://www.npmjs.com/package/enju)
 
 An elasticsearch client on node.js written in CoffeeScript.  
 [tina](https://github.com/kelp404/tina) is the Python version.
