@@ -10,6 +10,12 @@ exports.ListProperty = properties.ListProperty
 exports.ObjectProperty = properties.ObjectProperty
 exports.ReferenceProperty = properties.ReferenceProperty
 
+exceptions = require './lib/exceptions'
+exports.ArgumentError = exceptions.ArgumentError
+exports.ValueRequiredError = exceptions.ValueRequiredError
+exports.TypeError = exceptions.TypeError
+exports.OperationError = exceptions.OperationError
+exports.SyntaxError = exceptions.SyntaxError
 
 
 
