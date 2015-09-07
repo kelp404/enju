@@ -353,7 +353,7 @@ first: (fetchReference=yes) ->
 count: ->
     ###
     Count documents by the query.
-    @returns {number}
+    @returns {promise} ({number})
     ###
 ```
 

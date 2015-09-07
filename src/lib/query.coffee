@@ -350,7 +350,7 @@ module.exports = class Query
     count: ->
         ###
         Count documents by the query.
-        @returns {number}
+        @returns {promise} ({number})
         ###
         deferred = q.defer()
 
