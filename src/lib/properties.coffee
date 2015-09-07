@@ -8,7 +8,7 @@ class Property
     @property dbField: {string}
     @property analyzer: {string}
     @property mapping: {object}
-    @property propertyName: {string} The property name. It will be set at Document.define()
+    @property propertyName: {string} The property name in the document. It will be set at Document.define()
     ###
     constructor: (args={}) ->
         {
