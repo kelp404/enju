@@ -1,0 +1,15 @@
+machine:
+    node:
+        version:
+            0.12.2
+
+dependencies:
+    override:
+        - npm install -g nodeunit
+        - npm install -g grunt-cli
+        - npm install
+
+test:
+    override:
+        - grunt build
+        - npm test
