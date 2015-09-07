@@ -242,6 +242,30 @@ class IntegerProperty extends Property
 ```coffee
 class FloatProperty extends Property
 ```
+```coffee
+class BooleanProperty extends Property
+```
+```coffee
+class DateProperty extends Property
+    ###
+    @property autoNow: {bool}
+    ###
+```
+```coffee
+class ListProperty extends Property
+    ###
+    @property itemClass: {constructor}
+    ###
+```
+```coffee
+class ObjectProperty extends Property
+```
+```coffee
+class ReferenceProperty extends Property
+    ###
+    @property referenceClass: {Property}
+    ###
+```
 
 
 
@@ -316,6 +340,67 @@ fetch: (args={}) ->
         fetchReference: {bool} Fetch documents of reference properties. default is true.
     @returns {promise} ([Document, ...], {number})
     ###
+```
+
+
+
+## Example
+>```sql
+select * from "ExampleModel" where "name" = "tina"
+```
+```coffee
+ExampleModel.where('name', equal: 'tina').fetch().then (models, total) ->
+```
+
+---
+>```sql
+select * from "ExampleModel" where "name" = "tina" and "email" = "kelp@phate.org"
+```
+```coffee
+ExampleModel.where('name', equal: 'enju')
+    .where('email', equal='kelp@phate.org')
+    .fetch().then (models, total) ->
+```
+
+---
+>```sql
+select * from "ExampleModel" where "name" like "%tina%" or "email" like "%tina%"
+```
+```coffee
+ExampleModel.where (query) ->
+    query.where('name', like: 'tina').union('email', like: 'tina')
+.fetch().then (models, total) ->
+```
+
+---
+>```sql
+select * from "ExampleModel" where "category" = 1 or "category" = 3
+    order by "created_at" limit 20 offset 20
+```
+```coffee
+ExampleModel.where('category', contains: [1, 3])
+    .orderBy('created_at')
+    .fetch(20, 20).then (models, total) ->
+```
+
+---
+>Fetch the first item.
+```sql
+select * from "ExampleModel" where "age" >= 10
+     order by "created_at" desc limit 1
+```
+```coffee
+ExampleModel.where('age', '>=': 10)
+    .orderBy('created_at', yes).first().then (model) ->
+```
+
+---
+>Count items.
+```sql
+select count(*) from "ExampleModel" where "age" < 10
+```
+```python
+ExampleModel.where('age', less: 10).count().then (result) ->
 ```
 
 
