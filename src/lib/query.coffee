@@ -347,6 +347,32 @@ module.exports = class Query
 
         deferred.promise
 
+    hasAny: ->
+        ###
+        Are there any documents match with the query?
+        @returns {promise} (bool)
+        ###
+        deferred = q.defer()
+
+        queryObject = @compileQueries()
+        if queryObject.isContainsEmpty
+            deferred.resolve no
+            return deferred.promise
+
+        @documentClass._es.searchExists
+            index: @documentClass.getIndexName()
+            body:
+                query: queryObject.query
+        .then (result) ->
+            deferred.resolve if result.exists then yes else no
+        .catch (error) ->
+            if error?.body?.exists is no
+                deferred.resolve no
+            else
+                deferred.reject error
+
+        deferred.promise
+
     count: ->
         ###
         Count documents by the query.

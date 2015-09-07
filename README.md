@@ -366,6 +366,13 @@ first: (fetchReference=yes) ->
     @returns {promise} ({Document|null})
     ###
 ```
+```
+hasAny: ->
+    ###
+    Are there any documents match with the query?
+    @returns {promise} (bool)
+    ###
+```
 ```coffee
 count: ->
     ###
