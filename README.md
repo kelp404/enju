@@ -61,12 +61,12 @@ user = new UserModel
 user.save().then (user) ->
     product = new ProductModel
         user: user
-        title: 'title'
+        title: 'enju'
     product.save()
 ```
 ### 4. Fetch documents
 ```coffee
-ProductModel.all().fetch().then (products, total) ->
+ProductModel.where('title', '==': 'enju').fetch().then (products, total) ->
     console.log JSON.stringify(products, null, 4)
     # [{
     #     "id": "AU-mMiIwtrhIjlPeQBbT",
@@ -78,7 +78,7 @@ ProductModel.all().fetch().then (products, total) ->
     #         "email": "kelp@phate.org",
     #         "createTime": "2015-09-07T05:05:47.500Z"
     #     },
-    #     "title": "title"
+    #     "title": "enju"
     # }]
 ```
 
@@ -143,6 +143,28 @@ _type: {string} You can set type of the document. The default is class name.
 _settings: {object} You can set index settings by this attribute.
 id: {string}
 version: {number}
+```
+
+**Class method**
+>```coffee
+@get = (ids, fetchReference=yes) ->
+    ###
+    Fetch the document with id or ids.
+    If the document is not exist, it will return null.
+    @param ids: {string|list}
+    @param fetchReference: {bool} Fetch reference data of this document.
+    @returns {promise} (Document|null|list)
+    ###
+# ex: Document.get('MQ-ULRSJ291RG_eEwSfQ').then (document) ->
+# ex: Document.get(['MQ-ULRSJ291RG_eEwSfQ']).then (documents) ->
+```
+```coffee
+@all = ->
+    ###
+    Generate a query for this document.
+    @returns {Query}
+    ###
+# ex: query = Document.all()
 ```
 
 
