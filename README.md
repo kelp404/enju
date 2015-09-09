@@ -101,13 +101,19 @@ ProductModel.where('title', '==': 'enju').fetch().then (result) ->
 npm install -g nodeunit
 npm install -g grunt-cli
 npm install
+```
 
+```bash
 # compile and watch
 grunt dev
+```
 
+```bash
 # build coffee-script
 grunt build
+```
 
+```bash
 # run test
 grunt build
 grunt test
