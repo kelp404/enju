@@ -115,7 +115,7 @@ grunt build
 >```bash
 # run test
 grunt build
-grunt test
+npm test
 ```
 
 
