@@ -95,25 +95,24 @@ ProductModel.where('title', '==': 'enju').fetch().then (result) ->
 
 
 ## Develop
->
-```bash
+>```bash
 # install dependencies
 npm install -g nodeunit
 npm install -g grunt-cli
 npm install
 ```
 
-```bash
+>```bash
 # compile and watch
 grunt dev
 ```
 
-```bash
+>```bash
 # build coffee-script
 grunt build
 ```
 
-```bash
+>```bash
 # run test
 grunt build
 grunt test
