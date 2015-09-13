@@ -6,6 +6,7 @@ class Property
     @property default {bool}
     @property required {bool}
     @property dbField {string}
+    @property type {string}
     @property analyzer {string}
     @property mapping {object}
     @property propertyName {string} The property name in the document. It will be set at Document.define()
@@ -15,6 +16,7 @@ class Property
         @default,
         @required,
         @dbField,
+        @type,
         @analyzer,
         @mapping,
         } = args

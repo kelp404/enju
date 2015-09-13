@@ -290,6 +290,8 @@ module.exports = class Document
                                 field['type'] = 'string'
                                 field['analyzer'] = 'keyword'
 
+                if property.type
+                    field['type'] = property.type
                 if property.analyzer
                     field['analyzer'] = property.analyzer
 
