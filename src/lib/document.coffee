@@ -146,9 +146,13 @@ module.exports = class Document
                     return
                 deferred.reject error
                 return
-            args = response._source
-            args.id = response._id
-            args.version = response._version
+            args =
+                id: response._id
+                version: response._version
+            for propertyName, property of @_properties
+                dbField = property.dbField ? propertyName
+                if dbField of response._source
+                    args[propertyName] = response._source[dbField]
 
             # call resolve()
             document = new @(args)
