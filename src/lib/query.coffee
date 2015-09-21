@@ -77,7 +77,7 @@ module.exports = class Query
         deferred = q.defer()
         if not documents or not documents.length
             deferred.resolve()
-            return
+            return deferred.promise
 
         dataTable = {}  # {documentClassName: {documentId: {Document}}}
         documentClasses = {}  # {documentClassName: documentClass}
