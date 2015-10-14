@@ -6,7 +6,8 @@ exports.testGetIndexPrefix = (test) ->
     _enjuIndexPrefix = config.enjuIndexPrefix
     config.enjuIndexPrefix = 'index_'
 
-    test.equals 'index_', utils.getIndexPrefix()
+    test.expect 1
+    test.equals utils.getIndexPrefix(), 'index_'
     test.done()
 
     config.enjuIndexPrefix = _enjuIndexPrefix
