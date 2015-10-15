@@ -428,7 +428,7 @@ select * from "ExampleModel" where "name" = "tina" and "email" = "kelp@phate.org
 ```
 ```coffee
 ExampleModel.where('name', equal: 'enju')
-    .where('email', equal='kelp@phate.org')
+    .where('email', equal: 'kelp@phate.org')
     .fetch().then (result) ->
 ```
 
