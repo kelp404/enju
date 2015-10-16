@@ -528,7 +528,7 @@ module.exports = class Query
                         }
                         {
                             regexp:
-                                "#{queryCell.dbField}": '.*%s.*' % queryCell.value
+                                "#{queryCell.dbField}": ".*#{queryCell.value}.*"
                         }
                     ]
             when QueryOperation.unlike
@@ -547,6 +547,6 @@ module.exports = class Query
                             bool:
                                 must_not:
                                     regexp:
-                                        "#{queryCell.dbField}": '.*%s.*' % queryCell.value
+                                        "#{queryCell.dbField}": ".*#{queryCell.value}.*"
                         }
                     ]
