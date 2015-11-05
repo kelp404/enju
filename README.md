@@ -275,9 +275,10 @@ class Property
     @property default {bool}
     @property required {bool}
     @property dbField {string}
-    @property type {string}
-    @property analyzer {string}
-    @property mapping {object}
+    @property type {string}  For elasticsearch mapping
+    @property index {string}  For elasticsearch mapping
+    @property analyzer {string}  For elasticsearch mapping
+    @property mapping {object}  For elasticsearch mapping
     @property propertyName {string} The property name in the document. It will be set at Document.define()
     ###
 ```

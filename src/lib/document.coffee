@@ -298,6 +298,8 @@ module.exports = class Document
                     field.type = property.type
                 if property.analyzer
                     field.analyzer = property.analyzer
+                if property.index
+                    field.index = property.index
 
                 if Object.keys(field).length
                     mapping[property.dbField ? propertyName] = field
