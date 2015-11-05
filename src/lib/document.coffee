@@ -257,7 +257,7 @@ module.exports = class Document
                     continue
                 if property.mapping
                     # there is an object in this field
-                    mapping[propertyName] =
+                    mapping[property.dbField ? propertyName] =
                         properties: property.mapping
                     continue
 
