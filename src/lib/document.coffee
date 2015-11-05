@@ -264,40 +264,40 @@ module.exports = class Document
                 field = {}
                 switch property.constructor
                     when properties.StringProperty
-                        field['type'] = 'string'
+                        field.type = 'string'
                     when properties.BooleanProperty
-                        field['type'] = 'boolean'
+                        field.type = 'boolean'
                     when properties.IntegerProperty
-                        field['type'] = 'long'
+                        field.type = 'long'
                     when properties.FloatProperty
-                        field['type'] = 'double'
+                        field.type = 'double'
                     when properties.DateProperty
-                        field['type'] = 'date'
-                        field['format'] = 'dateOptionalTime'
+                        field.type = 'date'
+                        field.format = 'dateOptionalTime'
                     when properties.ReferenceProperty
-                        field['type'] = 'string'
-                        field['analyzer'] = 'keyword'
+                        field.type = 'string'
+                        field.analyzer = 'keyword'
                     when properties.ListProperty
                         switch property.itemClass
                             when properties.StringProperty
-                                field['type'] = 'string'
+                                field.type = 'string'
                             when properties.BooleanProperty
-                                field['type'] = 'boolean'
+                                field.type = 'boolean'
                             when properties.IntegerProperty
-                                field['type'] = 'long'
+                                field.type = 'long'
                             when properties.FloatProperty
-                                field['type'] = 'double'
+                                field.type = 'double'
                             when properties.DateProperty
-                                field['type'] = 'date'
-                                field['format'] = 'dateOptionalTime'
+                                field.type = 'date'
+                                field.format = 'dateOptionalTime'
                             when properties.ReferenceProperty
-                                field['type'] = 'string'
-                                field['analyzer'] = 'keyword'
+                                field.type = 'string'
+                                field.analyzer = 'keyword'
 
                 if property.type
-                    field['type'] = property.type
+                    field.type = property.type
                 if property.analyzer
-                    field['analyzer'] = property.analyzer
+                    field.analyzer = property.analyzer
 
                 if Object.keys(field).length
                     mapping[property.dbField ? propertyName] = field
