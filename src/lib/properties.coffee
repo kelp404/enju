@@ -170,19 +170,19 @@ class ListProperty extends Property
         if @itemClass?
             switch @itemClass
                 when StringProperty
-                    value = [if x? then x.toString() else null for x in value]
+                    value = ((if x? then x.toString() else null) for x in value)
                 when IntegerProperty
-                    value = [if x? then parseInt(x) else null for x in value]
+                    value = ((if x? then parseInt(x) else null) for x in value)
                 when FloatProperty
-                    value = [if x? then parseFloat(x) else null for x in value]
+                    value = ((if x? then parseFloat(x) else null) for x in value)
                 when BooleanProperty
-                    value = [if x? then Boolean(x) else null for x in value]
+                    value = ((if x? then Boolean(x) else null) for x in value)
                 when DateProperty
-                    value = [if x? then x.toJSON() else null for x in value]
+                    value = ((if x? then x.toJSON() else null) for x in value)
                 when ListProperty, ObjectProperty, ReferenceProperty
-                    value = [if x? then x else null for x in value]
+                    value = ((if x? then x else null) for x in value)
                 else
-                    value = [if x? then new itemClass(x) else null for x in value]
+                    value = ((if x? then new itemClass(x) else null) for x in value)
         value
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
@@ -196,19 +196,19 @@ class ListProperty extends Property
         if @itemClass?
             switch @itemClass
                 when StringProperty
-                    value = [if x? then x.toString() else null for x in value]
+                    value = ((if x? then x.toString() else null) for x in value)
                 when IntegerProperty
-                    value = [if x? then parseInt(x) else null for x in value]
+                    value = ((if x? then parseInt(x) else null) for x in value)
                 when FloatProperty
-                    value = [if x? then parseFloat(x) else null for x in value]
+                    value = ((if x? then parseFloat(x) else null) for x in value)
                 when BooleanProperty
-                    value = [if x? then Boolean(x) else null for x in value]
+                    value = ((if x? then Boolean(x) else null) for x in value)
                 when DateProperty
-                    value = [if x? then x.toJSON() else null for x in value]
+                    value = ((if x? then x.toJSON() else null) for x in value)
                 when ListProperty, ObjectProperty, ReferenceProperty
-                    value = [if x? then x else null for x in value]
+                    value = ((if x? then x else null) for x in value)
                 else
-                    value = [if x? then new itemClass(x) else null for x in value]
+                    value = ((if x? then new itemClass(x) else null) for x in value)
         value
 exports.ListProperty = ListProperty
 
