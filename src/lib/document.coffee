@@ -116,7 +116,7 @@ module.exports = class Document
                     deferred.reject error
                     return
                 result = []
-                for doc in response.docs
+                for doc in response.docs when doc.found
                     item =
                         id: doc._id
                         version: doc._version
