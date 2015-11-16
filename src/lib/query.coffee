@@ -394,6 +394,48 @@ module.exports = class Query
 
         deferred.promise
 
+    sum: (field) ->
+        ###
+        Sum the field of documents by the query.
+        https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-sum-aggregation.html
+        @param field {Property|string} The property name of the document.
+        @returns {promise} ({number})
+        ###
+        allFields = []
+        for propertyName, property of @documentClass._properties
+            allFields.push propertyName
+            allFields.push(property.dbField) if property.dbField
+        if typeof(field) is 'string' and field.split('.', 1)[0] not in allFields
+            throw new exceptions.SyntaxError("#{field} not in #{@documentClass.name}")
+
+        if typeof(field) is 'string'
+            dbField = @documentClass._properties[field].dbField ? field
+        else
+            dbField = field.dbField ? field.propertyName
+
+        deferred = q.defer()
+        queryObject = @compileQueries()
+        if queryObject.isContainsEmpty
+            deferred.resolve 0
+            return deferred.promise
+
+        @documentClass._es.search
+            index: @documentClass.getIndexName()
+            body:
+                query: queryObject.query
+                aggs:
+                    intraday_return:
+                        sum:
+                            field: dbField
+            size: 0
+        , (error, response) =>
+            if error
+                deferred.reject error
+                return
+            deferred.resolve response.aggregations.intraday_return.value
+
+        deferred.promise
+
 
     # -----------------------------------------------------
     # private methods

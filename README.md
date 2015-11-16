@@ -374,7 +374,7 @@ union: (field, operation) ->
 orderBy: (field, descending=no) ->
     ###
     Append the order query.
-    @param member {Property|string} The property name of the document.
+    @param field {Property|string} The property name of the document.
     @param descending {bool} Is sorted by descending?
     @returns {Query}
     ###
@@ -409,6 +409,15 @@ hasAny: ->
 count: ->
     ###
     Count documents by the query.
+    @returns {promise} ({number})
+    ###
+```
+```coffee
+sum: (field) ->
+    ###
+    Sum the field of documents by the query.
+    https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-sum-aggregation.html
+    @param field {Property|string} The property name of the document.
     @returns {promise} ({number})
     ###
 ```
