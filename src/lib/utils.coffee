@@ -6,7 +6,7 @@ module.exports =
     getElasticsearch: ->
         ###
         Get the connection for ElasticSearch.
-        @return {Elasticsearch.Client}
+        @returns {Elasticsearch.Client}
         ###
         new elasticsearch.Client
             host: config.enjuElasticsearchHost
@@ -14,6 +14,6 @@ module.exports =
     getIndexPrefix: ->
         ###
         Get index prefix.
-        @return {string}
+        @returns {string}
         ###
         config.enjuIndexPrefix ? ''

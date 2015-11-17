@@ -192,7 +192,7 @@ class Document
     If the document is not exist, it will return null.
     @param ids {string|list}
     @param fetchReference {bool} Fetch reference data of this document.
-    @returns {promise} ({items: {Document}, total: {number})
+    @returns {promise<Document>}
     ###
 # ex: Document.get('MQ-ULRSJ291RG_eEwSfQ').then (result) ->
 # ex: Document.get(['MQ-ULRSJ291RG_eEwSfQ']).then (result) ->
@@ -202,7 +202,7 @@ class Document
     ###
     Is the document exists?
     @param id {string} The documents' id.
-    @returns {promise} (bool)
+    @returns {promise<bool>}
     ###
 ```
 ```coffee
@@ -254,14 +254,14 @@ save: (refresh=no) ->
     ###
     Save this document.
     @param refresh {bool} Refresh the index after performing the operation.
-    @returns {promise} (Document)
+    @returns {promise<Document>}
     ###
 ```
 ```coffee
 delete: (refresh=no) ->
     ###
     Delete this document.
-    @returns {promise} (Document)
+    @returns {promise<Document>}
     ###
 ```
 
@@ -387,7 +387,7 @@ fetch: (args={}) ->
         limit: {number} The size of the pagination. (The limit of the result items.) default is 1000
         skip: {number} The offset of the pagination. (Skip x items.) default is 0
         fetchReference: {bool} Fetch documents of reference properties. default is true.
-    @returns {promise} ({items: {Document}, total: {number})
+    @returns {promise<object>} ({items: {Document}, total: {number}})
     ###
 ```
 ```coffee
@@ -395,21 +395,21 @@ first: (fetchReference=yes) ->
     ###
     Fetch the first document by this query.
     @param fetchReference {bool}
-    @returns {promise} ({Document|null})
+    @returns {promise<Document|null>}
     ###
 ```
 ```
 hasAny: ->
     ###
     Are there any documents match with the query?
-    @returns {promise} (bool)
+    @returns {promise<bool>}
     ###
 ```
 ```coffee
 count: ->
     ###
     Count documents by the query.
-    @returns {promise} ({number})
+    @returns {promise<number>}
     ###
 ```
 ```coffee
@@ -418,7 +418,7 @@ sum: (field) ->
     Sum the field of documents by the query.
     https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-sum-aggregation.html
     @param field {Property|string} The property name of the document.
-    @returns {promise} ({number})
+    @returns {promise<number>}
     ###
 ```
 

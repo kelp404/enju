@@ -71,7 +71,7 @@ module.exports = class Query
     @updateReferenceProperties = (documents) ->
         ###
         Update reference properties of documents.
-        @param documents {list} (Document)
+        @param documents {list<Document>}
         @returns {promise}
         ###
         deferred = q.defer()
@@ -275,7 +275,7 @@ module.exports = class Query
             limit: {number} The size of the pagination. (The limit of the result items.) default is 1000
             skip: {number} The offset of the pagination. (Skip x items.) default is 0
             fetchReference: {bool} Fetch documents of reference properties. default is true.
-        @returns {promise} ({items: {Document}, total: {number})
+        @returns {promise<object>} ({items: {Document}, total: {number}})
         ###
         args.limit ?= 1000
         args.skip ?= 0
@@ -331,7 +331,7 @@ module.exports = class Query
         ###
         Fetch the first document by this query.
         @param fetchReference {bool}
-        @returns {promise} ({Document|null})
+        @returns {promise<Document|null>}
         ###
         deferred = q.defer()
 
@@ -350,7 +350,7 @@ module.exports = class Query
     hasAny: ->
         ###
         Are there any documents match with the query?
-        @returns {promise} (bool)
+        @returns {promise<bool>}
         ###
         deferred = q.defer()
 
@@ -376,7 +376,7 @@ module.exports = class Query
     count: ->
         ###
         Count documents by the query.
-        @returns {promise} ({number})
+        @returns {promise<number>}
         ###
         deferred = q.defer()
 
@@ -399,7 +399,7 @@ module.exports = class Query
         Sum the field of documents by the query.
         https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-sum-aggregation.html
         @param field {Property|string} The property name of the document.
-        @returns {promise} ({number})
+        @returns {promise<number>}
         ###
         allFields = []
         for propertyName, property of @documentClass._properties

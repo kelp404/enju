@@ -168,7 +168,7 @@ module.exports = class Document
         ###
         Is the document exists?
         @param id {string} The documents' id.
-        @returns {promise} (bool)
+        @returns {promise<bool>}
         ###
         deferred = q.defer()
 
@@ -345,7 +345,7 @@ module.exports = class Document
         ###
         Save this document.
         @param refresh {bool} Refresh the index after performing the operation.
-        @returns {promise} (Document)
+        @returns {promise<Document>}
         ###
         deferred = q.defer()
         if not @version?
@@ -381,7 +381,7 @@ module.exports = class Document
     delete: (refresh=no) ->
         ###
         Delete this document.
-        @returns {promise} (Document)
+        @returns {promise<Document>}
         ###
         deferred = q.defer()
 
