@@ -366,7 +366,7 @@ module.exports = class Document
             type: @constructor.getDocumentType()
             refresh: refresh
             id: @id
-            version: @version
+            version: @version + 1
             versionType: 'external'
             body: document
         , (error, response) =>
