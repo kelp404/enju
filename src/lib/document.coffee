@@ -367,6 +367,7 @@ module.exports = class Document
             refresh: refresh
             id: @id
             version: @version
+            versionType: 'external'
             body: document
         , (error, response) =>
             if error
