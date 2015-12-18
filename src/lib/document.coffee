@@ -348,9 +348,6 @@ module.exports = class Document
         @returns {promise<Document>}
         ###
         deferred = q.defer()
-        if not @version?
-            # fix version
-            @version = 0
 
         document = {}  # it will be written to database
         for propertyName, property of @constructor._properties when property.dbField not in ['_id', '_version']
@@ -366,7 +363,7 @@ module.exports = class Document
             type: @constructor.getDocumentType()
             refresh: refresh
             id: @id
-            version: @version + 1
+            version: if @version? then @version + 1 else 0
             versionType: 'external'
             body: document
         , (error, response) =>
