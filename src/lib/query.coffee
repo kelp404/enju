@@ -509,6 +509,17 @@ module.exports = class Query
         @param queryCell: {QueryCell}
         @returns {object}
         ###
+        bleachRegexCode = (value='') ->
+            value = "#{value}"
+            table = '^$*+?{}.[]()\\|/'
+            result = []
+            for word in value
+                if word in table
+                    result.push "\\#{word}"
+                else
+                    result.push word
+            result.join ''
+
         switch queryCell.operation
             when QueryOperation.equal
                 if queryCell.value?
@@ -560,6 +571,7 @@ module.exports = class Query
                     minimum_should_match: queryCell.value.length
                     should: ({bool: {must_not: {match: {"#{queryCell.dbField}": {query: x, operator: 'and'}}}}} for x in queryCell.value)
             when QueryOperation.like
+                value = bleachRegexCode queryCell.value
                 bool:
                     should: [
                         {
@@ -570,10 +582,11 @@ module.exports = class Query
                         }
                         {
                             regexp:
-                                "#{queryCell.dbField}": ".*#{queryCell.value}.*"
+                                "#{queryCell.dbField}": ".*#{value}.*"
                         }
                     ]
             when QueryOperation.unlike
+                value = bleachRegexCode queryCell.value
                 bool:
                     minimum_should_match: 2
                     should: [
@@ -589,6 +602,6 @@ module.exports = class Query
                             bool:
                                 must_not:
                                     regexp:
-                                        "#{queryCell.dbField}": ".*#{queryCell.value}.*"
+                                        "#{queryCell.dbField}": ".*#{value}.*"
                         }
                     ]
