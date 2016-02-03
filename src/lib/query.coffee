@@ -186,7 +186,7 @@ module.exports = class Query
             for firstOperation, value of operation
                 break
             if typeof(field) is 'string'
-                dbField = @documentClass._properties[field].dbField ? field
+                dbField = @documentClass._properties[field]?.dbField ? field
             else
                 dbField = field.dbField ? field.propertyName
             @queryCells.push new QueryCell
@@ -231,7 +231,7 @@ module.exports = class Query
         for firstOperation, value of operation
             break
         if typeof(field) is 'string'
-            dbField = @documentClass._properties[field].dbField ? field
+            dbField = @documentClass._properties[field]?.dbField ? field
         else
             dbField = field.dbField ? field.propertyName
         @queryCells.push new QueryCell
@@ -260,7 +260,7 @@ module.exports = class Query
         else
             operationCode = QueryOperation.orderASC
         if typeof(field) is 'string'
-            dbField = @documentClass._properties[field].dbField ? field
+            dbField = @documentClass._properties[field]?.dbField ? field
         else
             dbField = field.dbField ? field.propertyName
         @queryCells.push new QueryCell
@@ -409,7 +409,7 @@ module.exports = class Query
             throw new exceptions.SyntaxError("#{field} not in #{@documentClass.name}")
 
         if typeof(field) is 'string'
-            dbField = @documentClass._properties[field].dbField ? field
+            dbField = @documentClass._properties[field]?.dbField ? field
         else
             dbField = field.dbField ? field.propertyName
 
