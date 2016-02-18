@@ -212,7 +212,7 @@ module.exports = class Document
             @_es.indices.create
                 index: @getIndexName()
             , (error, response) ->
-                if error and error.status isnt '400'
+                if error and error.status isnt 400
                     deferred.reject error
                     return
                 setTimeout ->
