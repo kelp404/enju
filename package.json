@@ -27,6 +27,7 @@
     "grunt-contrib-clean": "0.7.0",
     "grunt-contrib-coffee": "0.13.0",
     "grunt-contrib-watch": "0.6.1",
+    "npm-check-updates": "2.5.8",
     "time-grunt": "1.2.2"
   },
   "dependencies": {
