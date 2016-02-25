@@ -141,7 +141,7 @@ module.exports = class Document
             id: ids
         , (error, response) =>
             if error
-                if error.status is '404'
+                if error.status is 404
                     deferred.resolve null
                     return
                 deferred.reject error
