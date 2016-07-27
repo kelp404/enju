@@ -182,7 +182,7 @@ class ListProperty extends Property
                 when ListProperty, ObjectProperty, ReferenceProperty
                     value = ((if x? then x else null) for x in value)
                 else
-                    value = ((if x? then new itemClass(x) else null) for x in value)
+                    value = ((if x? then new @itemClass(x) else null) for x in value)
         value
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
@@ -208,7 +208,7 @@ class ListProperty extends Property
                 when ListProperty, ObjectProperty, ReferenceProperty
                     value = ((if x? then x else null) for x in value)
                 else
-                    value = ((if x? then new itemClass(x) else null) for x in value)
+                    value = ((if x? then new @itemClass(x) else null) for x in value)
         value
 exports.ListProperty = ListProperty
 
