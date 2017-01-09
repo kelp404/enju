@@ -1,3 +1,4 @@
+util = require 'util'
 exceptions = require './exceptions'
 
 
@@ -163,7 +164,7 @@ class ListProperty extends Property
     toJs: (value) ->
         if not value?
             if @default?
-                return @default
+                return Array.apply(@, @default)
             if @required
                 throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
@@ -188,7 +189,7 @@ class ListProperty extends Property
         value = classInstance[@propertyName]
         if not value?
             if @default?
-                classInstance[@propertyName] = @default
+                classInstance[@propertyName] = Array.apply(@, @default)
                 return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
@@ -218,7 +219,7 @@ class ObjectProperty extends Property
     toJs: (value) ->
         if not value?
             if @default?
-                return @default
+                return util._extend({}, @default)
             if @required
                 throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
@@ -227,7 +228,7 @@ class ObjectProperty extends Property
         value = classInstance[@propertyName]
         if not value?
             if @default?
-                classInstance[@propertyName] = @default
+                classInstance[@propertyName] = util._extend({}, @default)
                 return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
