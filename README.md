@@ -9,7 +9,6 @@ An elasticsearch client on node.js written in CoffeeScript.
 
 
 ## Installation
->
 ```bash
 $ npm install enju --save
 ```
@@ -17,7 +16,6 @@ $ npm install enju --save
 
 
 ## Config
->
 enju use [node-config](https://github.com/lorenwest/node-config).  
 `/your_project/config/default.cson`
 ```cson
@@ -28,7 +26,6 @@ enjuIndexPrefix: ''
 
 
 ## Quick start
->
 ### 1. Define models
 ```coffee
 enju = require 'enju'
@@ -95,24 +92,24 @@ ProductModel.where('title', '==': 'enju').fetch().then (result) ->
 
 
 ## Develop
->```bash
+```bash
 # install dependencies
 npm install -g nodeunit
 npm install -g grunt-cli
 npm install
 ```
 
->```bash
+```bash
 # compile and watch
 grunt dev
 ```
 
->```bash
+```bash
 # build coffee-script
 grunt build
 ```
 
->```bash
+```bash
 # run test
 grunt build
 npm test
@@ -121,7 +118,6 @@ npm test
 
 
 ## Document
->
 ```coffee
 # CoffeeScript
 enju = require 'enju'
@@ -173,7 +169,7 @@ var UserModel = enju.Document.define('UserModel', {
 ```
 
 **Properties**
->```coffee
+```coffee
 class Document
     ###
     _index {string} You can set index name by this attribute. **constructor property**
@@ -185,7 +181,7 @@ class Document
 ```
 
 **Class method**
->```coffee
+```coffee
 @get = (ids, fetchReference=yes) ->
     ###
     Fetch the document with id or ids.
@@ -249,7 +245,7 @@ class Document
 ```
 
 **Method**
->```coffee
+```coffee
 save: (refresh=no) ->
     ###
     Save this document.
@@ -268,7 +264,6 @@ delete: (refresh=no) ->
 
 
 ## Property
->
 ```coffee
 class Property
     ###
@@ -319,11 +314,10 @@ class ReferenceProperty extends Property
 
 
 ## Query
->
 The enju query.
 
 **Methods**
->```coffee
+```coffee
 where: (field, operation) ->
     ###
     Append a query as intersect.
@@ -425,7 +419,7 @@ sum: (field) ->
 
 
 ## Example
->```sql
+```sql
 select * from "ExampleModel" where "name" = "tina"
 ```
 ```coffee
@@ -433,7 +427,7 @@ ExampleModel.where('name', equal: 'tina').fetch().then (result) ->
 ```
 
 ---
->```sql
+```sql
 select * from "ExampleModel" where "name" = "tina" and "email" = "kelp@phate.org"
 ```
 ```coffee
@@ -443,7 +437,7 @@ ExampleModel.where('name', equal: 'enju')
 ```
 
 ---
->```sql
+```sql
 select * from "ExampleModel" where "name" like "%tina%" or "email" like "%tina%"
 ```
 ```coffee
@@ -453,7 +447,7 @@ ExampleModel.where (query) ->
 ```
 
 ---
->```sql
+```sql
 select * from "ExampleModel" where "category" = 1 or "category" = 3
     order by "created_at" limit 20 offset 20
 ```
@@ -464,7 +458,7 @@ ExampleModel.where('category', contains: [1, 3])
 ```
 
 ---
->Fetch the first item.
+Fetch the first item.
 ```sql
 select * from "ExampleModel" where "age" >= 10
      order by "created_at" desc limit 1
@@ -475,7 +469,7 @@ ExampleModel.where('age', '>=': 10)
 ```
 
 ---
->Count items.
+Count items.
 ```sql
 select count(*) from "ExampleModel" where "age" < 10
 ```
