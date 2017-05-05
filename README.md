@@ -477,6 +477,3 @@ select count(*) from "ExampleModel" where "age" < 10
 ExampleModel.where('age', less: 10).count().then (result) ->
 ```
 
-
-
-[MIT License](http://opensource.org/licenses/mit-license.php)
