@@ -273,7 +273,7 @@ module.exports = class Document
                         field.type = 'double'
                     when properties.DateProperty
                         field.type = 'date'
-                        field.format = 'dateOptionalTime'
+                        field.format = 'strict_date_optional_time||epoch_millis'
                     when properties.ReferenceProperty
                         field.type = 'string'
                         field.analyzer = 'keyword'
@@ -289,7 +289,7 @@ module.exports = class Document
                                 field.type = 'double'
                             when properties.DateProperty
                                 field.type = 'date'
-                                field.format = 'dateOptionalTime'
+                                field.format = 'strict_date_optional_time||epoch_millis'
                             when properties.ReferenceProperty
                                 field.type = 'string'
                                 field.analyzer = 'keyword'
