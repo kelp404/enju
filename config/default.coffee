@@ -1,3 +1,5 @@
 module.exports =
-    enjuElasticsearchHost: 'http://localhost:9200'
-    enjuIndexPrefix: ''
+    enju:
+        apiVersion: '2.4'
+        elasticsearchHost: 'http://localhost:9200'
+        indexPrefix: ''

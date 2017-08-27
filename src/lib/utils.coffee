@@ -9,11 +9,12 @@ module.exports =
         @returns {Elasticsearch.Client}
         ###
         new elasticsearch.Client
-            host: config.enjuElasticsearchHost
+            host: config.enju.elasticsearchHost
+            apiVersion: config.enju.apiVersion
 
     getIndexPrefix: ->
         ###
         Get index prefix.
         @returns {string}
         ###
-        config.enjuIndexPrefix ? ''
+        config.enju.indexPrefix ? ''

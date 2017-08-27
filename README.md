@@ -19,8 +19,10 @@ $ npm install enju --save
 enju use [node-config](https://github.com/lorenwest/node-config).  
 `/your_project/config/default.cson`
 ```cson
-enjuElasticsearchHost: 'http://localhost:9200'
-enjuIndexPrefix: ''
+enju:
+    apiVersion: '2.4'
+    elasticsearchHost: 'http://localhost:9200'
+    indexPrefix: ''
 ```
 
 
