@@ -4,7 +4,7 @@ exceptions = require './exceptions'
 
 class Property
     ###
-    @property default {bool}
+    @property default {any}
     @property required {bool}
     @property dbField {string}
     @property type {string}  For elasticsearch mapping
@@ -15,14 +15,14 @@ class Property
     ###
     constructor: (args={}) ->
         {
-        @default,
-        @required,
-        @dbField,
-        @type,
-        @index,
-        @analyzer,
-        @mapping,
+            @required
+            @dbField
+            @type
+            @index
+            @analyzer
+            @mapping
         } = args
+        @defaultValue = args.default
         @required ?= no
 
 class StringProperty extends Property
@@ -35,8 +35,8 @@ class StringProperty extends Property
         @returns {string}
         ###
         if not value?
-            if @default?
-                return @default.toString()
+            if @defaultValue?
+                return @defaultValue.toString()
             if @required
                 throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
@@ -49,8 +49,8 @@ class StringProperty extends Property
         ###
         value = classInstance[@propertyName]
         if not value?
-            if @default?
-                classInstance[@propertyName] = @default.toString()
+            if @defaultValue?
+                classInstance[@propertyName] = @defaultValue.toString()
                 return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
@@ -63,8 +63,8 @@ class IntegerProperty extends Property
         super args
     toJs: (value) ->
         if not value?
-            if @default?
-                return parseInt @default
+            if @defaultValue?
+                return parseInt @defaultValue
             if @required
                 throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
@@ -72,8 +72,8 @@ class IntegerProperty extends Property
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
-            if @default?
-                classInstance[@propertyName] = parseInt @default
+            if @defaultValue?
+                classInstance[@propertyName] = parseInt @defaultValue
                 return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
@@ -86,8 +86,8 @@ class FloatProperty extends Property
         super args
     toJs: (value) ->
         if not value?
-            if @default?
-                return parseFloat @default
+            if @defaultValue?
+                return parseFloat @defaultValue
             if @required
                 throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
@@ -95,8 +95,8 @@ class FloatProperty extends Property
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
-            if @default?
-                classInstance[@propertyName] = parseFloat @default
+            if @defaultValue?
+                classInstance[@propertyName] = parseFloat @defaultValue
                 return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
@@ -109,8 +109,8 @@ class BooleanProperty extends Property
         super args
     toJs: (value) ->
         if not value?
-            if @default?
-                return Boolean @default
+            if @defaultValue?
+                return Boolean @defaultValue
             if @required
                 throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
@@ -118,8 +118,8 @@ class BooleanProperty extends Property
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
-            if @default?
-                classInstance[@propertyName] = Boolean @default
+            if @defaultValue?
+                classInstance[@propertyName] = Boolean @defaultValue
                 return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
@@ -135,8 +135,8 @@ class DateProperty extends Property
         if not value?
             if @autoNow
                 return new Date()
-            else if @default?
-                return new Date(@default)
+            else if @defaultValue?
+                return new Date(@defaultValue)
             if @required
                 throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
@@ -147,8 +147,8 @@ class DateProperty extends Property
             if @autoNow
                 classInstance[@propertyName] = new Date()
                 return classInstance[@propertyName].toJSON()
-            else if @default?
-                classInstance[@propertyName] = new Date(@default)
+            else if @defaultValue?
+                classInstance[@propertyName] = new Date(@defaultValue)
                 return classInstance[@propertyName].toJSON()
             else
                 if @required
@@ -163,8 +163,8 @@ class ListProperty extends Property
         super args
     toJs: (value) ->
         if not value?
-            if @default?
-                return Array.apply(@, @default)
+            if @defaultValue?
+                return Array.apply(@, @defaultValue)
             if @required
                 throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
@@ -188,8 +188,8 @@ class ListProperty extends Property
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
-            if @default?
-                classInstance[@propertyName] = Array.apply(@, @default)
+            if @defaultValue?
+                classInstance[@propertyName] = Array.apply(@, @defaultValue)
                 return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
@@ -218,8 +218,8 @@ class ObjectProperty extends Property
         super args
     toJs: (value) ->
         if not value?
-            if @default?
-                return util._extend({}, @default)
+            if @defaultValue?
+                return util._extend({}, @defaultValue)
             if @required
                 throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
@@ -227,8 +227,8 @@ class ObjectProperty extends Property
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
-            if @default?
-                classInstance[@propertyName] = util._extend({}, @default)
+            if @defaultValue?
+                classInstance[@propertyName] = util._extend({}, @defaultValue)
                 return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
@@ -242,8 +242,8 @@ class ReferenceProperty extends Property
         super args
     toJs: (value) ->
         if not value?
-            if @default?
-                return @default
+            if @defaultValue?
+                return @defaultValue
             if @required
                 throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
             return null
@@ -256,8 +256,8 @@ class ReferenceProperty extends Property
     toDb: (classInstance) ->
         value = classInstance[@propertyName]
         if not value?
-            if @default?
-                classInstance[@propertyName] = @default
+            if @defaultValue?
+                classInstance[@propertyName] = @defaultValue
                 return classInstance[@propertyName]
             if @required
                 throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
