@@ -1,6 +1,24 @@
 config = require 'config'
+elasticsearch = require 'elasticsearch'
 utils = require '../lib/utils'
 
+
+exports.testGetElasticsearch = (test) ->
+    _elasticsearchClient = elasticsearch.Client
+    elasticsearch.Client = class FakeClient
+        constructor: (args) ->
+            {
+                @host
+                @apiVersion
+            } = args
+
+    test.expect 1
+    test.deepEqual utils.getElasticsearch(),
+        host: config.enju.elasticsearchHost
+        apiVersion: config.enju.apiVersion
+    test.done()
+
+    elasticsearch.Client = _elasticsearchClient
 
 exports.testGetIndexPrefix = (test) ->
     _enjuIndexPrefix = config.enju.indexPrefix
