@@ -1,4 +1,3 @@
-config = require 'config'
 q = require 'q'
 
 utils = require './utils'
