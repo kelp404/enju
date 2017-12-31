@@ -5,18 +5,12 @@ dependencies:
 
 test:
     override:
-        - nvm use 6.12.2
-        - node -v && npm -v
-        - npm install -g nodeunit grunt-cli
-        - npm install
-        - grunt build
-        - npm test
+        - nvm use 6.12.2 && node -v && npm -v
+        - nvm use 6.12.2 && npm install -g nodeunit grunt-cli && npm install
+        - nvm use 6.12.2 && grunt build && npm test
         
         - rm -r node_modules
         
-        - nvm use 8.9.3
-        - node -v && npm -v
-        - npm install -g nodeunit grunt-cli
-        - npm install
-        - grunt build
-        - npm test
+        - nvm use 8.9.3 && node -v && npm -v
+        - nvm use 8.9.3 && npm install -g nodeunit grunt-cli && npm install
+        - nvm use 8.9.3 && grunt build && npm test
