@@ -1,7 +1,7 @@
 dependencies:
     override:
-        - nvm install 8.9.3
         - nvm install 6.12.2
+        - nvm install 8.9.3
 
 test:
     override:
