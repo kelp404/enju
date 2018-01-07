@@ -15,7 +15,7 @@ jobs:
               curl -u ${CIRCLE_API_TOKEN}: \
                 -d build_parameters[CIRCLE_JOB]=${job_name} \
                 -d revision=$CIRCLE_SHA1 \
-                https://circleci.com/api/v1.1/project/github/your_org/your_project/tree/$CIRCLE_BRANCH
+                https://circleci.com/api/v1.1/project/github/kelp404/enju/tree/$CIRCLE_BRANCH
             }
             trigger_job build-node6
             trigger_job build-node8
