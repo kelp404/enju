@@ -1,3 +1,4 @@
+q = require 'q'
 Document = require '../lib/document'
 utils = require '../lib/utils'
 
@@ -24,3 +25,20 @@ exports.testDocumentGetDocumentType = (test) ->
     test.equals DataModelA.getDocumentType(), 'DataModelA'
     test.equals DataModelB.getDocumentType(), 'DataModel'
     test.done()
+
+exports.testDocumentGetWithNull = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+    test.expect 5
+    tasks = []
+    tasks.push DataModel.get('').then (result) ->
+        test.equals result, null
+    tasks.push DataModel.get(null).then (result) ->
+        test.equals result, null
+    tasks.push DataModel.get(undefined).then (result) ->
+        test.equals result, null
+    tasks.push DataModel.get([]).then (result) ->
+        test.equals result.constructor, Array
+        test.equals result.length, 0
+    q.all(tasks).then ->
+        test.done()
