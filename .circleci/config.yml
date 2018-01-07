@@ -25,19 +25,21 @@ jobs:
     docker:
       - image: node:6.12.3
     steps:
-      - run: |
-          npm install -g nodeunit grunt-cli
-          npm install
-          grunt build
-          npm test
+      - checkout
+      - run:
+        - npm install -g nodeunit grunt-cli
+        - npm install
+        - grunt build
+        - npm test
 
   build-node8:
     working_directory: ~/enju
     docker:
       - image: node:8.9.3
     steps:
-      - run: |
-          npm install -g nodeunit grunt-cli
-          npm install
-          grunt build
-          npm test
+      - checkout
+      - run:
+        - npm install -g nodeunit grunt-cli
+        - npm install
+        - grunt build
+        - npm test
