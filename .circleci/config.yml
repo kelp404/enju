@@ -26,7 +26,7 @@ jobs:
       - image: node:6.12.3
     steps:
       - checkout
-      - run: npm install -g nodeunit grunt-cli
+      - run: npm install -g coffee-script nodeunit grunt-cli
       - run: npm install
       - run: grunt build
       - run: npm test
@@ -37,7 +37,7 @@ jobs:
       - image: node:8.9.3
     steps:
       - checkout
-      - run: npm install -g nodeunit grunt-cli
+      - run: npm install -g coffee-script nodeunit grunt-cli
       - run: npm install
       - run: grunt build
       - run: npm test
