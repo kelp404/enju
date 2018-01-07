@@ -13,3 +13,14 @@ exports.testDocumentGetIndexName = (test) ->
     test.done()
 
     utils.getIndexPrefix = _utilsGetIndexPrefix
+
+exports.testDocumentGetDocumentType = (test) ->
+    class DataModelA extends Document
+        @_index = 'index'
+    class DataModelB extends Document
+        @_type = 'DataModel'
+        @_index = 'index'
+    test.expect 2
+    test.equals DataModelA.getDocumentType(), 'DataModelA'
+    test.equals DataModelB.getDocumentType(), 'DataModel'
+    test.done()
