@@ -1,4 +1,5 @@
 q = require 'q'
+enju = require '../'
 Document = require '../lib/document'
 utils = require '../lib/utils'
 
@@ -10,7 +11,7 @@ exports.testDocumentGetIndexName = (test) ->
     class DataModel extends Document
         @_index = 'index'
     test.expect 1
-    test.equals DataModel.getIndexName(), 'prefix_index'
+    test.equal DataModel.getIndexName(), 'prefix_index'
     test.done()
 
     utils.getIndexPrefix = _utilsGetIndexPrefix
@@ -22,8 +23,8 @@ exports.testDocumentGetDocumentType = (test) ->
         @_type = 'DataModel'
         @_index = 'index'
     test.expect 2
-    test.equals DataModelA.getDocumentType(), 'DataModelA'
-    test.equals DataModelB.getDocumentType(), 'DataModel'
+    test.equal DataModelA.getDocumentType(), 'DataModelA'
+    test.equal DataModelB.getDocumentType(), 'DataModel'
     test.done()
 
 exports.testDocumentGetWithNull = (test) ->
@@ -32,13 +33,37 @@ exports.testDocumentGetWithNull = (test) ->
     test.expect 5
     tasks = []
     tasks.push DataModel.get('').then (result) ->
-        test.equals result, null
+        test.equal result, null
     tasks.push DataModel.get(null).then (result) ->
-        test.equals result, null
+        test.equal result, null
     tasks.push DataModel.get(undefined).then (result) ->
-        test.equals result, null
+        test.equal result, null
     tasks.push DataModel.get([]).then (result) ->
-        test.equals result.constructor, Array
-        test.equals result.length, 0
+        test.equal result.constructor, Array
+        test.equal result.length, 0
     q.all(tasks).then ->
         test.done()
+
+exports.testDocumentGetWithIdButNotFetchReference = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+        @define
+            name: new enju.StringProperty()
+    _es = DataModel._es
+    DataModel._es =
+        get: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                type: 'DataModel'
+                id: 'id'
+            callback null,
+                _id: 'id'
+                _version: 0
+                _source:
+                    name: 'enju'
+
+    DataModel.get('id', no).then (document) ->
+        test.expect 2
+        test.equal document.name, 'enju'
+        test.done()
+        DataModel._es = _es

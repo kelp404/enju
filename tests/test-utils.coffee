@@ -25,7 +25,7 @@ exports.testGetIndexPrefix = (test) ->
     config.enju.indexPrefix = 'index_'
 
     test.expect 1
-    test.equals utils.getIndexPrefix(), 'index_'
+    test.equal utils.getIndexPrefix(), 'index_'
     test.done()
 
     config.enju.indexPrefix = _enjuIndexPrefix
