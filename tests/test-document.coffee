@@ -172,3 +172,21 @@ exports.testDocumentGetWithIdsAndFetchReference = (test) ->
         deferred.resolve()
         deferred.promise
     DataModel.get(['id'])
+
+exports.testDocumentExists = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+    _es = DataModel._es
+    DataModel._es =
+        exists: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                type: 'DataModel'
+                id: 'id'
+            callback null, yes
+
+    test.expect 2
+    DataModel.exists('id').then (result) ->
+        test.ok result
+        test.done()
+    DataModel._es = _es
