@@ -102,3 +102,73 @@ exports.testDocumentGetWithIdAndFetchReference = (test) ->
         deferred.resolve()
         deferred.promise
     DataModel.get('id')
+
+exports.testDocumentGetWithIdsButNotFetchReference = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+        @define
+            name: new enju.StringProperty()
+    _es = DataModel._es
+    DataModel._es =
+        mget: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                type: 'DataModel'
+                body:
+                    ids: ['id']
+            callback null,
+                docs: [
+                    found: yes
+                    _id: 'id'
+                    _version: 0
+                    _source:
+                        name: 'enju'
+                ]
+
+    test.expect 2
+    DataModel.get(['id'], no).then (documents) ->
+        test.deepEqual documents, [
+            id: 'id'
+            version: 0
+            name: 'enju'
+        ]
+        test.done()
+        DataModel._es = _es
+
+exports.testDocumentGetWithIdsAndFetchReference = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+        @define
+            name: new enju.StringProperty()
+    _es = DataModel._es
+    _updateReferenceProperties = Query.updateReferenceProperties
+    DataModel._es =
+        mget: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                type: 'DataModel'
+                body:
+                    ids: ['id']
+            callback null,
+                docs: [
+                    found: yes
+                    _id: 'id'
+                    _version: 0
+                    _source:
+                        name: 'enju'
+                ]
+
+    test.expect 2
+    Query.updateReferenceProperties = (documents) ->
+        deferred = q.defer()
+        test.deepEqual documents, [{
+            id: 'id'
+            version: 0
+            name: 'enju'
+        }]
+        test.done()
+        DataModel._es = _es
+        Query.updateReferenceProperties = _updateReferenceProperties
+        deferred.resolve()
+        deferred.promise
+    DataModel.get(['id'])
