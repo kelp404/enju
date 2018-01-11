@@ -1,6 +1,7 @@
 q = require 'q'
 enju = require '../'
 Document = require '../lib/document'
+Query = require '../lib/query'
 utils = require '../lib/utils'
 
 
@@ -62,8 +63,42 @@ exports.testDocumentGetWithIdButNotFetchReference = (test) ->
                 _source:
                     name: 'enju'
 
+    test.expect 2
     DataModel.get('id', no).then (document) ->
-        test.expect 2
         test.equal document.name, 'enju'
         test.done()
         DataModel._es = _es
+
+exports.testDocumentGetWithIdAndFetchReference = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+        @define
+            name: new enju.StringProperty()
+    _es = DataModel._es
+    _updateReferenceProperties = Query.updateReferenceProperties
+    DataModel._es =
+        get: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                type: 'DataModel'
+                id: 'id'
+            callback null,
+                _id: 'id'
+                _version: 0
+                _source:
+                    name: 'enju'
+
+    test.expect 2
+    Query.updateReferenceProperties = (documents) ->
+        deferred = q.defer()
+        test.deepEqual documents, [{
+            id: 'id'
+            version: 0
+            name: 'enju'
+        }]
+        test.done()
+        DataModel._es = _es
+        Query.updateReferenceProperties = _updateReferenceProperties
+        deferred.resolve()
+        deferred.promise
+    DataModel.get('id')
