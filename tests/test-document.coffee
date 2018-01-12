@@ -190,3 +190,12 @@ exports.testDocumentExists = (test) ->
         test.ok result
         test.done()
     DataModel._es = _es
+
+exports.testDocumentAll = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+    query = DataModel.all()
+    test.expect 2
+    test.equal query.constructor, Query
+    test.equal query.documentClass, DataModel
+    test.done()
