@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/enju
     docker:
-      - image: node:8.9.3
+      - image: node:8.9.4
     steps:
       - checkout
       - run:
@@ -34,7 +34,7 @@ jobs:
   build-node8:
     working_directory: ~/enju
     docker:
-      - image: node:8.9.3
+      - image: node:8.9.4
     steps:
       - checkout
       - run: npm install -g coffee-script nodeunit grunt-cli
