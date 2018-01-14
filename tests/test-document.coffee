@@ -199,3 +199,21 @@ exports.testDocumentAll = (test) ->
     test.equal query.constructor, Query
     test.equal query.documentClass, DataModel
     test.done()
+
+exports.testDocumentWhere = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+        @define
+            name: new enju.StringProperty()
+    query = DataModel.where 'name', equal: 'enju'
+    test.expect 2
+    test.equal query.constructor, Query
+    test.deepEqual query.queryCells, [
+        dbField: 'name'
+        operation: 'equal'
+        value: 'enju'
+        isIntersect: yes
+        isUnion: undefined
+        isContainsEmpty: no
+    ]
+    test.done()
