@@ -217,3 +217,63 @@ exports.testDocumentWhere = (test) ->
         isContainsEmpty: no
     ]
     test.done()
+
+exports.testDocumentSaveWithoutRefresh = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+        @define
+            name: new enju.StringProperty()
+    _es = DataModel._es
+    DataModel._es =
+        index: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                type: 'DataModel'
+                refresh: no
+                id: null,
+                version: 0
+                versionType: 'external'
+                body:
+                    name: 'enju'
+            callback null,
+                _id: 'id'
+                _version: 0
+
+    test.expect 3
+    data = new DataModel
+        name: 'enju'
+    data.save().then (result) ->
+        test.equal result.id, 'id'
+        test.equal result.version, 0
+        test.done()
+    DataModel._es = _es
+
+exports.testDocumentSaveWithRefresh = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+        @define
+            name: new enju.StringProperty()
+    _es = DataModel._es
+    DataModel._es =
+        index: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                type: 'DataModel'
+                refresh: yes
+                id: null,
+                version: 0
+                versionType: 'external'
+                body:
+                    name: 'enju'
+            callback null,
+                _id: 'id'
+                _version: 0
+
+    test.expect 3
+    data = new DataModel
+        name: 'enju'
+    data.save(yes).then (result) ->
+        test.equal result.id, 'id'
+        test.equal result.version, 0
+        test.done()
+    DataModel._es = _es
