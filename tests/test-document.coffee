@@ -246,7 +246,7 @@ exports.testDocumentSaveWithoutRefresh = (test) ->
         test.equal result.id, 'id'
         test.equal result.version, 0
         test.done()
-    DataModel._es = _es
+        DataModel._es = _es
 
 exports.testDocumentSaveWithRefresh = (test) ->
     class DataModel extends Document
@@ -276,4 +276,50 @@ exports.testDocumentSaveWithRefresh = (test) ->
         test.equal result.id, 'id'
         test.equal result.version, 0
         test.done()
-    DataModel._es = _es
+        DataModel._es = _es
+
+exports.testDocumentDeleteWithoutRefresh = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+        @define
+            name: new enju.StringProperty()
+    _es = DataModel._es
+    DataModel._es =
+        delete: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                type: 'DataModel'
+                refresh: no
+                id: 'id',
+            callback null
+
+    test.expect 1
+    data = new DataModel
+        id: 'id'
+        name: 'enju'
+    data.delete().then ->
+        test.done()
+        DataModel._es = _es
+
+exports.testDocumentDeleteWithRefresh = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+        @define
+            name: new enju.StringProperty()
+    _es = DataModel._es
+    DataModel._es =
+        delete: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                type: 'DataModel'
+                refresh: yes
+                id: 'id',
+            callback null
+
+    test.expect 1
+    data = new DataModel
+        id: 'id'
+        name: 'enju'
+    data.delete(yes).then ->
+        test.done()
+        DataModel._es = _es
