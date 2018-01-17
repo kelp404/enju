@@ -2,6 +2,34 @@ properties = require '../lib/properties'
 exceptions = require '../lib/exceptions'
 
 
+exports.testProperty = (test) ->
+    property = new properties.StringProperty
+        required: yes
+        dbField: 'field'
+        type: 'string'
+        index: 'index'
+        analyzer: 'keyword'
+        mapping:
+            analyzer: 'keyword'
+        default: 'default'
+    test.deepEqual property,
+        required: yes
+        dbField: 'field'
+        type: 'string'
+        index: 'index'
+        analyzer: 'keyword'
+        mapping:
+            analyzer: 'keyword'
+        defaultValue: 'default'
+    test.expect 1
+    test.done()
+
+exports.testPropertyDefaultRequiredValue = (test) ->
+    property = new properties.StringProperty()
+    test.equal property.required, no
+    test.expect 1
+    test.done()
+
 exports.testStringPropertyToJsWithNull = (test) ->
     property = new properties.StringProperty()
     result = property.toJs null
