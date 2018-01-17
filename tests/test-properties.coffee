@@ -79,3 +79,38 @@ exports.testStringPropertyToDbWithoutNull = (test) ->
     test.equal result, 'string'
     test.expect 2
     test.done()
+
+exports.testIntegerPropertyToJsWithNull = (test) ->
+    property = new properties.IntegerProperty()
+    result = property.toJs null
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testIntegerPropertyToJsWithNullAndDefaultValue = (test) ->
+    property = new properties.IntegerProperty
+        default: 2
+    result = property.toJs null
+    test.equal result, 2
+    test.expect 1
+    test.done()
+
+exports.testIntegerPropertyToJsWithNullAndRequiredException = (test) ->
+    property = new properties.IntegerProperty
+        required: yes
+    property.propertyName = 'property'
+    test.throws -> property.toJs null, Error
+    test.expect 1
+    test.done()
+
+exports.testIntegerPropertyToJsWithoutNull = (test) ->
+    _parseInt = global.parseInt
+    property = new properties.IntegerProperty()
+    global.parseInt = (value) ->
+        test.equal value, 3
+        value
+    result = property.toJs 3
+    test.equal result, 3
+    test.expect 2
+    test.done()
+    global.parseInt = _parseInt
