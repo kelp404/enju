@@ -142,3 +142,50 @@ exports.testIntegerPropertyToJsWithoutNull = (test) ->
     test.expect 2
     test.done()
     global.parseInt = _parseInt
+
+exports.testIntegerPropertyToDbWithNull = (test) ->
+    property = new properties.IntegerProperty()
+    property.propertyName = 'property'
+    instance =
+        property: null
+    result = property.toDb instance
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testIntegerPropertyToDbWithNullAndDefaultValue = (test) ->
+    property = new properties.IntegerProperty
+        default: 2
+    property.propertyName = 'property'
+    instance =
+        property: null
+    result = property.toDb instance
+    test.equal result, 2
+    test.equal instance.property, 2
+    test.expect 2
+    test.done()
+
+exports.testIntegerPropertyToDbWithNullAndRequiredException = (test) ->
+    property = new properties.IntegerProperty
+        required: yes
+    property.propertyName = 'property'
+    instance =
+        property: null
+    test.throws -> property.toDb instance, Error
+    test.expect 1
+    test.done()
+
+exports.testIntegerPropertyToDbWithoutNull = (test) ->
+    property = new properties.IntegerProperty()
+    property.propertyName = 'property'
+    _parseInt = global.parseInt
+    global.parseInt = (value) ->
+        test.equal value, 3
+        value
+    instance =
+        property: 3
+    result = property.toDb instance
+    test.equal result, 3
+    test.expect 2
+    test.done()
+    global.parseInt = _parseInt
