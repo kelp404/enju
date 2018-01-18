@@ -189,3 +189,85 @@ exports.testIntegerPropertyToDbWithoutNull = (test) ->
     test.expect 2
     test.done()
     global.parseInt = _parseInt
+
+exports.testFloatPropertyToJsWithNull = (test) ->
+    property = new properties.FloatProperty()
+    result = property.toJs null
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testFloatPropertyToJsWithNullAndDefaultValue = (test) ->
+    property = new properties.FloatProperty
+        default: 2.2
+    result = property.toJs null
+    test.equal result, 2.2
+    test.expect 1
+    test.done()
+
+exports.testFloatPropertyToJsWithNullAndRequiredException = (test) ->
+    property = new properties.FloatProperty
+        required: yes
+    property.propertyName = 'property'
+    test.throws -> property.toJs null, Error
+    test.expect 1
+    test.done()
+
+exports.testFloatPropertyToJsWithoutNull = (test) ->
+    _parseFloat = global.parseFloat
+    property = new properties.FloatProperty()
+    global.parseFloat = (value) ->
+        test.equal value, 3.2
+        value
+    result = property.toJs 3.2
+    test.equal result, 3.2
+    test.expect 2
+    test.done()
+    global.parseFloat = _parseFloat
+
+exports.testFloatPropertyToDbWithNull = (test) ->
+    property = new properties.FloatProperty()
+    property.propertyName = 'property'
+    instance =
+        property: null
+    result = property.toDb instance
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testFloatPropertyToDbWithNullAndDefaultValue = (test) ->
+    property = new properties.FloatProperty
+        default: 2.2
+    property.propertyName = 'property'
+    instance =
+        property: null
+    result = property.toDb instance
+    test.equal result, 2.2
+    test.equal instance.property, 2.2
+    test.expect 2
+    test.done()
+
+exports.testFloatPropertyToDbWithNullAndRequiredException = (test) ->
+    property = new properties.FloatProperty
+        required: yes
+    property.propertyName = 'property'
+    instance =
+        property: null
+    test.throws -> property.toDb instance, Error
+    test.expect 1
+    test.done()
+
+exports.testFloatPropertyToDbWithoutNull = (test) ->
+    property = new properties.FloatProperty()
+    property.propertyName = 'property'
+    _parseFloat = global.parseFloat
+    global.parseFloat = (value) ->
+        test.equal value, 3.2
+        value
+    instance =
+        property: 3.2
+    result = property.toDb instance
+    test.equal result, 3.2
+    test.expect 2
+    test.done()
+    global.parseFloat = _parseFloat
