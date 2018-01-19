@@ -271,3 +271,172 @@ exports.testFloatPropertyToDbWithoutNull = (test) ->
     test.expect 2
     test.done()
     global.parseFloat = _parseFloat
+
+exports.testBooleanPropertyToJsWithNull = (test) ->
+    property = new properties.BooleanProperty()
+    result = property.toJs null
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testBooleanPropertyToJsWithNullAndDefaultValue = (test) ->
+    property = new properties.BooleanProperty
+        default: yes
+    result = property.toJs null
+    test.equal result, yes
+    test.expect 1
+    test.done()
+
+exports.testBooleanPropertyToJsWithNullAndRequiredException = (test) ->
+    property = new properties.BooleanProperty
+        required: yes
+    property.propertyName = 'property'
+    test.throws -> property.toJs null, Error
+    test.expect 1
+    test.done()
+
+exports.testBooleanPropertyToJsWithoutNull = (test) ->
+    property = new properties.BooleanProperty()
+    _boolean = global.Boolean
+    global.Boolean = (value) ->
+        test.equal value, yes
+        value
+    result = property.toJs yes
+    test.equal result, yes
+    test.expect 2
+    test.done()
+    global.Boolean = _boolean
+
+exports.testBooleanPropertyToDbWithNull = (test) ->
+    property = new properties.BooleanProperty()
+    property.propertyName = 'property'
+    instance =
+        property: null
+    result = property.toDb instance
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testBooleanPropertyToDbWithNullAndDefaultValue = (test) ->
+    property = new properties.BooleanProperty
+        default: yes
+    property.propertyName = 'property'
+    instance =
+        property: null
+    result = property.toDb instance
+    test.equal result, yes
+    test.equal instance.property, yes
+    test.expect 2
+    test.done()
+
+exports.testBooleanPropertyToDbWithNullAndRequiredException = (test) ->
+    property = new properties.BooleanProperty
+        required: yes
+    property.propertyName = 'property'
+    instance =
+        property: null
+    test.throws -> property.toDb instance, Error
+    test.expect 1
+    test.done()
+
+exports.testBooleanPropertyToDbWithoutNull = (test) ->
+    property = new properties.BooleanProperty()
+    property.propertyName = 'property'
+    _boolean = global.Boolean
+    global.Boolean = (value) ->
+        test.equal value, yes
+        value
+    instance =
+        property: yes
+    result = property.toDb instance
+    test.equal result, yes
+    test.expect 2
+    test.done()
+    global.Boolean = _boolean
+
+exports.testDatePropertyToJsWithNull = (test) ->
+    property = new properties.DateProperty()
+    result = property.toJs null
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testDatePropertyToJsWithNullAndAutoNow = (test) ->
+    property = new properties.DateProperty
+        autoNow: yes
+    _date = global.Date
+    global.Date = class FakeDate
+        constructor: ->
+    result = property.toJs null
+    global.Date = _date
+    test.equal result.constructor, FakeDate
+    test.expect 1
+    test.done()
+
+exports.testDatePropertyToJsWithNullAndRequiredException = (test) ->
+    property = new properties.DateProperty
+        required: yes
+    property.propertyName = 'property'
+    test.throws -> property.toJs null, Error
+    test.expect 1
+    test.done()
+
+exports.testDatePropertyToJsWithoutNull = (test) ->
+    property = new properties.DateProperty()
+    dateValue = new Date('2018-01-01T00:00:00')
+    _date = global.Date
+    global.Date = class FakeDate
+        constructor: (value) ->
+            test.equal value, dateValue
+    result = property.toJs dateValue
+    global.Date = _date
+    test.equal result.constructor, FakeDate
+    test.expect 2
+    test.done()
+
+exports.testDatePropertyToDbWithNull = (test) ->
+    property = new properties.DateProperty()
+    property.propertyName = 'property'
+    instance =
+        property: null
+    result = property.toDb instance
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testDatePropertyToDbWithNullAndAutoNow = (test) ->
+    property = new properties.DateProperty
+        autoNow: yes
+    property.propertyName = 'property'
+    instance =
+        property: null
+    _date = global.Date
+    global.Date = class FakeDate
+        constructor: ->
+        toJSON: -> 'json'
+    result = property.toDb instance
+    global.Date = _date
+    test.equal result, 'json'
+    test.equal instance.property.constructor, FakeDate
+    test.expect 2
+    test.done()
+
+exports.testDatePropertyToDbWithNullAndRequiredException = (test) ->
+    property = new properties.DateProperty
+        required: yes
+    property.propertyName = 'property'
+    instance =
+        property: null
+    test.throws -> property.toDb instance, Error
+    test.expect 1
+    test.done()
+
+exports.testDatePropertyToDbWithoutNull = (test) ->
+    property = new properties.DateProperty()
+    property.propertyName = 'property'
+    instance =
+        property: new Date('2018-01-01T00:00:00.000Z')
+    result = property.toDb instance
+    test.equal result, '2018-01-01T00:00:00.000Z'
+    test.expect 1
+    test.done()
