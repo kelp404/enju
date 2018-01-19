@@ -440,3 +440,41 @@ exports.testDatePropertyToDbWithoutNull = (test) ->
     test.equal result, '2018-01-01T00:00:00.000Z'
     test.expect 1
     test.done()
+
+exports.testListProperty = (test) ->
+    property = new properties.ListProperty
+        itemClass: properties.StringProperty
+    test.equal property.itemClass, properties.StringProperty
+    test.expect 1
+    test.done()
+
+exports.testListPropertyToJsWithNull = (test) ->
+    property = new properties.ListProperty()
+    result = property.toJs null
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testListPropertyToJsWithNullAndDefaultValue = (test) ->
+    property = new properties.ListProperty
+        default: []
+    result = property.toJs null
+    test.equal result.constructor, Array
+    test.equal result.length, 0
+    test.expect 2
+    test.done()
+
+exports.testListPropertyToJsWithNullAndRequiredException = (test) ->
+    property = new properties.ListProperty
+        required: yes
+    property.propertyName = 'property'
+    test.throws -> property.toJs null, Error
+    test.expect 1
+    test.done()
+
+exports.testListPropertyToJsWithoutNull = (test) ->
+    property = new properties.ListProperty()
+    result = property.toJs 'string'
+    test.equal result, 'string'
+    test.expect 1
+    test.done()
