@@ -456,12 +456,14 @@ exports.testListPropertyToJsWithNull = (test) ->
     test.done()
 
 exports.testListPropertyToJsWithNullAndDefaultValue = (test) ->
+    defaultValue = []
     property = new properties.ListProperty
-        default: []
+        default: defaultValue
     result = property.toJs null
+    test.notEqual result, defaultValue
     test.equal result.constructor, Array
     test.equal result.length, 0
-    test.expect 2
+    test.expect 3
     test.done()
 
 exports.testListPropertyToJsWithNullAndRequiredException = (test) ->
@@ -476,5 +478,121 @@ exports.testListPropertyToJsWithoutNull = (test) ->
     property = new properties.ListProperty()
     result = property.toJs 'string'
     test.equal result, 'string'
+    test.expect 1
+    test.done()
+
+exports.testListPropertyToDbWithNull = (test) ->
+    property = new properties.ListProperty()
+    property.propertyName = 'property'
+    result = property.toDb
+        property: null
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testListPropertyToDbWithNullAndDefaultValue = (test) ->
+    defaultValue = []
+    property = new properties.ListProperty
+        default: defaultValue
+    property.propertyName = 'property'
+    result = property.toDb
+        property: null
+    test.notEqual result, defaultValue
+    test.equal result.constructor, Array
+    test.equal result.length, 0
+    test.expect 3
+    test.done()
+
+exports.testListPropertyToDbWithNullAndRequiredException = (test) ->
+    property = new properties.ListProperty
+        required: yes
+    property.propertyName = 'property'
+    instance =
+        property: null
+    test.throws -> property.toDb instance, Error
+    test.expect 1
+    test.done()
+
+exports.testListPropertyToDbWithoutNull = (test) ->
+    property = new properties.ListProperty
+        itemClass: properties.StringProperty
+    property.propertyName = 'property'
+    result = property.toDb
+        property: ['item']
+    test.deepEqual result, ['item']
+    test.expect 1
+    test.done()
+
+exports.testObjectPropertyToJsWithNull = (test) ->
+    property = new properties.ObjectProperty()
+    result = property.toJs null
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testObjectPropertyToJsWithNullAndDefaultValue = (test) ->
+    defaultValue =
+        default: yes
+    property = new properties.ObjectProperty
+        default: defaultValue
+    result = property.toJs null
+    test.notEqual result, defaultValue
+    test.deepEqual result, default: yes
+    test.expect 2
+    test.done()
+
+exports.testObjectPropertyToJsWithNullAndRequiredException = (test) ->
+    property = new properties.ObjectProperty
+        required: yes
+    property.propertyName = 'property'
+    test.throws -> property.toJs null, Error
+    test.expect 1
+    test.done()
+
+exports.testObjectPropertyToJsWithoutNull = (test) ->
+    property = new properties.ObjectProperty()
+    result = property.toJs field: yes
+    test.deepEqual result, field: yes
+    test.expect 1
+    test.done()
+
+exports.testObjectPropertyToDbWithNull = (test) ->
+    property = new properties.ObjectProperty()
+    property.propertyName = 'property'
+    result = property.toDb
+        property: null
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testObjectPropertyToDbWithNullAndDefaultValue = (test) ->
+    defaultValue = default: yes
+    property = new properties.ObjectProperty
+        default: defaultValue
+    property.propertyName = 'property'
+    result = property.toDb
+        property: null
+    test.notEqual result, defaultValue
+    test.deepEqual result, defaultValue
+    test.expect 2
+    test.done()
+
+exports.testObjectPropertyToDbWithNullAndRequiredException = (test) ->
+    property = new properties.ObjectProperty
+        required: yes
+    property.propertyName = 'property'
+    instance =
+        property: null
+    test.throws -> property.toDb instance, Error
+    test.expect 1
+    test.done()
+
+exports.testObjectPropertyToDbWithoutNull = (test) ->
+    property = new properties.ObjectProperty()
+    property.propertyName = 'property'
+    result = property.toDb
+        property:
+            field: yes
+    test.deepEqual result, field: yes
     test.expect 1
     test.done()
