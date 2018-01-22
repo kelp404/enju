@@ -596,3 +596,99 @@ exports.testObjectPropertyToDbWithoutNull = (test) ->
     test.deepEqual result, field: yes
     test.expect 1
     test.done()
+
+exports.testReferenceProperty = (test) ->
+    property = new properties.ReferenceProperty
+        referenceClass: 'reference'
+    test.equal property.referenceClass, 'reference'
+    test.expect 1
+    test.done()
+
+exports.testReferencePropertyToJsWithNull = (test) ->
+    property = new properties.ReferenceProperty()
+    result = property.toJs null
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testReferencePropertyToJsWithNullAndDefaultValue = (test) ->
+    property = new properties.ReferenceProperty
+        default: 'default'
+    result = property.toJs null
+    test.equal result, 'default'
+    test.expect 1
+    test.done()
+
+exports.testReferencePropertyToJsWithNullAndRequiredException = (test) ->
+    property = new properties.ReferenceProperty
+        required: yes
+    property.propertyName = 'property'
+    test.throws -> property.toJs null, Error
+    test.expect 1
+    test.done()
+
+exports.testReferencePropertyToJsWithString = (test) ->
+    property = new properties.ReferenceProperty()
+    result = property.toJs 'string'
+    test.equal result, 'string'
+    test.expect 1
+    test.done()
+
+exports.testReferencePropertyToJsWithClass = (test) ->
+    class Test
+        constructor: (args) -> {@id} = args
+    property = new properties.ReferenceProperty
+        referenceClass: Test
+    result = property.toJs new Test(id: 'id')
+    test.equal result.constructor, Test
+    test.equal result.id, 'id'
+    test.expect 2
+    test.done()
+
+exports.testReferencePropertyToDbWithNull = (test) ->
+    property = new properties.ReferenceProperty()
+    property.propertyName = 'property'
+    result = property.toDb
+        property: null
+    test.equal result, null
+    test.expect 1
+    test.done()
+
+exports.testReferencePropertyToDbWithNullAndDefaultValue = (test) ->
+    property = new properties.ReferenceProperty
+        default: 'default'
+    property.propertyName = 'property'
+    result = property.toDb
+        property: null
+    test.equal result, 'default'
+    test.expect 1
+    test.done()
+
+exports.testReferencePropertyToDbWithNullAndRequiredException = (test) ->
+    property = new properties.ReferenceProperty
+        required: yes
+    property.propertyName = 'property'
+    test.throws -> property.toDb null, Error
+    test.expect 1
+    test.done()
+
+exports.testReferencePropertyToDbWithString = (test) ->
+    property = new properties.ReferenceProperty()
+    property.propertyName = 'property'
+    result = property.toDb
+        property: 'string'
+    test.equal result, 'string'
+    test.expect 1
+    test.done()
+
+exports.testReferencePropertyToDbWithClass = (test) ->
+    class Test
+        constructor: (args) -> {@id} = args
+    property = new properties.ReferenceProperty
+        referenceClass: Test
+    property.propertyName = 'property'
+    result = property.toDb
+        property: new Test(id: 'id')
+    test.equal result, 'id'
+    test.expect 1
+    test.done()
