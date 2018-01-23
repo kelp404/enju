@@ -1,5 +1,4 @@
 properties = require '../lib/properties'
-exceptions = require '../lib/exceptions'
 
 
 exports.testProperty = (test) ->
@@ -49,7 +48,7 @@ exports.testStringPropertyToJsWithNullAndRequiredException = (test) ->
     property = new properties.StringProperty
         required: yes
     property.propertyName = 'property'
-    test.throws -> property.toJs null, Error
+    test.throws -> property.toJs null
     test.expect 1
     test.done()
 
@@ -91,7 +90,7 @@ exports.testStringPropertyToDbWithNullAndRequiredException = (test) ->
     property.propertyName = 'property'
     instance =
         property: null
-    test.throws -> property.toDb instance, Error
+    test.throws -> property.toDb instance
     test.expect 1
     test.done()
 
@@ -127,7 +126,7 @@ exports.testIntegerPropertyToJsWithNullAndRequiredException = (test) ->
     property = new properties.IntegerProperty
         required: yes
     property.propertyName = 'property'
-    test.throws -> property.toJs null, Error
+    test.throws -> property.toJs null
     test.expect 1
     test.done()
 
@@ -171,7 +170,7 @@ exports.testIntegerPropertyToDbWithNullAndRequiredException = (test) ->
     property.propertyName = 'property'
     instance =
         property: null
-    test.throws -> property.toDb instance, Error
+    test.throws -> property.toDb instance
     test.expect 1
     test.done()
 
@@ -209,7 +208,7 @@ exports.testFloatPropertyToJsWithNullAndRequiredException = (test) ->
     property = new properties.FloatProperty
         required: yes
     property.propertyName = 'property'
-    test.throws -> property.toJs null, Error
+    test.throws -> property.toJs null
     test.expect 1
     test.done()
 
@@ -253,7 +252,7 @@ exports.testFloatPropertyToDbWithNullAndRequiredException = (test) ->
     property.propertyName = 'property'
     instance =
         property: null
-    test.throws -> property.toDb instance, Error
+    test.throws -> property.toDb instance
     test.expect 1
     test.done()
 
@@ -291,7 +290,7 @@ exports.testBooleanPropertyToJsWithNullAndRequiredException = (test) ->
     property = new properties.BooleanProperty
         required: yes
     property.propertyName = 'property'
-    test.throws -> property.toJs null, Error
+    test.throws -> property.toJs null
     test.expect 1
     test.done()
 
@@ -335,7 +334,7 @@ exports.testBooleanPropertyToDbWithNullAndRequiredException = (test) ->
     property.propertyName = 'property'
     instance =
         property: null
-    test.throws -> property.toDb instance, Error
+    test.throws -> property.toDb instance
     test.expect 1
     test.done()
 
@@ -377,7 +376,7 @@ exports.testDatePropertyToJsWithNullAndRequiredException = (test) ->
     property = new properties.DateProperty
         required: yes
     property.propertyName = 'property'
-    test.throws -> property.toJs null, Error
+    test.throws -> property.toJs null
     test.expect 1
     test.done()
 
@@ -427,7 +426,7 @@ exports.testDatePropertyToDbWithNullAndRequiredException = (test) ->
     property.propertyName = 'property'
     instance =
         property: null
-    test.throws -> property.toDb instance, Error
+    test.throws -> property.toDb instance
     test.expect 1
     test.done()
 
@@ -470,7 +469,7 @@ exports.testListPropertyToJsWithNullAndRequiredException = (test) ->
     property = new properties.ListProperty
         required: yes
     property.propertyName = 'property'
-    test.throws -> property.toJs null, Error
+    test.throws -> property.toJs null
     test.expect 1
     test.done()
 
@@ -509,7 +508,7 @@ exports.testListPropertyToDbWithNullAndRequiredException = (test) ->
     property.propertyName = 'property'
     instance =
         property: null
-    test.throws -> property.toDb instance, Error
+    test.throws -> property.toDb instance
     test.expect 1
     test.done()
 
@@ -545,7 +544,7 @@ exports.testObjectPropertyToJsWithNullAndRequiredException = (test) ->
     property = new properties.ObjectProperty
         required: yes
     property.propertyName = 'property'
-    test.throws -> property.toJs null, Error
+    test.throws -> property.toJs null
     test.expect 1
     test.done()
 
@@ -583,7 +582,7 @@ exports.testObjectPropertyToDbWithNullAndRequiredException = (test) ->
     property.propertyName = 'property'
     instance =
         property: null
-    test.throws -> property.toDb instance, Error
+    test.throws -> property.toDb instance
     test.expect 1
     test.done()
 
@@ -623,7 +622,7 @@ exports.testReferencePropertyToJsWithNullAndRequiredException = (test) ->
     property = new properties.ReferenceProperty
         required: yes
     property.propertyName = 'property'
-    test.throws -> property.toJs null, Error
+    test.throws -> property.toJs null
     test.expect 1
     test.done()
 
@@ -668,7 +667,7 @@ exports.testReferencePropertyToDbWithNullAndRequiredException = (test) ->
     property = new properties.ReferenceProperty
         required: yes
     property.propertyName = 'property'
-    test.throws -> property.toDb null, Error
+    test.throws -> property.toDb null
     test.expect 1
     test.done()
 
