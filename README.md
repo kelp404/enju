@@ -394,7 +394,7 @@ first: (fetchReference=yes) ->
     @returns {promise<Document|null>}
     ###
 ```
-```
+```coffee
 hasAny: ->
     ###
     Are there any documents match with the query?
