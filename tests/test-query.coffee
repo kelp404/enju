@@ -1,3 +1,4 @@
+q = require 'q'
 enju = require '../'
 Query = require '../lib/query'
 
@@ -334,6 +335,127 @@ exports.testQueryFetch = (test) ->
                 age: null
                 createTime: null
             ]
+        test.expect 2
+        test.done()
+        @DataModel._es = _es
+
+exports.testQueryFirst = (test) ->
+    query = new Query(@DataModel)
+    _fetch = query.fetch
+    query.fetch = (args) ->
+        deferred = q.defer()
+        test.deepEqual args,
+            limit: 1
+            skip: 0
+            fetchReference: yes
+        deferred.resolve
+            total: 0
+            items: []
+        deferred.promise
+    query.first().then (result) ->
+        test.equal result, null
+        test.expect 2
+        test.done()
+        query.fetch = _fetch
+
+exports.testQueryFirstWithoutFetchReference = (test) ->
+    query = new Query(@DataModel)
+    _fetch = query.fetch
+    query.fetch = (args) ->
+        deferred = q.defer()
+        test.deepEqual args,
+            limit: 1
+            skip: 0
+            fetchReference: no
+        deferred.resolve
+            total: 0
+            items: []
+        deferred.promise
+    query.first(no).then (result) ->
+        test.equal result, null
+        test.expect 2
+        test.done()
+        query.fetch = _fetch
+
+exports.testQueryHasAny = (test) ->
+    query = new Query(@DataModel)
+    _es = @DataModel._es
+    @DataModel._es =
+        searchExists: (args) ->
+            deferred = q.defer()
+            test.deepEqual args,
+                index: 'index'
+                body:
+                    query:
+                        match_all: {}
+            deferred.resolve
+                exists: yes
+            deferred.promise
+    query.hasAny().then (result) ->
+        test.ok result
+        test.expect 2
+        test.done()
+        @DataModel._es = _es
+
+exports.testQueryHasAnyThrowException = (test) ->
+    query = new Query(@DataModel)
+    _es = @DataModel._es
+    @DataModel._es =
+        searchExists: (args) ->
+            deferred = q.defer()
+            test.deepEqual args,
+                index: 'index'
+                body:
+                    query:
+                        match_all: {}
+            deferred.reject
+                body:
+                    exists: no
+            deferred.promise
+    query.hasAny().then (result) ->
+        test.equal result, no
+        test.expect 2
+        test.done()
+        @DataModel._es = _es
+
+exports.testQueryCount = (test) ->
+    query = new Query(@DataModel)
+    _es = @DataModel._es
+    @DataModel._es =
+        count: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                body:
+                    query:
+                        match_all: {}
+                size: 0
+            callback null, count: 1
+    query.count().then (result) ->
+        test.equal result, 1
+        test.done()
+        @DataModel._es = _es
+
+exports.testQuerySum = (test) ->
+    query = new Query(@DataModel)
+    _es = @DataModel._es
+    @DataModel._es =
+        search: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                body:
+                    query:
+                        match_all: {}
+                    aggs:
+                        intraday_return:
+                            sum:
+                                field: 'age'
+                size: 0
+            callback null,
+                aggregations:
+                    intraday_return:
+                        value: 18
+    query.sum('age').then (result) ->
+        test.equal result, 18
         test.expect 2
         test.done()
         @DataModel._es = _es
