@@ -1,29 +1,16 @@
 version: 2.0
-jobs:
+workflows:
+  version: 2
   build:
+    jobs:
+      - node6
+      - node8
+      - node9
+jobs:
+  node6:
     working_directory: ~/enju
     docker:
-      - image: node:8.9.4
-    steps:
-      - checkout
-      - run:
-          name: "Trigger Jobs"
-          command: |
-            # a similar function will liekly get built in into the circleci cli
-            function trigger_job() {
-              job_name=$1
-              curl -u 00fd1badfa3a9ac5e39bcda4e32e52ddc54a17da: \
-                -d build_parameters[CIRCLE_JOB]=${job_name} \
-                -d revision=$CIRCLE_SHA1 \
-                https://circleci.com/api/v1.1/project/github/kelp404/enju/tree/$CIRCLE_BRANCH
-            }
-            trigger_job build-node6
-            trigger_job build-node8
-
-  build-node6:
-    working_directory: ~/enju
-    docker:
-      - image: node:6.12.3
+      - image: node:6.13.1
     steps:
       - checkout
       - run: npm install -g coffee-script nodeunit grunt-cli
@@ -31,10 +18,21 @@ jobs:
       - run: grunt build
       - run: npm test
 
-  build-node8:
+  node8:
     working_directory: ~/enju
     docker:
-      - image: node:8.9.4
+      - image: node:8.10.0
+    steps:
+      - checkout
+      - run: npm install -g coffee-script nodeunit grunt-cli
+      - run: npm install
+      - run: grunt build
+      - run: npm test
+
+  node9:
+    working_directory: ~/enju
+    docker:
+      - image: node:9.7.1
     steps:
       - checkout
       - run: npm install -g coffee-script nodeunit grunt-cli
