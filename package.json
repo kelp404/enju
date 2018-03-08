@@ -6,6 +6,9 @@
   "scripts": {
     "test": "nodeunit tests"
   },
+  "engines": {
+    "node": ">=0.12.6"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/kelp404/enju.git"
