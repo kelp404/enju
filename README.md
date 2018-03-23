@@ -475,7 +475,7 @@ Count items.
 ```sql
 select count(*) from "ExampleModel" where "age" < 10
 ```
-```python
+```coffee
 ExampleModel.where('age', less: 10).count().then (result) ->
 ```
 
