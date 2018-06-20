@@ -436,6 +436,60 @@ module.exports = class Query
 
         deferred.promise
 
+    groupBy: (field, args = {}) ->
+        ###
+        Aggregations
+        http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html
+        @param field {Property|string} The property name of the document.
+        @param args {object}
+            limit: {number}  Default is 1,000.
+            order: {string} "count|term"  Default is "term".
+            descending: {bool}  Default is no.
+        @returns {promise<list<object>>}
+            [{
+                doc_count: {number}
+                key: {string}
+            }]
+        ###
+        args.limit ?= 1000
+        args.order = 'term' if args.order not in ['count', 'term']
+        args.descending ?= no
+        allFields = []
+        for propertyName, property of @documentClass._properties
+            allFields.push propertyName
+            allFields.push(property.dbField) if property.dbField
+        if typeof(field) is 'string' and field.split('.', 1)[0] not in allFields
+            throw new exceptions.SyntaxError("#{field} not in #{@documentClass.name}")
+
+        if typeof(field) is 'string'
+            dbField = @documentClass._properties[field]?.dbField ? field
+        else
+            dbField = field.dbField ? field.propertyName
+
+        deferred = q.defer()
+        queryObject = @compileQueries()
+        if queryObject.isContainsEmpty
+            deferred.resolve []
+            return deferred.promise
+        @documentClass._es.search
+            index: @documentClass.getIndexName()
+            body:
+                query: queryObject.query
+                aggs:
+                    genres:
+                        terms:
+                            field: dbField
+                            size: args.limit
+                            order:
+                                "_#{args.order}": if args.descending then 'desc' else 'asc'
+            size: 0
+        , (error, response) =>
+            if error
+                deferred.reject error
+                return
+            deferred.resolve response.aggregations.genres.buckets
+        deferred.promise
+
 
     # -----------------------------------------------------
     # private methods

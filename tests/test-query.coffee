@@ -459,3 +459,34 @@ exports.testQuerySum = (test) ->
         test.expect 2
         test.done()
         @DataModel._es = _es
+
+exports.testQueryGroupBy = (test) ->
+    query = new Query(@DataModel)
+    _es = @DataModel._es
+    @DataModel._es =
+        search: (args, callback) ->
+            test.deepEqual args,
+                index: 'index'
+                body:
+                    query:
+                        match_all: {}
+                    aggs:
+                        genres:
+                            terms:
+                                field: 'age'
+                                size: 1000
+                                order:
+                                    _term: 'asc'
+                size: 0
+            callback null,
+                aggregations:
+                    genres:
+                        buckets: [
+                            doc_count: 1
+                            key: 18
+                        ]
+    query.groupBy('age').then (result) ->
+        test.deepEqual result, [doc_count: 1, key: 18]
+        test.expect 2
+        test.done()
+        @DataModel._es = _es

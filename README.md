@@ -417,6 +417,21 @@ sum: (field) ->
     @returns {promise<number>}
     ###
 ```
+```coffee
+groupBy: (field, args) ->
+    ###
+    @param field {Property|string} The property name of the document.
+    @param args {object}
+        limit: {number}  Default is 1,000.
+        order: {string} "count|term"  Default is "term".
+        descending: {bool}  Default is no.
+    @returns {promise<list<object>>}
+        [{
+            doc_count: {number}
+            key: {string}
+        }]
+    ###
+```
 
 
 
