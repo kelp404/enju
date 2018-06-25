@@ -14,8 +14,8 @@ exports.testGetElasticsearch = (test) ->
 
     test.expect 1
     test.deepEqual utils.getElasticsearch(),
-        host: config.enju.elasticsearchHost
-        apiVersion: config.enju.apiVersion
+        host: config.enju.elasticsearchConfig.host
+        apiVersion: config.enju.elasticsearchConfig.apiVersion
     test.done()
 
     elasticsearch.Client = _elasticsearchClient

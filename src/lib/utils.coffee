@@ -1,3 +1,4 @@
+util = require 'util'
 config = require 'config'
 elasticsearch = require 'elasticsearch'
 
@@ -8,9 +9,7 @@ module.exports =
         Get the connection for ElasticSearch.
         @returns {Elasticsearch.Client}
         ###
-        new elasticsearch.Client
-            host: config.enju.elasticsearchHost
-            apiVersion: config.enju.apiVersion
+        new elasticsearch.Client util._extend({}, config.enju.elasticsearchConfig)
 
     getIndexPrefix: ->
         ###
