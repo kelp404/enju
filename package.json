@@ -4,7 +4,8 @@
   "description": "An elasticsearch client on node.js written in CoffeeScript.",
   "main": "index.js",
   "scripts": {
-    "test": "nodeunit tests"
+    "test": "nodeunit tests",
+    "ncu": "./node_modules/npm-check-updates/bin/ncu"
   },
   "engines": {
     "node": ">=0.12.6"
