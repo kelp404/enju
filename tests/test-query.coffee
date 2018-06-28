@@ -314,7 +314,6 @@ exports.testQueryFetch = (test) ->
                     sort: []
                 from: 0
                 size: 1000
-                fields: [ '_source' ]
                 version: true
             callback null,
                 hits:
@@ -387,7 +386,6 @@ exports.testQueryCount = (test) ->
                 body:
                     query:
                         match_all: {}
-                size: 0
             callback null, count: 1
     query.count().then (result) ->
         test.equal result, 1
