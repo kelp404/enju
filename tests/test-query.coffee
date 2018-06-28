@@ -377,47 +377,6 @@ exports.testQueryFirstWithoutFetchReference = (test) ->
         test.done()
         query.fetch = _fetch
 
-exports.testQueryHasAny = (test) ->
-    query = new Query(@DataModel)
-    _es = @DataModel._es
-    @DataModel._es =
-        searchExists: (args) ->
-            deferred = q.defer()
-            test.deepEqual args,
-                index: 'index'
-                body:
-                    query:
-                        match_all: {}
-            deferred.resolve
-                exists: yes
-            deferred.promise
-    query.hasAny().then (result) ->
-        test.ok result
-        test.expect 2
-        test.done()
-        @DataModel._es = _es
-
-exports.testQueryHasAnyThrowException = (test) ->
-    query = new Query(@DataModel)
-    _es = @DataModel._es
-    @DataModel._es =
-        searchExists: (args) ->
-            deferred = q.defer()
-            test.deepEqual args,
-                index: 'index'
-                body:
-                    query:
-                        match_all: {}
-            deferred.reject
-                body:
-                    exists: no
-            deferred.promise
-    query.hasAny().then (result) ->
-        test.equal result, no
-        test.expect 2
-        test.done()
-        @DataModel._es = _es
-
 exports.testQueryCount = (test) ->
     query = new Query(@DataModel)
     _es = @DataModel._es

@@ -404,13 +404,6 @@ first: (fetchReference=yes) ->
     ###
 ```
 ```coffee
-hasAny: ->
-    ###
-    Are there any documents match with the query?
-    @returns {promise<bool>}
-    ###
-```
-```coffee
 count: ->
     ###
     Count documents by the query.
