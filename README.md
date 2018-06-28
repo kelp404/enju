@@ -278,7 +278,7 @@ delete: (refresh=no) ->
 ```coffee
 class Property
     ###
-    @property default {bool}
+    @property default {any}
     @property required {bool}
     @property dbField {string}
     @property type {string}  For elasticsearch mapping
