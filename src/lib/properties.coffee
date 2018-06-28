@@ -8,7 +8,7 @@ class Property
     @property required {bool}
     @property dbField {string}
     @property type {string}  For elasticsearch mapping
-    @property index {string}  For elasticsearch mapping
+    @property index {bool}  For elasticsearch mapping
     @property analyzer {string}  For elasticsearch mapping
     @property mapping {object}  For elasticsearch mapping
     @property propertyName {string} The property name in the document. It will be set at Document.define()
@@ -24,6 +24,7 @@ class Property
         } = args
         @defaultValue = args.default
         @required ?= no
+        @index ?= yes
 
 class StringProperty extends Property
     constructor: (args) ->
@@ -57,6 +58,72 @@ class StringProperty extends Property
             return null
         value.toString()
 exports.StringProperty = StringProperty
+
+class TextProperty extends Property
+    constructor: (args) ->
+        super args
+    toJs: (value) ->
+        ###
+        Convert value for initial Document.
+        @param classInstance: {Document} The instance of the document.
+        @returns {string}
+        ###
+        if not value?
+            if @defaultValue?
+                return @defaultValue.toString()
+            if @required
+                throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
+            return null
+        value.toString()
+    toDb: (classInstance) ->
+        ###
+        Convert value for writing database.
+        @param classInstance: {Document} The instance of the document.
+        @returns {string}
+        ###
+        value = classInstance[@propertyName]
+        if not value?
+            if @defaultValue?
+                classInstance[@propertyName] = @defaultValue.toString()
+                return classInstance[@propertyName]
+            if @required
+                throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
+            return null
+        value.toString()
+exports.TextProperty = TextProperty
+
+class KeywordProperty extends Property
+    constructor: (args) ->
+        super args
+    toJs: (value) ->
+        ###
+        Convert value for initial Document.
+        @param classInstance: {Document} The instance of the document.
+        @returns {string}
+        ###
+        if not value?
+            if @defaultValue?
+                return @defaultValue.toString()
+            if @required
+                throw new exceptions.ValueRequiredError("#{@propertyName} is required.")
+            return null
+        value.toString()
+    toDb: (classInstance) ->
+        ###
+        Convert value for writing database.
+        @param classInstance: {Document} The instance of the document.
+        @returns {string}
+        ###
+        value = classInstance[@propertyName]
+        if not value?
+            if @defaultValue?
+                classInstance[@propertyName] = @defaultValue.toString()
+                return classInstance[@propertyName]
+            if @required
+                throw new exceptions.ValueRequiredError("#{classInstance.constructor.name}.#{@propertyName} is required.")
+            return null
+        value.toString()
+exports.KeywordProperty = KeywordProperty
 
 class IntegerProperty extends Property
     constructor: (args) ->
@@ -170,7 +237,7 @@ class ListProperty extends Property
             return null
         if @itemClass?
             switch @itemClass
-                when StringProperty
+                when StringProperty, TextProperty, KeywordProperty
                     value = ((if x? then x.toString() else null) for x in value)
                 when IntegerProperty
                     value = ((if x? then parseInt(x) else null) for x in value)
@@ -196,7 +263,7 @@ class ListProperty extends Property
             return null
         if @itemClass?
             switch @itemClass
-                when StringProperty
+                when StringProperty, TextProperty, KeywordProperty
                     value = ((if x? then x.toString() else null) for x in value)
                 when IntegerProperty
                     value = ((if x? then parseInt(x) else null) for x in value)

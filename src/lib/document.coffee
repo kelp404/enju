@@ -53,7 +53,7 @@ module.exports = class Document
             @param properties: {object}
         ###
         @_properties =
-            id: new properties.StringProperty(dbField: '_id')
+            id: new properties.KeywordProperty(dbField: '_id')
             version: new properties.IntegerProperty(dbField: '_version')
         @_es = utils.getElasticsearch()
 
@@ -264,6 +264,10 @@ module.exports = class Document
                 switch property.constructor
                     when properties.StringProperty
                         field.type = 'string'
+                    when properties.TextProperty
+                        field.type = 'text'
+                    when properties.KeywordProperty
+                        field.type = 'keyword'
                     when properties.BooleanProperty
                         field.type = 'boolean'
                     when properties.IntegerProperty
@@ -274,12 +278,15 @@ module.exports = class Document
                         field.type = 'date'
                         field.format = 'strict_date_optional_time||epoch_millis'
                     when properties.ReferenceProperty
-                        field.type = 'string'
-                        field.analyzer = 'keyword'
+                        field.type = 'keyword'
                     when properties.ListProperty
                         switch property.itemClass
                             when properties.StringProperty
                                 field.type = 'string'
+                            when properties.TextProperty
+                                field.type = 'text'
+                            when properties.KeywordProperty
+                                field.type = 'keyword'
                             when properties.BooleanProperty
                                 field.type = 'boolean'
                             when properties.IntegerProperty
@@ -290,18 +297,18 @@ module.exports = class Document
                                 field.type = 'date'
                                 field.format = 'strict_date_optional_time||epoch_millis'
                             when properties.ReferenceProperty
-                                field.type = 'string'
-                                field.analyzer = 'keyword'
+                                field.type = 'keyword'
 
                 if property.type
                     field.type = property.type
                 if property.analyzer
                     field.analyzer = property.analyzer
-                if property.index
+                if property.index?
                     field.index = property.index
 
                 if Object.keys(field).length
                     mapping[property.dbField ? propertyName] = field
+
             @_es.indices.putMapping
                 index: @getIndexName()
                 type: @getDocumentType()

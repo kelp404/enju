@@ -2,6 +2,8 @@ exports.Document = require './lib/document'
 
 properties = require './lib/properties'
 exports.StringProperty = properties.StringProperty
+exports.TextProperty = properties.TextProperty
+exports.KeywordProperty = properties.KeywordProperty
 exports.IntegerProperty = properties.IntegerProperty
 exports.FloatProperty = properties.FloatProperty
 exports.BooleanProperty = properties.BooleanProperty

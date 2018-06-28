@@ -7,6 +7,10 @@
 
   exports.StringProperty = properties.StringProperty;
 
+  exports.TextProperty = properties.TextProperty;
+
+  exports.KeywordProperty = properties.KeywordProperty;
+
   exports.IntegerProperty = properties.IntegerProperty;
 
   exports.FloatProperty = properties.FloatProperty;

@@ -49,9 +49,9 @@ class UserModel extends enju.Document
                     type: 'custom'
                     tokenizer: 'uax_url_email'
     @define
-        name: new enju.StringProperty
+        name: new enju.KeywordProperty
             required: yes
-        email: new enju.StringProperty
+        email: new enju.TextProperty
             required: yes
             analyzer: 'email_url'
         createTime: new enju.DateProperty
@@ -63,7 +63,7 @@ class ProductModel extends enju.Document
         user: new enju.ReferenceProperty
             referenceClass: UserModel
             required: yes
-        title: new enju.StringProperty
+        title: new enju.KeywordProperty
             required: yes
 ```
 ### 2. Update elasticsearch mapping
@@ -141,9 +141,9 @@ class UserModel extends enju.Document
                     type: 'custom'
                     tokenizer: 'uax_url_email'
     @define
-        name: new enju.StringProperty
+        name: new enju.KeywordProperty
             required: yes
-        email: new enju.StringProperty
+        email: new enju.TextProperty
             required: yes
             analyzer: 'email_url'
         createTime: new enju.DateProperty
@@ -165,10 +165,10 @@ var UserModel = enju.Document.define('UserModel', {
             }
         }
     },
-    name: new enju.StringProperty({
+    name: new enju.KeywordProperty({
         required: true
     }),
-    email: new enju.StringProperty({
+    email: new enju.TextProperty({
         required: true,
         analyzer: 'email_url'
     }),
@@ -282,7 +282,7 @@ class Property
     @property required {bool}
     @property dbField {string}
     @property type {string}  For elasticsearch mapping
-    @property index {string}  For elasticsearch mapping
+    @property index {bool}  For elasticsearch mapping
     @property analyzer {string}  For elasticsearch mapping
     @property mapping {object}  For elasticsearch mapping
     @property propertyName {string} The property name in the document. It will be set at Document.define()
@@ -290,6 +290,12 @@ class Property
 ```
 ```coffee
 class StringProperty extends Property
+```
+```coffee
+class TextProperty extends Property
+```
+```coffee
+class KeywordProperty extends Property
 ```
 ```coffee
 class IntegerProperty extends Property
