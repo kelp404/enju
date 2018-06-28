@@ -296,7 +296,6 @@ module.exports = class Query
                 sort: queryObject.sort
             from: args.skip
             size: args.limit
-            fields: ['_source']
             version: yes
         , (error, response) =>
             if error
@@ -359,7 +358,6 @@ module.exports = class Query
             index: @documentClass.getIndexName()
             body:
                 query: queryObject.query
-            size: 0
         , (error, response) ->
             if error
                 deferred.reject error
@@ -499,13 +497,11 @@ module.exports = class Query
                     sort.push
                         "#{queryCell.dbField}":
                             order: 'asc'
-                            ignore_unmapped: yes
                             missing: '_first'
                 when QueryOperation.orderDESC
                     sort.push
                         "#{queryCell.dbField}":
                             order: 'desc'
-                            ignore_unmapped: yes
                             missing: '_last'
                 else
                     queries.push @compileQuery queryCell
