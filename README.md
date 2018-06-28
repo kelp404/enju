@@ -4,6 +4,12 @@
 An elasticsearch client on node.js written in CoffeeScript.  
 [tina](https://github.com/kelp404/tina) is the Python version.
 
+
+  enju  |  Elasticsearch
+:-----:|:-------------:
+   2.x   |        2.4
+   5.x   |        5.6
+
 ![tina](_enju.gif)
 
 
