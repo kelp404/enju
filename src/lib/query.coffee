@@ -552,9 +552,9 @@ module.exports = class Query
                             query: queryCell.value
                             operator: 'and'
                 else
-                    filtered:
-                        filter:
-                            missing:
+                    bool:
+                        must_not:
+                            exists:
                                 field: queryCell.dbField
             when QueryOperation.unequal
                 if queryCell.value?
@@ -566,11 +566,9 @@ module.exports = class Query
                                     operator: 'and'
                 else
                     bool:
-                        must_not:
-                            filtered:
-                                filter:
-                                    missing:
-                                        field: queryCell.dbField
+                        must:
+                            exists:
+                                field: queryCell.dbField
             when QueryOperation.greater
                 range:
                     "#{queryCell.dbField}":
