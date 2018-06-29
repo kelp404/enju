@@ -17,7 +17,7 @@ module.exports = class Document
     @property _properties {object} {'propertyName': {Property}}
     @property _es {Elasticsearch.Client}
     ###
-    constructor: (args={}) ->
+    constructor: (args = {}) ->
         for propertyName, property of @constructor._properties
             @[propertyName] = property.toJs args[propertyName]
 
@@ -303,6 +303,8 @@ module.exports = class Document
                     field.type = property.type
                 if property.analyzer
                     field.analyzer = property.analyzer
+                if property.normalizer
+                    field.normalizer = property.normalizer
                 if property.index?
                     field.index = property.index
 

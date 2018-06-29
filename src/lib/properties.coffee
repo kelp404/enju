@@ -7,19 +7,17 @@ class Property
     @property default {any}
     @property required {bool}
     @property dbField {string}
-    @property type {string}  For elasticsearch mapping
-    @property index {bool}  For elasticsearch mapping
-    @property analyzer {string}  For elasticsearch mapping
-    @property mapping {object}  For elasticsearch mapping
+    @property type {string}  https://www.elastic.co/guide/en/elasticsearch/reference/5.6/mapping-types.html
+    @property index {bool}  https://www.elastic.co/guide/en/elasticsearch/reference/5.6/mapping-index.html
+    @property mapping {object}  https://www.elastic.co/guide/en/elasticsearch/reference/5.6/mapping.html
     @property propertyName {string} The property name in the document. It will be set at Document.define()
     ###
-    constructor: (args={}) ->
+    constructor: (args = {}) ->
         {
             @required
             @dbField
             @type
             @index
-            @analyzer
             @mapping
         } = args
         @defaultValue = args.default
@@ -27,7 +25,9 @@ class Property
         @index ?= yes
 
 class StringProperty extends Property
-    constructor: (args) ->
+    constructor: (args = {}) ->
+        # analyzer: https://www.elastic.co/guide/en/elasticsearch/reference/5.6/analyzer.html
+        {@analyzer} = args
         super args
     toJs: (value) ->
         ###
@@ -60,7 +60,9 @@ class StringProperty extends Property
 exports.StringProperty = StringProperty
 
 class TextProperty extends Property
-    constructor: (args) ->
+    constructor: (args = {}) ->
+        # analyzer: https://www.elastic.co/guide/en/elasticsearch/reference/5.6/analyzer.html
+        {@analyzer} = args
         super args
     toJs: (value) ->
         ###
@@ -93,7 +95,9 @@ class TextProperty extends Property
 exports.TextProperty = TextProperty
 
 class KeywordProperty extends Property
-    constructor: (args) ->
+    constructor: (args = {}) ->
+        # normalizer: https://www.elastic.co/guide/en/elasticsearch/reference/5.6/analysis-normalizers.html
+        {@normalizer} = args
         super args
     toJs: (value) ->
         ###
@@ -195,7 +199,7 @@ class BooleanProperty extends Property
 exports.BooleanProperty = BooleanProperty
 
 class DateProperty extends Property
-    constructor: (args={}) ->
+    constructor: (args = {}) ->
         {@autoNow} = args
         super args
     toJs: (value) ->
@@ -225,7 +229,7 @@ class DateProperty extends Property
 exports.DateProperty = DateProperty
 
 class ListProperty extends Property
-    constructor: (args={}) ->
+    constructor: (args = {}) ->
         {@itemClass} = args
         super args
     toJs: (value) ->
@@ -304,7 +308,7 @@ class ObjectProperty extends Property
 exports.ObjectProperty = ObjectProperty
 
 class ReferenceProperty extends Property
-    constructor: (args={}) ->
+    constructor: (args = {}) ->
         {@referenceClass} = args
         super args
     toJs: (value) ->

@@ -23,15 +23,17 @@ $ npm install enju --save
 
 ## Config
 enju use [node-config](https://github.com/lorenwest/node-config).  
-`/your_project/config/default.cson`  
+`/your_project/config/default.json`  
 Read more elasticsearch config at here:  
 [https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html)
-```cson
-enju:
-    indexPrefix: ''
-    elasticsearchConfig:
-        apiVersion: '5.6'
-        host: 'http://localhost:9200'
+```json
+"enju": {
+    "indexPrefix": "",
+    "elasticsearchConfig": {
+        "apiVersion": "5.6",
+        "host": "http://localhost:9200"
+    }
+}
 ```
 
 
@@ -281,21 +283,32 @@ class Property
     @property default {any}
     @property required {bool}
     @property dbField {string}
-    @property type {string}  For elasticsearch mapping
-    @property index {bool}  For elasticsearch mapping
-    @property analyzer {string}  For elasticsearch mapping
-    @property mapping {object}  For elasticsearch mapping
+    @property type {string}  https://www.elastic.co/guide/en/elasticsearch/reference/5.6/mapping-types.html
+    @property index {bool}  https://www.elastic.co/guide/en/elasticsearch/reference/5.6/mapping-index.html
+    @property mapping {object}  https://www.elastic.co/guide/en/elasticsearch/reference/5.6/mapping.html
     @property propertyName {string} The property name in the document. It will be set at Document.define()
     ###
 ```
 ```coffee
 class StringProperty extends Property
+    ###
+    https://www.elastic.co/guide/en/elasticsearch/reference/5.6/analyzer.html
+    @property analyzer {string}
+    ###
 ```
 ```coffee
 class TextProperty extends Property
+    ###
+    https://www.elastic.co/guide/en/elasticsearch/reference/5.6/analyzer.html
+    @property analyzer {string}
+    ###
 ```
 ```coffee
 class KeywordProperty extends Property
+    ###
+    https://www.elastic.co/guide/en/elasticsearch/reference/5.6/analysis-normalizers.html
+    @property normalizer {string}
+    ###
 ```
 ```coffee
 class IntegerProperty extends Property

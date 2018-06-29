@@ -268,7 +268,7 @@ module.exports = class Query
             operation: operationCode
         @
 
-    fetch: (args={}) ->
+    fetch: (args = {}) ->
         ###
         Fetch documents by this query.
         @param args {object}
