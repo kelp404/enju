@@ -26,7 +26,7 @@ enju use [node-config](https://github.com/lorenwest/node-config).
 `/your_project/config/default.json`  
 Read more elasticsearch config at here:  
 [https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html)
-```cson
+```json
 {
     "enju": {
         "indexPrefix": "",
