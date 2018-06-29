@@ -23,15 +23,19 @@ $ npm install enju --save
 
 ## Config
 enju use [node-config](https://github.com/lorenwest/node-config).  
-`/your_project/config/default.cson`  
+`/your_project/config/default.json`  
 Read more elasticsearch config at here:  
 [https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html)
 ```cson
-enju:
-    indexPrefix: ''
-    elasticsearchConfig:
-        apiVersion: '2.4'
-        host: 'http://localhost:9200'
+{
+    "enju": {
+        "indexPrefix": "",
+        "elasticsearchConfig": {
+            "apiVersion": "2.4",
+            "host": "http://localhost:9200"
+        }
+    }
+}
 ```
 
 
