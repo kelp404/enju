@@ -366,15 +366,25 @@ module.exports = class Document
                 deferred.reject error
                 return deferred.promise
 
-        @constructor._es.index
-            index: @constructor.getIndexName()
-            type: @constructor.getDocumentType()
-            refresh: refresh
-            id: @id
-            version: if @version? then @version + 1 else 0
-            versionType: 'external'
-            body: document
-        , (error, response) =>
+        if @id
+            # modify
+            args =
+                index: @constructor.getIndexName()
+                type: @constructor.getDocumentType()
+                refresh: refresh
+                id: @id
+                version: if @version? then @version + 1 else 0
+                versionType: 'external'
+                body: document
+        else
+            # create
+            args =
+                index: @constructor.getIndexName()
+                type: @constructor.getDocumentType()
+                refresh: refresh
+                body: document
+
+        @constructor._es.index args, (error, response) =>
             if error
                 deferred.reject error
                 return

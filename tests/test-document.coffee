@@ -230,9 +230,6 @@ exports.testDocumentSaveWithoutRefresh = (test) ->
                 index: 'index'
                 type: 'DataModel'
                 refresh: no
-                id: null,
-                version: 0
-                versionType: 'external'
                 body:
                     name: 'enju'
             callback null,
@@ -260,9 +257,6 @@ exports.testDocumentSaveWithRefresh = (test) ->
                 index: 'index'
                 type: 'DataModel'
                 refresh: yes
-                id: null,
-                version: 0
-                versionType: 'external'
                 body:
                     name: 'enju'
             callback null,
