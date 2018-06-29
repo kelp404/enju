@@ -27,11 +27,13 @@ enju use [node-config](https://github.com/lorenwest/node-config).
 Read more elasticsearch config at here:  
 [https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html)
 ```json
-"enju": {
-    "indexPrefix": "",
-    "elasticsearchConfig": {
-        "apiVersion": "5.6",
-        "host": "http://localhost:9200"
+{
+    "enju": {
+        "indexPrefix": "",
+        "elasticsearchConfig": {
+            "apiVersion": "5.6",
+            "host": "http://localhost:9200"
+        }
     }
 }
 ```
