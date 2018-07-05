@@ -20,7 +20,7 @@
     "database",
     "ORM"
   ],
-  "author": "",
+  "author": "Kelp <kelp@phate.org> (https://github.com/kelp404)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kelp404/enju/issues"
