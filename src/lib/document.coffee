@@ -199,6 +199,22 @@ module.exports = class Document
         query = new Query(@)
         query.intersect field, operation
 
+    @refresh = (args = {}) ->
+        ###
+        Explicitly refresh one or more index, making all operations performed since the last refresh available for search.
+        https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference-5-6.html#api-indices-refresh-5-6
+        @params args {object}
+        @returns {promise}
+        ###
+        deferred = q.defer()
+        args.index = @getIndexName()
+        @_es.indices.refresh args, (error) ->
+            if error
+                deferred.reject error
+                return
+            deferred.resolve()
+        deferred.promise
+
     @updateMapping = ->
         ###
         Update the index mapping.

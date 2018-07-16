@@ -200,6 +200,23 @@ exports.testDocumentAll = (test) ->
     test.equal query.documentClass, DataModel
     test.done()
 
+exports.testDocumentRefresh = (test) ->
+    class DataModel extends Document
+        @_index = 'index'
+    _es = DataModel._es
+    DataModel._es =
+        indices:
+            refresh: (args, callback) ->
+                test.deepEqual args,
+                    index: 'index'
+                callback null, yes
+
+    test.expect 2
+    DataModel.refresh().then ->
+        test.ok 1
+        test.done()
+    DataModel._es = _es
+
 exports.testDocumentWhere = (test) ->
     class DataModel extends Document
         @_index = 'index'
