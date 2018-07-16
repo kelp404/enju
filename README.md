@@ -250,6 +250,15 @@ class Document
 # ex: query = Document.where('field', '==': 'value')
 ```
 ```coffee
+@refresh = (args) ->
+    ###
+    Explicitly refresh one or more index.
+    https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference-5-6.html#api-indices-refresh-5-6
+    @params args {object}
+    @returns {promise}
+    ###
+```
+```coffee
 @updateMapping = ->
     ###
     Update the index mapping.
