@@ -1,5 +1,3 @@
-q = require 'q'
-
 utils = require './utils'
 Query = require './query'
 properties = require './properties'
@@ -82,7 +80,7 @@ module.exports = class Document
             return
         throw exceptions.ArgumentError('Argument error for enju.Document.define()')
 
-    @get = (ids, fetchReference=yes) ->
+    @get = (ids, fetchReference=yes) -> new Promise (resolve, reject) =>
         ###
         Fetch the document with id or ids.
         If the document is not exist, it will return null.
@@ -90,18 +88,14 @@ module.exports = class Document
         @param fetchReference {bool} Fetch reference data of this document.
         @returns {promise} (Document|null|list)
         ###
-        deferred = q.defer()
-
         # the empty document
         if not ids? or ids is ''
-            deferred.resolve null
-            return deferred.promise
+            return resolve(null)
         # empty documents
         if ids.constructor is Array
             ids = (x for x in ids when x)
             if ids.length is 0
-                deferred.resolve []
-                return deferred.promise
+                return resolve([])
 
         # fetch documents
         if ids.constructor is Array
@@ -111,9 +105,7 @@ module.exports = class Document
                 body:
                     ids: ids
             , (error, response) =>
-                if error
-                    deferred.reject error
-                    return
+                return reject(error) if error
                 result = []
                 for doc in response.docs when doc.found
                     item =
@@ -128,10 +120,12 @@ module.exports = class Document
                 # call resolve()
                 if fetchReference
                     Query.updateReferenceProperties(result).then ->
-                        deferred.resolve result
+                        resolve result
+                    .catch (error) ->
+                        reject error
                 else
-                    deferred.resolve result
-            return deferred.promise
+                    resolve result
+            return
 
         # fetch the document
         @_es.get
@@ -141,10 +135,8 @@ module.exports = class Document
         , (error, response) =>
             if error
                 if error.status is 404
-                    deferred.resolve null
-                    return
-                deferred.reject error
-                return
+                    return resolve(null)
+                return reject(error)
             args =
                 id: response._id
                 version: response._version
@@ -157,31 +149,25 @@ module.exports = class Document
             document = new @(args)
             if fetchReference
                 Query.updateReferenceProperties([document]).then ->
-                    deferred.resolve document
+                    resolve document
+                .catch (error) ->
+                    reject error
             else
-                deferred.resolve document
+                resolve document
 
-        deferred.promise
-
-    @exists = (id) ->
+    @exists = (id) -> new Promise (resolve, reject) =>
         ###
         Is the document exists?
         @param id {string} The documents' id.
         @returns {promise<bool>}
         ###
-        deferred = q.defer()
-
         @_es.exists
             index: @getIndexName()
             type: @getDocumentType()
             id: id
         , (error, response) ->
-            if error
-                deferred.reject error
-                return
-            deferred.resolve response
-
-        deferred.promise
+            return reject(error) if error
+            resolve(response)
 
 
     @all = ->
@@ -199,21 +185,17 @@ module.exports = class Document
         query = new Query(@)
         query.intersect field, operation
 
-    @refresh = (args = {}) ->
+    @refresh = (args = {}) -> new Promise (resolve, reject) =>
         ###
         Explicitly refresh one or more index, making all operations performed since the last refresh available for search.
         https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference-5-6.html#api-indices-refresh-5-6
         @params args {object}
         @returns {promise}
         ###
-        deferred = q.defer()
         args.index = @getIndexName()
         @_es.indices.refresh args, (error) ->
-            if error
-                deferred.reject error
-                return
-            deferred.resolve()
-        deferred.promise
+            return reject(error) if error
+            resolve()
 
     @updateMapping = ->
         ###
@@ -222,49 +204,36 @@ module.exports = class Document
         https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-put-mapping.html
         @returns {promise}
         ###
-        createIndex = =>
-            deferred = q.defer()
+        createIndex = => new Promise (resolve, reject) =>
             @_es.indices.create
                 index: @getIndexName()
             , (error, response) ->
                 if error and error.status isnt 400
-                    deferred.reject error
-                    return
+                    return reject(error)
                 setTimeout ->
-                    deferred.resolve response
+                    resolve response
                 , 1000
-            deferred.promise
 
-        closeIndex = =>
-            deferred = q.defer()
+        closeIndex = => new Promise (resolve, reject) =>
             @_es.indices.close
                 index: @getIndexName()
             , (error, response) ->
-                if error
-                    deferred.reject error
-                    return
-                deferred.resolve response
-            deferred.promise
+                return reject(error) if error
+                resolve response
 
-        putSettings = =>
-            deferred = q.defer()
+        putSettings = => new Promise (resolve, reject) =>
             if not @_settings
-                deferred.resolve()
-                return deferred.promise
+                return resolve()
             @_es.indices.putSettings
                 index: @getIndexName()
                 body:
                     settings:
                         index: @_settings
             , (error, response) ->
-                if error
-                    deferred.reject error
-                    return
-                deferred.resolve response
-            deferred.promise
+                return reject(error) if error
+                resolve response
 
-        putMapping = =>
-            deferred = q.defer()
+        putMapping = => new Promise (resolve, reject) =>
             mapping = {}
             for propertyName, property of @_properties
                 if property.dbField in ['_id', '_version']
@@ -324,24 +293,16 @@ module.exports = class Document
                 body:
                     properties: mapping
             , (error, response) ->
-                if error
-                    deferred.reject error
-                    return
-                deferred.resolve response
-            deferred.promise
+                return reject(error) if error
+                resolve response
 
-        openIndex = =>
-            deferred = q.defer()
+        openIndex = => new Promise (resolve, reject) =>
             @_es.indices.open
                 index: @getIndexName()
             , (error, response) ->
-                if error
-                    deferred.reject error
-                    return
-                deferred.resolve response
-            deferred.promise
+                return reject(error) if error
+                resolve response
 
-        deferred = q.defer()
         createIndex()
         .then closeIndex
         .then putSettings
@@ -349,29 +310,25 @@ module.exports = class Document
         .then openIndex
         .then =>
             console.log "updated mapping [#{@getIndexName()}]"
-            deferred.resolve()
-        , (error) ->
+        .catch (error) ->
             console.error error
-            deferred.reject error
+            throw error
 
-        deferred.promise
-
-    save: (refresh=no) ->
+    save: (refresh=no) -> new Promise (resolve, reject) =>
         ###
         Save this document.
         @param refresh {bool} Refresh the index after performing the operation.
         @returns {promise<Document>}
         ###
-        deferred = q.defer()
-
         document = {}  # it will be written to database
+        convertError = null
         for propertyName, property of @constructor._properties when property.dbField not in ['_id', '_version']
             dbFieldName = property.dbField ? propertyName
             try
                 document[dbFieldName] = property.toDb @
             catch error
-                deferred.reject error
-                return deferred.promise
+                convertError = error
+        return reject(convertError) if convertError?
 
         @constructor._es.index
             index: @constructor.getIndexName()
@@ -382,31 +339,21 @@ module.exports = class Document
             versionType: 'external'
             body: document
         , (error, response) =>
-            if error
-                deferred.reject error
-                return
+            return reject(error) if error
             @id = response._id
             @version = response._version
-            deferred.resolve @
+            resolve @
 
-        deferred.promise
-
-    delete: (refresh=no) ->
+    delete: (refresh=no) -> new Promise (resolve, reject) =>
         ###
         Delete this document.
         @returns {promise<Document>}
         ###
-        deferred = q.defer()
-
         @constructor._es.delete
             index: @constructor.getIndexName()
             type: @constructor.getDocumentType()
             refresh: refresh
             id: @id
         , (error) =>
-            if error
-                deferred.reject error
-                return
-            deferred.resolve @
-
-        deferred.promise
+            return reject(error) if error
+            resolve @

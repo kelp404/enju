@@ -1,5 +1,3 @@
-q = require 'q'
-
 exceptions = require './exceptions'
 properties = require './properties'
 
@@ -68,16 +66,14 @@ module.exports = class Query
     # -----------------------------------------------------
     # class methods
     # -----------------------------------------------------
-    @updateReferenceProperties = (documents) ->
+    @updateReferenceProperties = (documents) -> new Promise (resolve, reject) =>
         ###
         Update reference properties of documents.
         @param documents {list<Document>}
         @returns {promise}
         ###
-        deferred = q.defer()
         if not documents or not documents.length
-            deferred.resolve()
-            return deferred.promise
+            return resolve()
 
         dataTable = {}  # {documentClassName: {documentId: {Document}}}
         documentClasses = {}  # {documentClassName: documentClass}
@@ -100,27 +96,24 @@ module.exports = class Query
                     dataTable[property.referenceClass.name][documentId] = null
 
         # fetch documents
-        funcs = []
+        tasks = []
         for documentClassName, items of dataTable
-            funcs.push do (documentClassName, items) ->
+            tasks.push do (documentClassName, items) ->
                 documentClasses[documentClassName].get(Object.keys(items), no).then (referenceDocuments) ->
                     for referenceDocument in referenceDocuments
                         dataTable[documentClassName][referenceDocument.id] = referenceDocument
-        q.all(funcs)
-        .catch (error) ->
-            deferred.reject error
-        .done ->
+        Promise.all(tasks).then ->
             # update reference properties of documents
             for document in documents
                 for property in referenceProperties  # loop all reference properties in the document
                     resolveDocument = dataTable[property.referenceClass.name][document[property.propertyName]]
                     if property.required and not resolveDocument
-                        console.log("There are a reference class can't mapping")
+                        console.warning("There are a reference class can't mapping: #{property.referenceClass.name}::#{document[property.propertyName]}")
                         continue
                     document[property.propertyName] = resolveDocument
-            deferred.resolve()
-
-        deferred.promise
+            resolve()
+        .catch (error) ->
+            reject error
 
 
     # -----------------------------------------------------
@@ -241,7 +234,7 @@ module.exports = class Query
             isUnion: yes
         @
 
-    orderBy: (field, descending=no) ->
+    orderBy: (field, descending = no) ->
         ###
         Append the order query.
         @param member {Property|string} The property name of the document.
@@ -268,7 +261,7 @@ module.exports = class Query
             operation: operationCode
         @
 
-    fetch: (args={}) ->
+    fetch: (args = {}) -> new Promise (resolve, reject) =>
         ###
         Fetch documents by this query.
         @param args {object}
@@ -281,13 +274,12 @@ module.exports = class Query
         args.skip ?= 0
         args.fetchReference ?= yes
 
-        deferred = q.defer()
         queryObject = @compileQueries()
         if queryObject.isContainsEmpty
-            deferred.resolve
+            resolve
                 items: []
                 total: 0
-            return deferred.promise
+            return
 
         @documentClass._es.search
             index: @documentClass.getIndexName()
@@ -299,9 +291,7 @@ module.exports = class Query
             fields: ['_source']
             version: yes
         , (error, response) =>
-            if error
-                deferred.reject error
-                return
+            return reject(error) if error
             items = do =>
                 result = []
                 for hit in response.hits.hits
@@ -317,69 +307,56 @@ module.exports = class Query
             total = response.hits.total
             if args.fetchReference
                 Query.updateReferenceProperties(items).then ->
-                    deferred.resolve
+                    resolve
                         items: items
                         total: total
+                .catch (error) ->
+                    reject error
             else
-                deferred.resolve
+                resolve
                     items: items
                     total: total
 
-        deferred.promise
-
-    first: (fetchReference=yes) ->
+    first: (fetchReference = yes) ->
         ###
         Fetch the first document by this query.
         @param fetchReference {bool}
         @returns {promise<Document|null>}
         ###
-        deferred = q.defer()
-
-        args =
+        @fetch
             limit: 1
             skip: 0
             fetchReference: fetchReference
-        @fetch(args)
         .then (result) ->
-            deferred.resolve if result.items.length then result.items[0] else null
-        .catch (error) ->
-            deferred.reject error
+            if result.items.length then result.items[0] else null
 
-        deferred.promise
-
-    hasAny: ->
+    hasAny: -> new Promise (resolve, reject) =>
         ###
         Are there any documents match with the query?
         @returns {promise<bool>}
         ###
-        deferred = q.defer()
-
         queryObject = @compileQueries()
         if queryObject.isContainsEmpty
-            deferred.resolve no
-            return deferred.promise
+            resolve no
+            return
 
         @documentClass._es.searchExists
             index: @documentClass.getIndexName()
             body:
                 query: queryObject.query
         .then (result) ->
-            deferred.resolve if result.exists then yes else no
+            resolve if result.exists then yes else no
         .catch (error) ->
             if error?.body?.exists is no
-                deferred.resolve no
+                resolve no
             else
-                deferred.reject error
+                reject error
 
-        deferred.promise
-
-    count: ->
+    count: -> new Promise (resolve, reject) =>
         ###
         Count documents by the query.
         @returns {promise<number>}
         ###
-        deferred = q.defer()
-
         queryObject = @compileQueries()
         @documentClass._es.count
             index: @documentClass.getIndexName()
@@ -387,14 +364,10 @@ module.exports = class Query
                 query: queryObject.query
             size: 0
         , (error, response) ->
-            if error
-                deferred.reject error
-                return
-            deferred.resolve response.count
+            return reject(error) if error
+            resolve response.count
 
-        deferred.promise
-
-    sum: (field) ->
+    sum: (field) -> new Promise (resolve, reject) =>
         ###
         Sum the field of documents by the query.
         https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-sum-aggregation.html
@@ -406,18 +379,16 @@ module.exports = class Query
             allFields.push propertyName
             allFields.push(property.dbField) if property.dbField
         if typeof(field) is 'string' and field.split('.', 1)[0] not in allFields
-            throw new exceptions.SyntaxError("#{field} not in #{@documentClass.name}")
+            return reject(new exceptions.SyntaxError("#{field} not in #{@documentClass.name}"))
 
         if typeof(field) is 'string'
             dbField = @documentClass._properties[field]?.dbField ? field
         else
             dbField = field.dbField ? field.propertyName
 
-        deferred = q.defer()
         queryObject = @compileQueries()
         if queryObject.isContainsEmpty
-            deferred.resolve 0
-            return deferred.promise
+            return resolve(0)
 
         @documentClass._es.search
             index: @documentClass.getIndexName()
@@ -429,14 +400,10 @@ module.exports = class Query
                             field: dbField
             size: 0
         , (error, response) =>
-            if error
-                deferred.reject error
-                return
-            deferred.resolve response.aggregations.intraday_return.value
+            return reject(error) if error
+            resolve response.aggregations.intraday_return.value
 
-        deferred.promise
-
-    groupBy: (field, args = {}) ->
+    groupBy: (field, args = {}) -> new Promise (resolve, reject) =>
         ###
         Aggregations
         http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html
@@ -459,18 +426,16 @@ module.exports = class Query
             allFields.push propertyName
             allFields.push(property.dbField) if property.dbField
         if typeof(field) is 'string' and field.split('.', 1)[0] not in allFields
-            throw new exceptions.SyntaxError("#{field} not in #{@documentClass.name}")
+            return reject(new exceptions.SyntaxError("#{field} not in #{@documentClass.name}"))
 
         if typeof(field) is 'string'
             dbField = @documentClass._properties[field]?.dbField ? field
         else
             dbField = field.dbField ? field.propertyName
 
-        deferred = q.defer()
         queryObject = @compileQueries()
         if queryObject.isContainsEmpty
-            deferred.resolve []
-            return deferred.promise
+            return resolve([])
         @documentClass._es.search
             index: @documentClass.getIndexName()
             body:
@@ -484,11 +449,8 @@ module.exports = class Query
                                 "_#{args.order}": if args.descending then 'desc' else 'asc'
             size: 0
         , (error, response) =>
-            if error
-                deferred.reject error
-                return
-            deferred.resolve response.aggregations.genres.buckets
-        deferred.promise
+            return reject(error) if error
+            resolve response.aggregations.genres.buckets
 
 
     # -----------------------------------------------------
