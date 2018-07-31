@@ -1,4 +1,3 @@
-q = require 'q'
 enju = require '../'
 Document = require '../lib/document'
 Query = require '../lib/query'
@@ -42,7 +41,7 @@ exports.testDocumentGetWithNull = (test) ->
     tasks.push DataModel.get([]).then (result) ->
         test.equal result.constructor, Array
         test.equal result.length, 0
-    q.all(tasks).then ->
+    Promise.all(tasks).then ->
         test.done()
 
 exports.testDocumentGetWithIdButNotFetchReference = (test) ->
@@ -66,8 +65,8 @@ exports.testDocumentGetWithIdButNotFetchReference = (test) ->
     test.expect 2
     DataModel.get('id', no).then (document) ->
         test.equal document.name, 'enju'
-        test.done()
         DataModel._es = _es
+        test.done()
 
 exports.testDocumentGetWithIdAndFetchReference = (test) ->
     class DataModel extends Document
@@ -89,19 +88,17 @@ exports.testDocumentGetWithIdAndFetchReference = (test) ->
                     name: 'enju'
 
     test.expect 2
-    Query.updateReferenceProperties = (documents) ->
-        deferred = q.defer()
+    Query.updateReferenceProperties = (documents) -> new Promise (resolve, reject) =>
         test.deepEqual documents, [{
             id: 'id'
             version: 0
             name: 'enju'
         }]
-        test.done()
+        resolve()
+    DataModel.get('id').then ->
         DataModel._es = _es
         Query.updateReferenceProperties = _updateReferenceProperties
-        deferred.resolve()
-        deferred.promise
-    DataModel.get('id')
+        test.done()
 
 exports.testDocumentGetWithIdsButNotFetchReference = (test) ->
     class DataModel extends Document
@@ -132,8 +129,8 @@ exports.testDocumentGetWithIdsButNotFetchReference = (test) ->
             version: 0
             name: 'enju'
         ]
-        test.done()
         DataModel._es = _es
+        test.done()
 
 exports.testDocumentGetWithIdsAndFetchReference = (test) ->
     class DataModel extends Document
@@ -159,19 +156,17 @@ exports.testDocumentGetWithIdsAndFetchReference = (test) ->
                 ]
 
     test.expect 2
-    Query.updateReferenceProperties = (documents) ->
-        deferred = q.defer()
+    Query.updateReferenceProperties = (documents) -> new Promise (resolve, reject) ->
         test.deepEqual documents, [{
             id: 'id'
             version: 0
             name: 'enju'
         }]
-        test.done()
+        resolve()
+    DataModel.get(['id']).then ->
         DataModel._es = _es
         Query.updateReferenceProperties = _updateReferenceProperties
-        deferred.resolve()
-        deferred.promise
-    DataModel.get(['id'])
+        test.done()
 
 exports.testDocumentExists = (test) ->
     class DataModel extends Document
@@ -188,8 +183,8 @@ exports.testDocumentExists = (test) ->
     test.expect 2
     DataModel.exists('id').then (result) ->
         test.ok result
+        DataModel._es = _es
         test.done()
-    DataModel._es = _es
 
 exports.testDocumentAll = (test) ->
     class DataModel extends Document
@@ -214,8 +209,8 @@ exports.testDocumentRefresh = (test) ->
     test.expect 2
     DataModel.refresh().then ->
         test.ok 1
+        DataModel._es = _es
         test.done()
-    DataModel._es = _es
 
 exports.testDocumentWhere = (test) ->
     class DataModel extends Document
@@ -259,8 +254,8 @@ exports.testDocumentSaveWithoutRefresh = (test) ->
     data.save().then (result) ->
         test.equal result.id, 'id'
         test.equal result.version, 0
-        test.done()
         DataModel._es = _es
+        test.done()
 
 exports.testDocumentSaveWithRefresh = (test) ->
     class DataModel extends Document
@@ -286,8 +281,8 @@ exports.testDocumentSaveWithRefresh = (test) ->
     data.save(yes).then (result) ->
         test.equal result.id, 'id'
         test.equal result.version, 0
-        test.done()
         DataModel._es = _es
+        test.done()
 
 exports.testDocumentDeleteWithoutRefresh = (test) ->
     class DataModel extends Document
@@ -309,8 +304,8 @@ exports.testDocumentDeleteWithoutRefresh = (test) ->
         id: 'id'
         name: 'enju'
     data.delete().then ->
-        test.done()
         DataModel._es = _es
+        test.done()
 
 exports.testDocumentDeleteWithRefresh = (test) ->
     class DataModel extends Document
@@ -332,5 +327,5 @@ exports.testDocumentDeleteWithRefresh = (test) ->
         id: 'id'
         name: 'enju'
     data.delete(yes).then ->
-        test.done()
         DataModel._es = _es
+        test.done()

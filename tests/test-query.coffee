@@ -1,4 +1,3 @@
-q = require 'q'
 enju = require '../'
 Query = require '../lib/query'
 
@@ -14,6 +13,7 @@ exports.setUp = (done) ->
     done()
 
 exports.testQueryWhereWillPassArgumentsToIntersect = (test) ->
+    test.expect 2
     query = new Query(@DataModel)
     _intersect = query.intersect
     query.intersect = (field, operation) ->
@@ -21,37 +21,37 @@ exports.testQueryWhereWillPassArgumentsToIntersect = (test) ->
         test.deepEqual operation,
             equal: 'enju'
     query.where 'name', equal: 'enju'
-    test.expect 2
-    test.done()
     query.intersect = _intersect
+    test.done()
 
 exports.testQueryWhereWillReturnSelf = (test) ->
+    test.expect 1
     query = new Query(@DataModel)
     result = query.where 'name', equal: 'enju'
     test.equal result, query
-    test.expect 1
     test.done()
 
 exports.testQueryIntersectWillReturnSelf = (test) ->
+    test.expect 1
     query = new Query(@DataModel)
     result = query.intersect 'name', equal: 'enju'
     test.equal result, query
-    test.expect 1
     test.done()
 
 exports.testQueryIntersectUnknownOperation = (test) ->
+    test.expect 1
     query = new Query(@DataModel)
     test.throws -> query.intersect 'name', x: 'enju'
-    test.expect 1
     test.done()
 
 exports.testQueryIntersectUnknownField = (test) ->
+    test.expect 1
     query = new Query(@DataModel)
     test.throws -> query.intersect 'x', equal: 'enju'
-    test.expect 1
     test.done()
 
 exports.testQueryIntersectUnequalOperation = (test) ->
+    test.expect 2
     queryA = new Query(@DataModel)
     queryA.intersect 'name', unequal: 'enju'
     queryB = new Query(@DataModel)
@@ -66,10 +66,10 @@ exports.testQueryIntersectUnequalOperation = (test) ->
             isContainsEmpty: no
         ]
     test.deepEqual queryA.queryCells, queryB.queryCells
-    test.expect 2
     test.done()
 
 exports.testQueryIntersectEqualOperation = (test) ->
+    test.expect 2
     queryA = new Query(@DataModel)
     queryA.intersect 'name', equal: 'enju'
     queryB = new Query(@DataModel)
@@ -84,10 +84,10 @@ exports.testQueryIntersectEqualOperation = (test) ->
             isContainsEmpty: no
         ]
     test.deepEqual queryA.queryCells, queryB.queryCells
-    test.expect 2
     test.done()
 
 exports.testQueryIntersectLessOperation = (test) ->
+    test.expect 2
     queryA = new Query(@DataModel)
     queryA.intersect 'age', less: 20
     queryB = new Query(@DataModel)
@@ -102,10 +102,10 @@ exports.testQueryIntersectLessOperation = (test) ->
             isContainsEmpty: no
         ]
     test.deepEqual queryA.queryCells, queryB.queryCells
-    test.expect 2
     test.done()
 
 exports.testQueryIntersectLessEqualOperation = (test) ->
+    test.expect 2
     queryA = new Query(@DataModel)
     queryA.intersect 'age', lessEqual: 20
     queryB = new Query(@DataModel)
@@ -120,10 +120,10 @@ exports.testQueryIntersectLessEqualOperation = (test) ->
             isContainsEmpty: no
         ]
     test.deepEqual queryA.queryCells, queryB.queryCells
-    test.expect 2
     test.done()
 
 exports.testQueryIntersectGreaterOperation = (test) ->
+    test.expect 2
     queryA = new Query(@DataModel)
     queryA.intersect 'age', greater: 20
     queryB = new Query(@DataModel)
@@ -138,10 +138,10 @@ exports.testQueryIntersectGreaterOperation = (test) ->
             isContainsEmpty: no
         ]
     test.deepEqual queryA.queryCells, queryB.queryCells
-    test.expect 2
     test.done()
 
 exports.testQueryIntersectGreaterEqualOperation = (test) ->
+    test.expect 2
     queryA = new Query(@DataModel)
     queryA.intersect 'age', greaterEqual: 20
     queryB = new Query(@DataModel)
@@ -156,10 +156,10 @@ exports.testQueryIntersectGreaterEqualOperation = (test) ->
             isContainsEmpty: no
         ]
     test.deepEqual queryA.queryCells, queryB.queryCells
-    test.expect 2
     test.done()
 
 exports.testQueryIntersectLikeOperation = (test) ->
+    test.expect 1
     query = new Query(@DataModel)
     query.intersect 'name', like: 'enju'
     test.deepEqual query.queryCells,
@@ -171,10 +171,10 @@ exports.testQueryIntersectLikeOperation = (test) ->
             isUnion: undefined
             isContainsEmpty: no
         ]
-    test.expect 1
     test.done()
 
 exports.testQueryIntersetUnlikeOperation = (test) ->
+    test.expect 1
     query = new Query(@DataModel)
     query.intersect 'name', unlike: 'enju'
     test.deepEqual query.queryCells,
@@ -186,10 +186,10 @@ exports.testQueryIntersetUnlikeOperation = (test) ->
             isUnion: undefined
             isContainsEmpty: no
         ]
-    test.expect 1
     test.done()
 
 exports.testQueryIntersectContainsOperation = (test) ->
+    test.expect 1
     query = new Query(@DataModel)
     query.intersect 'age', contains: [18, 20]
     test.deepEqual query.queryCells,
@@ -201,10 +201,10 @@ exports.testQueryIntersectContainsOperation = (test) ->
             isUnion: undefined
             isContainsEmpty: no
         ]
-    test.expect 1
     test.done()
 
 exports.testQueryIntersectExcludeOperation = (test) ->
+    test.expect 1
     query = new Query(@DataModel)
     query.intersect 'age', exclude: [18, 20]
     test.deepEqual query.queryCells,
@@ -216,10 +216,10 @@ exports.testQueryIntersectExcludeOperation = (test) ->
             isUnion: undefined
             isContainsEmpty: no
         ]
-    test.expect 1
     test.done()
 
 exports.testQueryIntersectReplaceDbField = (test) ->
+    test.expect 1
     createTime = new Date('2018-01-23T00:00:00.000Z')
     query = new Query(@DataModel)
     query.intersect 'createTime', equal: createTime
@@ -232,10 +232,10 @@ exports.testQueryIntersectReplaceDbField = (test) ->
             isUnion: undefined
             isContainsEmpty: no
         ]
-    test.expect 1
     test.done()
 
 exports.testQueryIntersectTwoEqualOperationAndOrderOperation = (test) ->
+    test.expect 1
     query = new Query(@DataModel)
     query.intersect 'name', equal: 'enju'
     query.intersect 'name', equal: 'tina'
@@ -267,10 +267,10 @@ exports.testQueryIntersectTwoEqualOperationAndOrderOperation = (test) ->
                 isContainsEmpty: no
             }
         ]
-    test.expect 1
     test.done()
 
 exports.testQueryIntersectFunctionArgument = (test) ->
+    test.expect 1
     query = new Query(@DataModel)
     query.intersect (subQuery) ->
         subQuery.where 'name', equal: 'enju'
@@ -294,10 +294,10 @@ exports.testQueryIntersectFunctionArgument = (test) ->
                 isContainsEmpty: no
             }
         ]]
-    test.expect 1
     test.done()
 
 exports.testQueryFetch = (test) ->
+    test.expect 2
     query = new Query(@DataModel)
     query.where 'name', equal: 'enju'
     _es = @DataModel._es
@@ -324,7 +324,7 @@ exports.testQueryFetch = (test) ->
                             name: 'enju'
                     ]
                     total: 1
-    query.fetch().then (result) ->
+    query.fetch().then (result) =>
         test.deepEqual result,
             total: 1
             items: [
@@ -334,49 +334,45 @@ exports.testQueryFetch = (test) ->
                 age: null
                 createTime: null
             ]
-        test.expect 2
-        test.done()
         @DataModel._es = _es
+        test.done()
 
 exports.testQueryFirst = (test) ->
+    test.expect 2
     query = new Query(@DataModel)
     _fetch = query.fetch
-    query.fetch = (args) ->
-        deferred = q.defer()
+    query.fetch = (args) -> new Promise (resolve, reject) ->
         test.deepEqual args,
             limit: 1
             skip: 0
             fetchReference: yes
-        deferred.resolve
+        resolve
             total: 0
             items: []
-        deferred.promise
     query.first().then (result) ->
         test.equal result, null
-        test.expect 2
-        test.done()
         query.fetch = _fetch
+        test.done()
 
 exports.testQueryFirstWithoutFetchReference = (test) ->
+    test.expect 2
     query = new Query(@DataModel)
     _fetch = query.fetch
-    query.fetch = (args) ->
-        deferred = q.defer()
+    query.fetch = (args) -> new Promise (resolve, reject) ->
         test.deepEqual args,
             limit: 1
             skip: 0
             fetchReference: no
-        deferred.resolve
+        resolve
             total: 0
             items: []
-        deferred.promise
     query.first(no).then (result) ->
         test.equal result, null
-        test.expect 2
-        test.done()
         query.fetch = _fetch
+        test.done()
 
 exports.testQueryCount = (test) ->
+    test.expect 2
     query = new Query(@DataModel)
     _es = @DataModel._es
     @DataModel._es =
@@ -387,12 +383,13 @@ exports.testQueryCount = (test) ->
                     query:
                         match_all: {}
             callback null, count: 1
-    query.count().then (result) ->
+    query.count().then (result) =>
         test.equal result, 1
-        test.done()
         @DataModel._es = _es
+        test.done()
 
 exports.testQuerySum = (test) ->
+    test.expect 2
     query = new Query(@DataModel)
     _es = @DataModel._es
     @DataModel._es =
@@ -411,13 +408,13 @@ exports.testQuerySum = (test) ->
                 aggregations:
                     intraday_return:
                         value: 18
-    query.sum('age').then (result) ->
+    query.sum('age').then (result) =>
         test.equal result, 18
-        test.expect 2
-        test.done()
         @DataModel._es = _es
+        test.done()
 
 exports.testQueryGroupBy = (test) ->
+    test.expect 2
     query = new Query(@DataModel)
     _es = @DataModel._es
     @DataModel._es =
@@ -442,8 +439,7 @@ exports.testQueryGroupBy = (test) ->
                             doc_count: 1
                             key: 18
                         ]
-    query.groupBy('age').then (result) ->
+    query.groupBy('age').then (result) =>
         test.deepEqual result, [doc_count: 1, key: 18]
-        test.expect 2
-        test.done()
         @DataModel._es = _es
+        test.done()
