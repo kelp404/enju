@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "config": "2.0.1",
-    "elasticsearch": "15.0.0",
+    "elasticsearch": "15.1.1",
     "q": "1.5.1"
   }
 }
