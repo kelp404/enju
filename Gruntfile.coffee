@@ -1,5 +1,6 @@
 module.exports = (grunt) ->
     require('time-grunt') grunt
+    require('load-grunt-tasks') grunt
 
     grunt.config.init
         clean:
@@ -44,7 +45,3 @@ module.exports = (grunt) ->
             'clean'
             'coffee'
         ]
-
-    grunt.loadNpmTasks 'grunt-contrib-clean'
-    grunt.loadNpmTasks 'grunt-contrib-coffee'
-    grunt.loadNpmTasks 'grunt-contrib-watch'
