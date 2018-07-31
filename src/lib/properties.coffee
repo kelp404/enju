@@ -26,8 +26,10 @@ class Property
         @required ?= no
 
 class StringProperty extends Property
-    constructor: (args) ->
+    constructor: (args = {}) ->
         super args
+        # analyzer: https://www.elastic.co/guide/en/elasticsearch/reference/2.4/analyzer.html
+        {@analyzer} = args
     toJs: (value) ->
         ###
         Convert value for initial Document.
@@ -128,9 +130,9 @@ class BooleanProperty extends Property
 exports.BooleanProperty = BooleanProperty
 
 class DateProperty extends Property
-    constructor: (args={}) ->
-        {@autoNow} = args
+    constructor: (args = {}) ->
         super args
+        {@autoNow} = args
     toJs: (value) ->
         if not value?
             if @autoNow
@@ -158,9 +160,9 @@ class DateProperty extends Property
 exports.DateProperty = DateProperty
 
 class ListProperty extends Property
-    constructor: (args={}) ->
-        {@itemClass} = args
+    constructor: (args = {}) ->
         super args
+        {@itemClass} = args
     toJs: (value) ->
         if not value?
             if @defaultValue?
@@ -237,9 +239,9 @@ class ObjectProperty extends Property
 exports.ObjectProperty = ObjectProperty
 
 class ReferenceProperty extends Property
-    constructor: (args={}) ->
-        {@referenceClass} = args
+    constructor: (args = {}) ->
         super args
+        {@referenceClass} = args
     toJs: (value) ->
         if not value?
             if @defaultValue?

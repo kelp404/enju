@@ -4,11 +4,9 @@
   "description": "An elasticsearch client on node.js written in CoffeeScript.",
   "main": "index.js",
   "scripts": {
-    "test": "nodeunit tests",
+    "build": "grunt build",
+    "test": "nodeunit tests/*.js",
     "ncu": "./node_modules/npm-check-updates/bin/ncu"
-  },
-  "engines": {
-    "node": ">=0.12.6"
   },
   "repository": {
     "type": "git",
@@ -27,17 +25,17 @@
   },
   "homepage": "https://github.com/kelp404/enju",
   "devDependencies": {
-    "coffee-script": "1.12.7",
+    "coffeescript": "2.3.1",
     "grunt": "1.0.3",
     "grunt-contrib-clean": "1.1.0",
-    "grunt-contrib-coffee": "1.0.0",
-    "grunt-contrib-watch": "1.0.0",
+    "grunt-contrib-coffee": "2.0.0",
+    "grunt-contrib-watch": "1.1.0",
     "npm-check-updates": "2.14.2",
     "time-grunt": "1.4.0"
   },
   "dependencies": {
-    "config": "1.30.0",
-    "elasticsearch": "13.3.1",
+    "config": "2.0.1",
+    "elasticsearch": "15.0.0",
     "q": "1.5.1"
   }
 }
