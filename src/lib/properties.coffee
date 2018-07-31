@@ -26,9 +26,9 @@ class Property
 
 class StringProperty extends Property
     constructor: (args = {}) ->
+        super args
         # analyzer: https://www.elastic.co/guide/en/elasticsearch/reference/5.6/analyzer.html
         {@analyzer} = args
-        super args
     toJs: (value) ->
         ###
         Convert value for initial Document.
@@ -61,9 +61,9 @@ exports.StringProperty = StringProperty
 
 class TextProperty extends Property
     constructor: (args = {}) ->
+        super args
         # analyzer: https://www.elastic.co/guide/en/elasticsearch/reference/5.6/analyzer.html
         {@analyzer} = args
-        super args
     toJs: (value) ->
         ###
         Convert value for initial Document.
@@ -96,9 +96,9 @@ exports.TextProperty = TextProperty
 
 class KeywordProperty extends Property
     constructor: (args = {}) ->
+        super args
         # normalizer: https://www.elastic.co/guide/en/elasticsearch/reference/5.6/analysis-normalizers.html
         {@normalizer} = args
-        super args
     toJs: (value) ->
         ###
         Convert value for initial Document.
@@ -200,8 +200,8 @@ exports.BooleanProperty = BooleanProperty
 
 class DateProperty extends Property
     constructor: (args = {}) ->
-        {@autoNow} = args
         super args
+        {@autoNow} = args
     toJs: (value) ->
         if not value?
             if @autoNow
@@ -230,8 +230,8 @@ exports.DateProperty = DateProperty
 
 class ListProperty extends Property
     constructor: (args = {}) ->
-        {@itemClass} = args
         super args
+        {@itemClass} = args
     toJs: (value) ->
         if not value?
             if @defaultValue?
@@ -309,8 +309,8 @@ exports.ObjectProperty = ObjectProperty
 
 class ReferenceProperty extends Property
     constructor: (args = {}) ->
-        {@referenceClass} = args
         super args
+        {@referenceClass} = args
     toJs: (value) ->
         if not value?
             if @defaultValue?

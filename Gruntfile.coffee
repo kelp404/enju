@@ -7,6 +7,7 @@ module.exports = (grunt) ->
                 'index.js'
                 'lib'
             ]
+            test: 'tests/*.js'
 
         coffee:
             enju:
@@ -16,6 +17,13 @@ module.exports = (grunt) ->
                 src: ['**/*.coffee']
                 dest: './'
                 ext: '.js'
+            test:
+                expand: yes
+                flatten: no
+                cwd: 'tests'
+                src: ['**/*.coffee']
+                dest: './tests'
+                ext: '.js'
 
         watch:
             enju:
@@ -24,9 +32,6 @@ module.exports = (grunt) ->
                 options:
                     spawn: no
 
-    # -----------------------------------
-    # tasks
-    # -----------------------------------
     grunt.registerTask 'dev', ->
         grunt.task.run [
             'clean:build'
@@ -36,8 +41,8 @@ module.exports = (grunt) ->
 
     grunt.registerTask 'build', ->
         grunt.task.run [
-            'clean:build'
-            'coffee:enju'
+            'clean'
+            'coffee'
         ]
 
     grunt.loadNpmTasks 'grunt-contrib-clean'

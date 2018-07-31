@@ -13,9 +13,9 @@ jobs:
       - image: node:6.14.3
     steps:
       - checkout
-      - run: npm install -g coffee-script nodeunit grunt-cli
+      - run: npm install -g coffeescript nodeunit grunt-cli
       - run: npm install
-      - run: grunt build
+      - run: npm run build
       - run: npm test
 
   node8:
@@ -24,9 +24,9 @@ jobs:
       - image: node:8.11.3
     steps:
       - checkout
-      - run: npm install -g coffee-script nodeunit grunt-cli
+      - run: npm install -g coffeescript nodeunit grunt-cli
       - run: npm install
-      - run: grunt build
+      - run: npm run build
       - run: npm test
 
   node10:
@@ -35,7 +35,7 @@ jobs:
       - image: node:10.6.0
     steps:
       - checkout
-      - run: npm install -g coffee-script nodeunit grunt-cli
+      - run: npm install -g coffeescript nodeunit grunt-cli
       - run: npm install
-      - run: grunt build
+      - run: npm run build
       - run: npm test

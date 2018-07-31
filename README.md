@@ -120,13 +120,13 @@ grunt dev
 ```
 
 ```bash
-# build coffee-script
-grunt build
+# build CoffeeScript
+npm run build
 ```
 
 ```bash
 # run test
-grunt build
+npm run build
 npm test
 ```
 
