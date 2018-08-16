@@ -10,7 +10,7 @@ jobs:
   node6:
     working_directory: ~/enju
     docker:
-      - image: node:6.14.3
+      - image: node:6.14.4
     steps:
       - checkout
       - run: npm install -g coffeescript nodeunit grunt-cli
@@ -21,7 +21,7 @@ jobs:
   node8:
     working_directory: ~/enju
     docker:
-      - image: node:8.11.3
+      - image: node:8.11.4
     steps:
       - checkout
       - run: npm install -g coffeescript nodeunit grunt-cli
@@ -32,7 +32,7 @@ jobs:
   node10:
     working_directory: ~/enju
     docker:
-      - image: node:10.8.0
+      - image: node:10.9.0
     steps:
       - checkout
       - run: npm install -g coffeescript nodeunit grunt-cli
