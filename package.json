@@ -1,6 +1,6 @@
 {
   "name": "enju",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "An elasticsearch client on node.js written in CoffeeScript.",
   "main": "index.js",
   "scripts": {
