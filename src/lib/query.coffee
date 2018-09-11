@@ -55,7 +55,7 @@ class QueryCell
 
 
 module.exports = class Query
-    constructor: (documentClass, queryCells=[]) ->
+    constructor: (documentClass, queryCells = []) ->
         ###
         @param documentClass {constructor} The document's constructor.
         ###
@@ -525,7 +525,7 @@ module.exports = class Query
         @param queryCell: {QueryCell}
         @returns {object}
         ###
-        bleachRegexCode = (value='') ->
+        bleachRegexCode = (value = '') ->
             value = "#{value}"
             table = '^$*+?{}.[]()\\|/'
             result = []
