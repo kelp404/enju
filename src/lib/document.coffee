@@ -80,7 +80,7 @@ module.exports = class Document
             return
         throw exceptions.ArgumentError('Argument error for enju.Document.define()')
 
-    @get = (ids, fetchReference=yes) -> new Promise (resolve, reject) =>
+    @get = (ids, fetchReference = yes) -> new Promise (resolve, reject) =>
         ###
         Fetch the document with id or ids.
         If the document is not exist, it will return null.
@@ -323,7 +323,7 @@ module.exports = class Document
             console.error error
             throw error
 
-    save: (refresh=no) -> new Promise (resolve, reject) =>
+    save: (refresh = no) -> new Promise (resolve, reject) =>
         ###
         Save this document.
         @param refresh {bool} Refresh the index after performing the operation.
@@ -363,7 +363,7 @@ module.exports = class Document
             @version = response._version
             resolve @
 
-    delete: (refresh=no) -> new Promise (resolve, reject) =>
+    delete: (refresh = no) -> new Promise (resolve, reject) =>
         ###
         Delete this document.
         @returns {promise<Document>}
