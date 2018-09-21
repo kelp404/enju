@@ -32,7 +32,7 @@ jobs:
   node10:
     working_directory: ~/enju
     docker:
-      - image: node:10.10.0
+      - image: node:10.11.0
     steps:
       - checkout
       - run: npm install -g coffeescript nodeunit grunt-cli
