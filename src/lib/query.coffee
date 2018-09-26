@@ -108,7 +108,7 @@ module.exports = class Query
                 for property in referenceProperties  # loop all reference properties in the document
                     resolveDocument = dataTable[property.referenceClass.name][document[property.propertyName]]
                     if property.required and not resolveDocument
-                        console.warning("There are a reference class can't mapping: #{property.referenceClass.name}::#{document[property.propertyName]}")
+                        console.log "There are a reference class can't mapping: #{property.referenceClass.name}::#{document[property.propertyName]}"
                         continue
                     document[property.propertyName] = resolveDocument
             resolve()
