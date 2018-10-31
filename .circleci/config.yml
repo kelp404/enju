@@ -6,7 +6,6 @@ workflows:
       - node6
       - node8
       - node10
-      - node11
 jobs:
   node6:
     working_directory: ~/enju
@@ -33,21 +32,10 @@ jobs:
   node10:
     working_directory: ~/enju
     docker:
-      - image: node:10.13.0
+      - image: node:10.12.0
     steps:
       - checkout
       - run: npm install -g coffeescript nodeunit grunt-cli
       - run: npm install
       - run: npm run build
       - run: npm test
-
-  node11:
-    working_directory: ~/enju
-    docker:
-    - image: node:11.0.0
-    steps:
-    - checkout
-    - run: npm install -g coffeescript nodeunit grunt-cli
-    - run: npm install
-    - run: npm run build
-    - run: npm test
