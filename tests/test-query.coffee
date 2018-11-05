@@ -384,7 +384,7 @@ exports.testQueryHasAny = (test) ->
                         match_all: {}
             resolve
                 exists: yes
-    query.hasAny().then (result) ->
+    query.hasAny().then (result) =>
         test.ok result
         test.expect 2
         test.done()
@@ -403,7 +403,7 @@ exports.testQueryHasAnyThrowException = (test) ->
             reject
                 body:
                     exists: no
-    query.hasAny().then (result) ->
+    query.hasAny().then (result) =>
         test.equal result, no
         test.expect 2
         test.done()
