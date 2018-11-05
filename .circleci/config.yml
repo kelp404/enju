@@ -44,7 +44,7 @@ jobs:
   node11:
     working_directory: ~/enju
     docker:
-    - image: node:11.0.0
+    - image: node:11.1.0
     steps:
     - checkout
     - run: npm install -g coffeescript nodeunit grunt-cli
