@@ -21,9 +21,9 @@ module.exports = (grunt) ->
             test:
                 expand: yes
                 flatten: no
-                cwd: 'tests'
+                cwd: '__tests__'
                 src: ['**/*.coffee']
-                dest: './tests'
+                dest: './__tests__'
                 ext: '.js'
 
         watch:

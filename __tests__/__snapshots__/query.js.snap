@@ -1,0 +1,347 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test query count. 1`] = `
+Object {
+  "body": Object {
+    "query": Object {
+      "match_all": Object {},
+    },
+  },
+  "index": "index",
+}
+`;
+
+exports[`Test query fetch. 1`] = `
+Object {
+  "body": Object {
+    "query": Object {
+      "match": Object {
+        "name": Object {
+          "operator": "and",
+          "query": "enju",
+        },
+      },
+    },
+    "sort": Array [],
+  },
+  "from": 0,
+  "index": "index",
+  "size": 1000,
+  "version": true,
+}
+`;
+
+exports[`Test query fetch. 2`] = `
+Object {
+  "items": Array [
+    DataModel {
+      "age": null,
+      "createTime": null,
+      "id": "id",
+      "name": "enju",
+      "version": 1,
+    },
+  ],
+  "total": 1,
+}
+`;
+
+exports[`Test query first without fetch reference. 1`] = `
+Object {
+  "fetchReference": false,
+  "limit": 1,
+  "skip": 0,
+}
+`;
+
+exports[`Test query first without fetch reference. 2`] = `null`;
+
+exports[`Test query first. 1`] = `
+Object {
+  "fetchReference": true,
+  "limit": 1,
+  "skip": 0,
+}
+`;
+
+exports[`Test query group by. 1`] = `
+Object {
+  "body": Object {
+    "aggs": Object {
+      "genres": Object {
+        "terms": Object {
+          "field": "age",
+          "order": Object {
+            "_term": "asc",
+          },
+          "size": 1000,
+        },
+      },
+    },
+    "query": Object {
+      "match_all": Object {},
+    },
+  },
+  "index": "index",
+  "size": 0,
+}
+`;
+
+exports[`Test query group by. 2`] = `
+Array [
+  Object {
+    "doc_count": 1,
+    "key": 18,
+  },
+]
+`;
+
+exports[`Test query intersect contains operation. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "age",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "contains",
+      "value": Array [
+        18,
+        20,
+      ],
+    },
+  ],
+}
+`;
+
+exports[`Test query intersect equal operation. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "name",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "equal",
+      "value": "enju",
+    },
+  ],
+}
+`;
+
+exports[`Test query intersect exclude operation. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "age",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "exclude",
+      "value": Array [
+        18,
+        20,
+      ],
+    },
+  ],
+}
+`;
+
+exports[`Test query intersect function argument. 1`] = `
+Array [
+  Array [
+    QueryCell {
+      "dbField": "name",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "equal",
+      "value": "enju",
+    },
+    QueryCell {
+      "dbField": "name",
+      "isContainsEmpty": false,
+      "isIntersect": undefined,
+      "isUnion": true,
+      "operation": "equal",
+      "value": "tina",
+    },
+  ],
+]
+`;
+
+exports[`Test query intersect greater equal operation. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "age",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "greaterEqual",
+      "value": 20,
+    },
+  ],
+}
+`;
+
+exports[`Test query intersect greater operation. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "age",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "greater",
+      "value": 20,
+    },
+  ],
+}
+`;
+
+exports[`Test query intersect less equal operation. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "age",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "lessEqual",
+      "value": 20,
+    },
+  ],
+}
+`;
+
+exports[`Test query intersect less operation. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "age",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "less",
+      "value": 20,
+    },
+  ],
+}
+`;
+
+exports[`Test query intersect like operation. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "name",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "like",
+      "value": "enju",
+    },
+  ],
+}
+`;
+
+exports[`Test query intersect replace db field. 1`] = `
+Array [
+  QueryCell {
+    "dbField": "create_time",
+    "isContainsEmpty": false,
+    "isIntersect": true,
+    "isUnion": undefined,
+    "operation": "equal",
+    "value": 2018-01-23T00:00:00.000Z,
+  },
+]
+`;
+
+exports[`Test query intersect two equal operation and order operation. 1`] = `
+Array [
+  QueryCell {
+    "dbField": "name",
+    "isContainsEmpty": false,
+    "isIntersect": true,
+    "isUnion": undefined,
+    "operation": "equal",
+    "value": "enju",
+  },
+  QueryCell {
+    "dbField": "name",
+    "isContainsEmpty": false,
+    "isIntersect": true,
+    "isUnion": undefined,
+    "operation": "equal",
+    "value": "tina",
+  },
+  QueryCell {
+    "dbField": "create_time",
+    "isContainsEmpty": false,
+    "isIntersect": undefined,
+    "isUnion": undefined,
+    "operation": "orderASC",
+    "value": undefined,
+  },
+]
+`;
+
+exports[`Test query intersect unequal operation. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "name",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "unequal",
+      "value": "enju",
+    },
+  ],
+}
+`;
+
+exports[`Test query intersect unlike operation. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "name",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "unlike",
+      "value": "enju",
+    },
+  ],
+}
+`;
+
+exports[`Test query sum. 1`] = `
+Object {
+  "body": Object {
+    "aggs": Object {
+      "intraday_return": Object {
+        "sum": Object {
+          "field": "age",
+        },
+      },
+    },
+    "query": Object {
+      "match_all": Object {},
+    },
+  },
+  "index": "index",
+  "size": 0,
+}
+`;

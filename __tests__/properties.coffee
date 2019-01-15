@@ -1,0 +1,419 @@
+properties = require '../lib/properties'
+exceptions = require '../lib/exceptions'
+
+
+
+beforeEach ->
+    global.parseInt.mockClear?()
+    global.parseFloat.mockClear?()
+    global.Boolean.mockClear?()
+
+test 'Initial property.', ->
+    property = new properties.StringProperty
+        required: yes
+        dbField: 'field'
+        type: 'string'
+        index: 'index'
+        analyzer: 'keyword'
+        mapping:
+            analyzer: 'keyword'
+        default: 'default'
+    expect(property).toMatchSnapshot()
+
+
+# String Property
+test 'The default string property is optional.', ->
+    property = new properties.StringProperty()
+    expect(property.required).toBe no
+
+test 'The default value of string property is null.', ->
+    property = new properties.StringProperty()
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBeNull()
+    expect(property.toDb(property: null)).toBeNull()
+
+test 'The default value config of the string property.', ->
+    property = new properties.StringProperty
+        default: 'default'
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBe 'default'
+    instance =
+        property: null
+    expect(property.toDb(instance)).toBe 'default'
+    expect(instance.property).toBe 'default'
+
+test 'Throw an error when the required string property get null.', ->
+    property = new properties.StringProperty
+        required: yes
+    property.propertyName = 'property'
+    expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
+    expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
+
+test 'Convert the value of the string property to the string.', ->
+    property = new properties.StringProperty()
+    property.propertyName = 'property'
+    fakeToString = jest.fn -> 'string'
+    instance =
+        property:
+            toString: jest.fn -> 'string'
+    expect(property.toJs(toString: fakeToString)).toBe 'string'
+    expect(fakeToString).toBeCalled()
+    expect(property.toDb(instance)).toBe 'string'
+    expect(instance.property.toString).toBeCalled()
+
+
+# Text Property
+test 'The default text property is optional.', ->
+    property = new properties.TextProperty()
+    expect(property.required).toBe no
+
+test 'The default value of text property is null.', ->
+    property = new properties.TextProperty()
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBeNull()
+    expect(property.toDb(property: null)).toBeNull()
+
+test 'The default value config of the text property.', ->
+    property = new properties.TextProperty
+        default: 'default'
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBe 'default'
+    instance =
+        property: null
+    expect(property.toDb(instance)).toBe 'default'
+    expect(instance.property).toBe 'default'
+
+test 'Throw an error when the required text property get null.', ->
+    property = new properties.TextProperty
+        required: yes
+    property.propertyName = 'property'
+    expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
+    expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
+
+test 'Convert the value of the text property to the string.', ->
+    property = new properties.TextProperty()
+    property.propertyName = 'property'
+    fakeToString = jest.fn -> 'string'
+    instance =
+        property:
+            toString: jest.fn -> 'string'
+    expect(property.toJs(toString: fakeToString)).toBe 'string'
+    expect(fakeToString).toBeCalled()
+    expect(property.toDb(instance)).toBe 'string'
+    expect(instance.property.toString).toBeCalled()
+
+
+# Keyword Property
+test 'The default keyword property is optional.', ->
+    property = new properties.KeywordProperty()
+    expect(property.required).toBe no
+
+test 'The default value of keyword property is null.', ->
+    property = new properties.KeywordProperty()
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBeNull()
+    expect(property.toDb(property: null)).toBeNull()
+
+test 'The default value config of the keyword property.', ->
+    property = new properties.KeywordProperty
+        default: 'default'
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBe 'default'
+    instance =
+        property: null
+    expect(property.toDb(instance)).toBe 'default'
+    expect(instance.property).toBe 'default'
+
+test 'Throw an error when the required keyword property get null.', ->
+    property = new properties.KeywordProperty
+        required: yes
+    property.propertyName = 'property'
+    expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
+    expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
+
+test 'Convert the value of the keyword property to the string.', ->
+    property = new properties.KeywordProperty()
+    property.propertyName = 'property'
+    fakeToString = jest.fn -> 'string'
+    instance =
+        property:
+            toString: jest.fn -> 'string'
+    expect(property.toJs(toString: fakeToString)).toBe 'string'
+    expect(fakeToString).toBeCalled()
+    expect(property.toDb(instance)).toBe 'string'
+    expect(instance.property.toString).toBeCalled()
+
+
+# Integer Property
+test 'The default integer property is optional.', ->
+    property = new properties.IntegerProperty()
+    expect(property.required).toBe no
+
+test 'The default value of integer property is null.', ->
+    property = new properties.IntegerProperty()
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBeNull()
+    expect(property.toDb(property: null)).toBeNull()
+
+test 'The default value config of the integer property.', ->
+    property = new properties.IntegerProperty
+        default: 2
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBe 2
+    instance =
+        property: null
+    expect(property.toDb(instance)).toBe 2
+    expect(instance.property).toBe 2
+
+test 'Throw an error when the required integer property get null.', ->
+    property = new properties.IntegerProperty
+        required: yes
+    property.propertyName = 'property'
+    expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
+    expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
+
+test 'Convert the value of the integer property to the integer.', ->
+    property = new properties.IntegerProperty()
+    global.parseInt = jest.fn parseInt
+    property.propertyName = 'property'
+    instance =
+        property: 2
+    expect(property.toJs(2)).toBe 2
+    expect(property.toDb(instance)).toBe 2
+    expect(global.parseInt).toBeCalledTimes 2
+
+
+# Float property
+test 'The default float property is optional.', ->
+    property = new properties.FloatProperty()
+    expect(property.required).toBe no
+
+test 'The default value of float property is null.', ->
+    property = new properties.FloatProperty()
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBeNull()
+    expect(property.toDb(property: null)).toBeNull()
+
+test 'The default value config of the float property.', ->
+    property = new properties.FloatProperty
+        default: 3.2
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBe 3.2
+    instance =
+        property: null
+    expect(property.toDb(instance)).toBe 3.2
+    expect(instance.property).toBe 3.2
+
+test 'Throw an error when the required float property get null.', ->
+    property = new properties.FloatProperty
+        required: yes
+    property.propertyName = 'property'
+    expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
+    expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
+
+test 'Convert the value of the float property to the float.', ->
+    property = new properties.FloatProperty()
+    global.parseFloat = jest.fn parseFloat
+    property.propertyName = 'property'
+    instance =
+        property: 3.2
+    expect(property.toJs(3.2)).toBe 3.2
+    expect(property.toDb(instance)).toBe 3.2
+    expect(global.parseFloat).toBeCalledTimes 2
+
+
+# Boolean property
+test 'The default boolean property is optional.', ->
+    property = new properties.BooleanProperty()
+    expect(property.required).toBe no
+
+test 'The default value of boolean property is null.', ->
+    property = new properties.BooleanProperty()
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBeNull()
+    expect(property.toDb(property: null)).toBeNull()
+
+test 'The default value config of the boolean property.', ->
+    property = new properties.BooleanProperty
+        default: yes
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBe yes
+    instance =
+        property: null
+    expect(property.toDb(instance)).toBe yes
+    expect(instance.property).toBe yes
+
+test 'Throw an error when the required boolean property get null.', ->
+    property = new properties.BooleanProperty
+        required: yes
+    property.propertyName = 'property'
+    expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
+    expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
+
+test 'Convert the value of the boolean property to the boolean.', ->
+    property = new properties.BooleanProperty()
+    global.Boolean = jest.fn Boolean
+    property.propertyName = 'property'
+    instance =
+        property: yes
+    expect(property.toJs(yes)).toBe yes
+    expect(property.toDb(instance)).toBe yes
+    expect(global.Boolean).toBeCalledTimes 2
+
+
+# Date property
+test 'The default date property is optional.', ->
+    property = new properties.DateProperty()
+    expect(property.required).toBe no
+
+test 'The default value of date property is null.', ->
+    property = new properties.DateProperty()
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBeNull()
+    expect(property.toDb(property: null)).toBeNull()
+
+test 'The default value config of the date property.', ->
+    defaultValue = new Date()
+    property = new properties.DateProperty
+        default: defaultValue
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toEqual defaultValue
+    instance =
+        property: null
+    expect(property.toDb(instance)).toBe defaultValue.toJSON()
+    expect(instance.property).toEqual defaultValue
+
+test 'Throw an error when the required date property get null.', ->
+    property = new properties.DateProperty
+        required: yes
+    property.propertyName = 'property'
+    expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
+    expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
+
+test 'Convert the value of the date property to the date.', ->
+    date = new Date()
+    property = new properties.DateProperty()
+    property.propertyName = 'property'
+    instance =
+        property: date
+    expect(property.toJs(date.toJSON())).toEqual date
+    expect(property.toDb(instance)).toBe date.toJSON()
+
+
+# List property
+test 'Initial list property.', ->
+    property = new properties.ListProperty
+        itemClass: properties.StringProperty
+    expect(property.itemClass).toBe properties.StringProperty
+
+test 'The default value of list property is null.', ->
+    property = new properties.ListProperty()
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBeNull()
+    expect(property.toDb(property: null)).toBeNull()
+
+test 'The default value config of the list property.', ->
+    defaultValue = []
+    property = new properties.ListProperty
+        default: defaultValue
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toEqual defaultValue
+    instance =
+        property: null
+    expect(property.toDb(instance)).toEqual defaultValue
+    expect(instance.property).toEqual defaultValue
+
+test 'Throw an error when the required list property get null.', ->
+    property = new properties.ListProperty
+        required: yes
+    property.propertyName = 'property'
+    expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
+    expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
+
+test 'Convert the value of the list property to the list.', ->
+    property = new properties.ListProperty
+        itemClass: properties.StringProperty
+    property.propertyName = 'property'
+    instance =
+        property: ['item']
+    expect(property.toJs(['item'])).toEqual ['item']
+    expect(property.toDb(instance)).toEqual ['item']
+
+
+# Object property
+test 'The default value of object property is null.', ->
+    property = new properties.ObjectProperty()
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBeNull()
+    expect(property.toDb(property: null)).toBeNull()
+
+test 'The default value config of the object property.', ->
+    defaultValue =
+        key: 'the-key'
+    property = new properties.ObjectProperty
+        default: defaultValue
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toEqual defaultValue
+    instance =
+        property: null
+    expect(property.toDb(instance)).toEqual defaultValue
+    expect(instance.property).toEqual defaultValue
+
+test 'Throw an error when the required object property get null.', ->
+    property = new properties.ObjectProperty
+        required: yes
+    property.propertyName = 'property'
+    expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
+    expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
+
+test 'Convert the value of the object property to the object.', ->
+    property = new properties.ObjectProperty()
+    property.propertyName = 'property'
+    instance =
+        property:
+            key: 'the-key'
+    expect(property.toJs(key: 'the-key')).toEqual key: 'the-key'
+    expect(property.toDb(instance)).toEqual key: 'the-key'
+
+
+# Reference property
+test 'The default value of reference property is null.', ->
+    property = new properties.ReferenceProperty()
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBeNull()
+    expect(property.toDb(property: null)).toBeNull()
+
+test 'The default value config of the reference property.', ->
+    defaultValue = 'default'
+    property = new properties.ReferenceProperty
+        default: defaultValue
+    property.propertyName = 'property'
+    expect(property.toJs(null)).toBe defaultValue
+    instance =
+        property: null
+    expect(property.toDb(instance)).toBe defaultValue
+    expect(instance.property).toBe defaultValue
+
+test 'Throw an error when the required reference property get null.', ->
+    property = new properties.ReferenceProperty
+        required: yes
+    property.propertyName = 'property'
+    expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
+    expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
+
+test 'Convert the value of the reference property to the string.', ->
+    property = new properties.ReferenceProperty()
+    property.propertyName = 'property'
+    instance =
+        property: 'key'
+    expect(property.toJs('key')).toBe 'key'
+    expect(property.toDb(instance)).toBe 'key'
+
+test 'Set reference class of the reference property.', ->
+    class Test
+        constructor: (args) -> {@id} = args
+    property = new properties.ReferenceProperty
+        referenceClass: Test
+    property.propertyName = 'property'
+    expect(property.toJs(new Test(id: 'id'))).toMatchSnapshot()
+    expect(property.toDb(property: new Test(id: 'id'))).toBe 'id'
