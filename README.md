@@ -1,5 +1,6 @@
 # enju
 [![npm version](https://badge.fury.io/js/enju.svg)](https://www.npmjs.com/package/enju)
+[![Coverage Status](https://coveralls.io/repos/github/kelp404/enju/badge.svg)](https://coveralls.io/github/kelp404/enju)
 [![circle-ci](https://circleci.com/gh/kelp404/enju.svg?style=svg&circle-token=55c92edca67c45f7e79d9d9bc6ffce340a462878)](https://circleci.com/gh/kelp404/enju)
   
 
