@@ -1,0 +1,178 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Delete the document with refresh. 1`] = `
+Object {
+  "id": "id",
+  "index": "index",
+  "refresh": true,
+  "type": "DataModel",
+}
+`;
+
+exports[`Delete the document without refresh. 1`] = `
+Object {
+  "id": "id",
+  "index": "index",
+  "refresh": false,
+  "type": "DataModel",
+}
+`;
+
+exports[`Generate a query of the model. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [],
+}
+`;
+
+exports[`Generate a query via where(). 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "name",
+      "isContainsEmpty": false,
+      "isIntersect": true,
+      "isUnion": undefined,
+      "operation": "equal",
+      "value": "enju",
+    },
+  ],
+}
+`;
+
+exports[`Get documents by ids with reference. 1`] = `
+Object {
+  "body": Object {
+    "ids": Array [
+      "id",
+    ],
+  },
+  "index": "index",
+  "type": "DataModel",
+}
+`;
+
+exports[`Get documents by ids with reference. 2`] = `
+Array [
+  DataModel {
+    "id": "id",
+    "name": "enju",
+    "version": 0,
+  },
+]
+`;
+
+exports[`Get documents by ids without reference. 1`] = `
+Object {
+  "body": Object {
+    "ids": Array [
+      "id",
+    ],
+  },
+  "index": "index",
+  "type": "DataModel",
+}
+`;
+
+exports[`Get documents by ids without reference. 2`] = `
+Array [
+  DataModel {
+    "id": "id",
+    "name": "enju",
+    "version": 0,
+  },
+]
+`;
+
+exports[`Get the document by id with reference. 1`] = `
+Object {
+  "id": "id",
+  "index": "index",
+  "type": "DataModel",
+}
+`;
+
+exports[`Get the document by id with reference. 2`] = `
+Array [
+  DataModel {
+    "id": "id",
+    "name": "enju",
+    "version": 0,
+  },
+]
+`;
+
+exports[`Get the document by id without reference. 1`] = `
+Object {
+  "id": "id",
+  "index": "index",
+  "type": "DataModel",
+}
+`;
+
+exports[`Get the document by id without reference. 2`] = `
+DataModel {
+  "id": "id",
+  "name": "enju",
+  "version": 0,
+}
+`;
+
+exports[`Is the document exists. 1`] = `
+Object {
+  "id": "id",
+  "index": "index",
+  "type": "DataModel",
+}
+`;
+
+exports[`Refresh the model. 1`] = `
+Object {
+  "index": "index",
+}
+`;
+
+exports[`Save a document with refresh. 1`] = `
+Object {
+  "body": Object {
+    "name": "enju",
+  },
+  "id": null,
+  "index": "index",
+  "refresh": true,
+  "type": "DataModel",
+  "version": 0,
+  "versionType": "external",
+}
+`;
+
+exports[`Save a document with refresh. 2`] = `
+DataModel {
+  "id": "id",
+  "name": "enju",
+  "version": 0,
+}
+`;
+
+exports[`Save a document without refresh. 1`] = `
+Object {
+  "body": Object {
+    "name": "enju",
+  },
+  "id": null,
+  "index": "index",
+  "refresh": false,
+  "type": "DataModel",
+  "version": 0,
+  "versionType": "external",
+}
+`;
+
+exports[`Save a document without refresh. 2`] = `
+DataModel {
+  "id": "id",
+  "name": "enju",
+  "version": 0,
+}
+`;

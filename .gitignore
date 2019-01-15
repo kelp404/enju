@@ -6,7 +6,8 @@ node_modules
 package-lock.json
 
 # test scripts
-tests/*.js
+__tests__/*.js
+coverage/
 
 # WebStorm
 .idea

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Initial property. 1`] = `
+StringProperty {
+  "analyzer": "keyword",
+  "dbField": "field",
+  "defaultValue": "default",
+  "index": "index",
+  "mapping": Object {
+    "analyzer": "keyword",
+  },
+  "required": true,
+  "type": "string",
+}
+`;
+
+exports[`Set reference class of the reference property. 1`] = `
+Test {
+  "id": "id",
+}
+`;

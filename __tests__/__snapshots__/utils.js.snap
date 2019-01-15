@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Get elasticsearch client. 1`] = `
+Object {
+  "apiVersion": "2.4",
+  "host": "http://localhost:9200",
+}
+`;
