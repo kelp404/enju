@@ -2,14 +2,27 @@ config = require 'config'
 enju = require '../'
 utils = require '../lib/utils'
 Query = require '../lib/query'
+exceptions = require '../lib/exceptions'
 
 
 DataModel = null
 generateDataModel = ->
     class DataModel extends enju.Document
         @_index = 'index'
+        @_settings =
+            analysis:
+                normalizer:
+                    lowercase_filter:
+                        type: 'custom'
+                        filter: ['lowercase']
         @define
             name: new enju.StringProperty()
+            gender: new enju.KeywordProperty()
+            bio: new enju.TextProperty()
+            isAdmin: new enju.BooleanProperty
+                default: no
+                dbField: 'is_admin'
+            score: new enju.FloatProperty()
             age: new enju.IntegerProperty()
             createTime: new enju.DateProperty
                 dbField: 'create_time'
@@ -18,6 +31,55 @@ beforeEach ->
     DataModel = generateDataModel()
     Query.updateReferenceProperties.mockClear?()
     utils.getIndexPrefix.mockClear?()
+
+test 'Define model.', ->
+    class DataModelA extends enju.Document
+        @_index = 'index'
+        @_settings =
+            analysis:
+                normalizer:
+                    lowercase_filter:
+                        type: 'custom'
+                        filter: ['lowercase']
+        @define
+            name: new enju.StringProperty()
+    DataModelB = enju.Document.define 'DataModelB',
+        name: new enju.StringProperty()
+    expect(DataModelA).toMatchSnapshot()
+    expect(DataModelA._properties).toMatchSnapshot()
+    expect(DataModelA._settings).toMatchSnapshot()
+    expect(DataModelB).toMatchSnapshot()
+    expect(DataModelB._properties).toMatchSnapshot()
+
+test 'Get error when define the model with wrong arguments.', ->
+    func = ->
+        class DataModel extends enju.Document
+            @_index = 'index'
+            @define {}, {}
+    expect(func).toThrow exceptions.ArgumentError
+
+test 'Update the model mapping.', ->
+    DataModel._es.indices.create = jest.fn (args, callback) ->
+        expect(args).toMatchSnapshot()
+        callback null
+    DataModel._es.indices.close = jest.fn (args, callback) ->
+        expect(args).toMatchSnapshot()
+        callback null
+    DataModel._es.indices.putSettings = jest.fn (args, callback) ->
+        expect(args).toMatchSnapshot()
+        callback null
+    DataModel._es.indices.putMapping = jest.fn (args, callback) ->
+        expect(args).toMatchSnapshot()
+        callback null
+    DataModel._es.indices.open = jest.fn (args, callback) ->
+        expect(args).toMatchSnapshot()
+        callback null
+    DataModel.updateMapping().then ->
+        expect(DataModel._es.indices.create).toBeCalled()
+        expect(DataModel._es.indices.close).toBeCalled()
+        expect(DataModel._es.indices.putSettings).toBeCalled()
+        expect(DataModel._es.indices.putMapping).toBeCalled()
+        expect(DataModel._es.indices.open).toBeCalled()
 
 test 'Get the index prefix of the model.', ->
     utils.getIndexPrefix = jest.fn -> config.enju.indexPrefix
