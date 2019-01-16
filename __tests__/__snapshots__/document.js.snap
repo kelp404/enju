@@ -1,5 +1,88 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Define model. 1`] = `[Function]`;
+
+exports[`Define model. 2`] = `
+Object {
+  "id": KeywordProperty {
+    "dbField": "_id",
+    "defaultValue": undefined,
+    "index": true,
+    "mapping": undefined,
+    "normalizer": undefined,
+    "required": false,
+    "type": undefined,
+  },
+  "name": StringProperty {
+    "analyzer": undefined,
+    "dbField": undefined,
+    "defaultValue": undefined,
+    "index": true,
+    "mapping": undefined,
+    "propertyName": "name",
+    "required": false,
+    "type": undefined,
+  },
+  "version": IntegerProperty {
+    "dbField": "_version",
+    "defaultValue": undefined,
+    "index": true,
+    "mapping": undefined,
+    "required": false,
+    "type": undefined,
+  },
+}
+`;
+
+exports[`Define model. 3`] = `
+Object {
+  "analysis": Object {
+    "normalizer": Object {
+      "lowercase_filter": Object {
+        "filter": Array [
+          "lowercase",
+        ],
+        "type": "custom",
+      },
+    },
+  },
+}
+`;
+
+exports[`Define model. 4`] = `[Function]`;
+
+exports[`Define model. 5`] = `
+Object {
+  "id": KeywordProperty {
+    "dbField": "_id",
+    "defaultValue": undefined,
+    "index": true,
+    "mapping": undefined,
+    "normalizer": undefined,
+    "required": false,
+    "type": undefined,
+  },
+  "name": StringProperty {
+    "analyzer": undefined,
+    "dbField": undefined,
+    "defaultValue": undefined,
+    "index": true,
+    "mapping": undefined,
+    "propertyName": "name",
+    "required": false,
+    "type": undefined,
+  },
+  "version": IntegerProperty {
+    "dbField": "_version",
+    "defaultValue": undefined,
+    "index": true,
+    "mapping": undefined,
+    "required": false,
+    "type": undefined,
+  },
+}
+`;
+
 exports[`Delete the document with refresh. 1`] = `
 Object {
   "id": "id",
@@ -168,5 +251,85 @@ DataModel {
   "id": "id",
   "name": "enju",
   "version": 0,
+}
+`;
+
+exports[`Update the model mapping. 1`] = `
+Object {
+  "index": "index",
+}
+`;
+
+exports[`Update the model mapping. 2`] = `
+Object {
+  "index": "index",
+}
+`;
+
+exports[`Update the model mapping. 3`] = `
+Object {
+  "body": Object {
+    "settings": Object {
+      "index": Object {
+        "analysis": Object {
+          "normalizer": Object {
+            "lowercase_filter": Object {
+              "filter": Array [
+                "lowercase",
+              ],
+              "type": "custom",
+            },
+          },
+        },
+      },
+    },
+  },
+  "index": "index",
+}
+`;
+
+exports[`Update the model mapping. 4`] = `
+Object {
+  "body": Object {
+    "properties": Object {
+      "age": Object {
+        "index": true,
+        "type": "long",
+      },
+      "bio": Object {
+        "index": true,
+        "type": "text",
+      },
+      "create_time": Object {
+        "format": "strict_date_optional_time||epoch_millis",
+        "index": true,
+        "type": "date",
+      },
+      "gender": Object {
+        "index": true,
+        "type": "keyword",
+      },
+      "is_admin": Object {
+        "index": true,
+        "type": "boolean",
+      },
+      "name": Object {
+        "index": true,
+        "type": "string",
+      },
+      "score": Object {
+        "index": true,
+        "type": "double",
+      },
+    },
+  },
+  "index": "index",
+  "type": "DataModel",
+}
+`;
+
+exports[`Update the model mapping. 5`] = `
+Object {
+  "index": "index",
 }
 `;
