@@ -78,7 +78,7 @@ module.exports = class Document
                 property.propertyName = propertyName
                 @_properties[propertyName] = property
             return
-        throw exceptions.ArgumentError('Argument error for enju.Document.define()')
+        throw new exceptions.ArgumentError('Argument error for enju.Document.define()')
 
     @get = (ids, fetchReference = yes) -> new Promise (resolve, reject) =>
         ###
