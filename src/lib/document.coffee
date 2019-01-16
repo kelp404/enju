@@ -55,14 +55,14 @@ module.exports = class Document
             version: new properties.IntegerProperty(dbField: '_version')
         @_es = utils.getElasticsearch()
 
-        if arguments.length is 2 and typeof(arguments[0]) is 'string' and arguments[1]? and typeof(arguments[1]) is 'object'
+        if arguments.length is 2 and typeof(arguments[0]) is 'string' and typeof(arguments[1]) is 'object'
             # 1. define properties with class name.
             defined = arguments[1]
             defined._type ?= arguments[0]
             class DynamicClass extends @
                 @define defined
             return DynamicClass
-        else if arguments.length is 1 and arguments[0]? and typeof(arguments[0]) is 'object'
+        else if arguments.length is 1 and typeof(arguments[0]) is 'object'
             # 2. define properties for this document.
             defined = arguments[0]
             if '_index' of defined
