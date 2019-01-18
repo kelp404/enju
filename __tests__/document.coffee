@@ -17,8 +17,6 @@ generateDataModel = ->
                         filter: ['lowercase']
         @define
             name: new enju.StringProperty()
-            gender: new enju.KeywordProperty()
-            bio: new enju.TextProperty()
             isAdmin: new enju.BooleanProperty
                 default: no
                 dbField: 'is_admin'

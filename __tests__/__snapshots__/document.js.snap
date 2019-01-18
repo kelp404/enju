@@ -4,12 +4,12 @@ exports[`Define model. 1`] = `[Function]`;
 
 exports[`Define model. 2`] = `
 Object {
-  "id": KeywordProperty {
+  "id": StringProperty {
+    "analyzer": undefined,
     "dbField": "_id",
     "defaultValue": undefined,
-    "index": true,
+    "index": undefined,
     "mapping": undefined,
-    "normalizer": undefined,
     "required": false,
     "type": undefined,
   },
@@ -17,16 +17,17 @@ Object {
     "analyzer": undefined,
     "dbField": undefined,
     "defaultValue": undefined,
-    "index": true,
+    "index": undefined,
     "mapping": undefined,
     "propertyName": "name",
     "required": false,
     "type": undefined,
   },
   "version": IntegerProperty {
+    "analyzer": undefined,
     "dbField": "_version",
     "defaultValue": undefined,
-    "index": true,
+    "index": undefined,
     "mapping": undefined,
     "required": false,
     "type": undefined,
@@ -53,12 +54,12 @@ exports[`Define model. 4`] = `[Function]`;
 
 exports[`Define model. 5`] = `
 Object {
-  "id": KeywordProperty {
+  "id": StringProperty {
+    "analyzer": undefined,
     "dbField": "_id",
     "defaultValue": undefined,
-    "index": true,
+    "index": undefined,
     "mapping": undefined,
-    "normalizer": undefined,
     "required": false,
     "type": undefined,
   },
@@ -66,16 +67,17 @@ Object {
     "analyzer": undefined,
     "dbField": undefined,
     "defaultValue": undefined,
-    "index": true,
+    "index": undefined,
     "mapping": undefined,
     "propertyName": "name",
     "required": false,
     "type": undefined,
   },
   "version": IntegerProperty {
+    "analyzer": undefined,
     "dbField": "_version",
     "defaultValue": undefined,
-    "index": true,
+    "index": undefined,
     "mapping": undefined,
     "required": false,
     "type": undefined,
@@ -299,32 +301,19 @@ Object {
   "body": Object {
     "properties": Object {
       "age": Object {
-        "index": true,
         "type": "long",
-      },
-      "bio": Object {
-        "index": true,
-        "type": "text",
       },
       "create_time": Object {
         "format": "strict_date_optional_time||epoch_millis",
-        "index": true,
         "type": "date",
       },
-      "gender": Object {
-        "index": true,
-        "type": "keyword",
-      },
       "is_admin": Object {
-        "index": true,
         "type": "boolean",
       },
       "name": Object {
-        "index": true,
         "type": "string",
       },
       "score": Object {
-        "index": true,
         "type": "double",
       },
     },
