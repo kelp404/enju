@@ -113,6 +113,16 @@ test 'Test query intersect exclude operation.', ->
     query.intersect 'age', exclude: [18, 20]
     expect(query).toMatchSnapshot()
 
+test 'Test query sorting ASC.', ->
+    query = new Query(DataModel)
+    query.orderBy 'age'
+    expect(query).toMatchSnapshot()
+
+test 'Test query sorting DESC.', ->
+    query = new Query(DataModel)
+    query.orderBy 'age', yes
+    expect(query).toMatchSnapshot()
+
 test 'Test query intersect replace db field.', ->
     query = new Query(DataModel)
     query.intersect 'createTime', equal: new Date('2018-01-23T00:00:00.000Z')
