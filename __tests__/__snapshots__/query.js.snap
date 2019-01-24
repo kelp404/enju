@@ -342,6 +342,38 @@ Query {
 }
 `;
 
+exports[`Test query sorting ASC. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "age",
+      "isContainsEmpty": false,
+      "isIntersect": undefined,
+      "isUnion": undefined,
+      "operation": "orderASC",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`Test query sorting DESC. 1`] = `
+Query {
+  "documentClass": [Function],
+  "queryCells": Array [
+    QueryCell {
+      "dbField": "age",
+      "isContainsEmpty": false,
+      "isIntersect": undefined,
+      "isUnion": undefined,
+      "operation": "orderDESC",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
 exports[`Test query sum. 1`] = `
 Object {
   "body": Object {
