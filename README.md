@@ -111,7 +111,6 @@ ProductModel.where('title', '==': 'enju').fetch().then (result) ->
 ## Develop
 ```bash
 # install dependencies
-npm install -g nodeunit
 npm install -g grunt-cli
 npm install
 ```
