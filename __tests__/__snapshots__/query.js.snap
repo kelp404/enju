@@ -1,6 +1,44 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test query count. 1`] = `
+exports[`Count items of the query. 1`] = `
+Object {
+  "body": Object {
+    "query": Object {
+      "match_all": Object {},
+    },
+  },
+  "index": "index",
+  "size": 0,
+}
+`;
+
+exports[`Fetch the first item of the query then get null. 1`] = `
+Object {
+  "fetchReference": true,
+  "limit": 1,
+  "skip": 0,
+}
+`;
+
+exports[`Fetch the first item of the query. 1`] = `
+Object {
+  "fetchReference": true,
+  "limit": 1,
+  "skip": 0,
+}
+`;
+
+exports[`Fetch the first item of the query. 2`] = `
+DataModel {
+  "age": 0,
+  "createTime": null,
+  "id": null,
+  "name": "enju",
+  "version": null,
+}
+`;
+
+exports[`Get an error when count items of the query. 1`] = `
 Object {
   "body": Object {
     "query": Object {
@@ -59,14 +97,6 @@ Object {
 `;
 
 exports[`Test query first without fetch reference. 2`] = `null`;
-
-exports[`Test query first. 1`] = `
-Object {
-  "fetchReference": true,
-  "limit": 1,
-  "skip": 0,
-}
-`;
 
 exports[`Test query group by. 1`] = `
 Object {

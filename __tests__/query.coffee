@@ -173,14 +173,30 @@ test 'Test query fetch.', ->
         expect(result).toMatchSnapshot()
     expect(DataModel._es.search).toBeCalled()
 
-test 'Test query first.', ->
+test 'Fetch the first item of the query.', ->
     query = new Query(DataModel)
-    query.fetch = (args) -> new Promise (resolve) ->
+    query.fetch = jest.fn (args) -> new Promise (resolve) ->
+        expect(args).toMatchSnapshot()
+        resolve
+            total: 1
+            items: [
+                new DataModel
+                    name: 'enju'
+                    age: 0
+            ]
+    query.first().then (result) ->
+        expect(query.fetch).toBeCalled()
+        expect(result).toMatchSnapshot()
+
+test 'Fetch the first item of the query then get null.', ->
+    query = new Query(DataModel)
+    query.fetch = jest.fn (args) -> new Promise (resolve) ->
         expect(args).toMatchSnapshot()
         resolve
             total: 0
             items: []
     query.first().then (result) ->
+        expect(query.fetch).toBeCalled()
         expect(result).toBeNull()
 
 test 'Test query first without fetch reference.', ->
@@ -203,13 +219,25 @@ test 'Test query has any.', ->
         expect(result).toBe yes
         expect(DataModel._es.searchExists).toBeCalled()
 
-test 'Test query count.', ->
+test 'Count items of the query.', ->
     query = new Query(DataModel)
     DataModel._es.count = jest.fn (args, callback) ->
         expect(args).toMatchSnapshot()
         callback null, count: 1
     query.count().then (result) ->
+        expect(DataModel._es.count).toBeCalled()
         expect(result).toBe 1
+
+test 'Get an error when count items of the query.', ->
+    query = new Query(DataModel)
+    DataModel._es.count = jest.fn (args, callback) ->
+        expect(args).toMatchSnapshot()
+        callback new Error()
+    query.count()
+    .then ->
+        throw new Error()
+    .catch ->
+        expect(DataModel._es.count).toBeCalled()
 
 test 'Test query sum.', ->
     query = new Query(DataModel)
