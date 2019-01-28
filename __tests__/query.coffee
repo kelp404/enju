@@ -142,6 +142,19 @@ test 'Test query intersect function argument.', ->
         .union 'name', equal: 'tina'
     expect(query.queryCells).toMatchSnapshot()
 
+test 'Get an error when the first query is union.', ->
+    query = new Query(DataModel)
+    func = ->
+        query.union 'name', equal: 'enju'
+    expect(func).toThrow exceptions.SyntaxError
+
+test 'Get an error when the union query field is not exist.', ->
+    query = new Query(DataModel)
+    func = ->
+        query.where 'name', equal: 'enju'
+        query.union 'hello', equal: 'hello'
+    expect(func).toThrow exceptions.SyntaxError
+
 test 'Test query fetch.', ->
     query = new Query(DataModel)
     query.where 'name', equal: 'enju'
