@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Bleach regex words. 1`] = `"\\\\^\\\\$\\\\*\\\\+\\\\?\\\\{\\\\}\\\\.\\\\[\\\\]\\\\(\\\\)\\\\\\\\hello\\\\|\\\\/"`;
+
 exports[`Get elasticsearch client. 1`] = `
 Object {
   "apiVersion": "5.6",
