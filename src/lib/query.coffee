@@ -127,8 +127,7 @@ module.exports = class Query
     intersect: (field, operation) ->
         ###
         Append a query as intersect.
-        @param field {Property|string|function}
-            Property: The property of the document.
+        @param field {string|function}
             string: The property name of the document.
             function: The sub query.
         @param operation {object}
@@ -178,10 +177,7 @@ module.exports = class Query
             value = null
             for firstOperation, value of operation
                 break
-            if typeof(field) is 'string'
-                dbField = @documentClass._properties[field]?.dbField ? field
-            else
-                dbField = field.dbField ? field.propertyName
+            dbField = @documentClass._properties[field]?.dbField ? field
             @queryCells.push new QueryCell
                 dbField: dbField
                 operation: QueryOperation.convertOperation firstOperation
@@ -192,9 +188,7 @@ module.exports = class Query
     union: (field, operation) ->
         ###
         Append a query as intersect.
-        @param field {Property|string}
-            Property: The property of the document.
-            string: The property name of the document.
+        @param field {string} The property name of the document.
         @param operation {object}
             key: [
                 '!=', 'unequal'
@@ -223,10 +217,7 @@ module.exports = class Query
         value = null
         for firstOperation, value of operation
             break
-        if typeof(field) is 'string'
-            dbField = @documentClass._properties[field]?.dbField ? field
-        else
-            dbField = field.dbField ? field.propertyName
+        dbField = @documentClass._properties[field]?.dbField ? field
         @queryCells.push new QueryCell
             dbField: dbField
             operation: QueryOperation.convertOperation firstOperation
@@ -237,7 +228,7 @@ module.exports = class Query
     orderBy: (field, descending = no) ->
         ###
         Append the order query.
-        @param member {Property|string} The property name of the document.
+        @param member {string} The property name of the document.
         @param descending {bool} Is sorted by descending?
         @returns {Query}
         ###
@@ -252,10 +243,7 @@ module.exports = class Query
             operationCode = QueryOperation.orderDESC
         else
             operationCode = QueryOperation.orderASC
-        if typeof(field) is 'string'
-            dbField = @documentClass._properties[field]?.dbField ? field
-        else
-            dbField = field.dbField ? field.propertyName
+        dbField = @documentClass._properties[field]?.dbField ? field
         @queryCells.push new QueryCell
             dbField: dbField
             operation: operationCode
@@ -371,7 +359,7 @@ module.exports = class Query
         ###
         Sum the field of documents by the query.
         https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-sum-aggregation.html
-        @param field {Property|string} The property name of the document.
+        @param field {string} The property name of the document.
         @returns {promise<number>}
         ###
         allFields = []
@@ -381,10 +369,7 @@ module.exports = class Query
         if typeof(field) is 'string' and field.split('.', 1)[0] not in allFields
             return reject(new exceptions.SyntaxError("#{field} not in #{@documentClass.name}"))
 
-        if typeof(field) is 'string'
-            dbField = @documentClass._properties[field]?.dbField ? field
-        else
-            dbField = field.dbField ? field.propertyName
+        dbField = @documentClass._properties[field]?.dbField ? field
 
         queryObject = @compileQueries()
         if queryObject.isContainsEmpty
@@ -407,7 +392,7 @@ module.exports = class Query
         ###
         Aggregations
         http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html
-        @param field {Property|string} The property name of the document.
+        @param field {string} The property name of the document.
         @param args {object}
             limit: {number}  Default is 1,000.
             order: {string} "count|term"  Default is "term".
@@ -428,10 +413,7 @@ module.exports = class Query
         if typeof(field) is 'string' and field.split('.', 1)[0] not in allFields
             return reject(new exceptions.SyntaxError("#{field} not in #{@documentClass.name}"))
 
-        if typeof(field) is 'string'
-            dbField = @documentClass._properties[field]?.dbField ? field
-        else
-            dbField = field.dbField ? field.propertyName
+        dbField = @documentClass._properties[field]?.dbField ? field
 
         queryObject = @compileQueries()
         if queryObject.isContainsEmpty
