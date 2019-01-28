@@ -230,8 +230,7 @@ class Document
 @where = (field, operation) ->
     ###
     Generate the query for this document.
-    @param field {Property|string|function}
-        Property: The property of the document.
+    @param field {string|function}
         string: The property name of the document.
         function: The sub query.
     @param operation {object}
@@ -364,8 +363,7 @@ The enju query.
 where: (field, operation) ->
     ###
     Append a query as intersect.
-    @param field {Property|string|function}
-        Property: The property of the document.
+    @param field {string|function}
         string: The property name of the document.
         function: The sub query.
     @param operation {object}
@@ -388,9 +386,7 @@ where: (field, operation) ->
 union: (field, operation) ->
     ###
     Append a query as intersect.
-    @param field {Property|string}
-        Property: The property of the document.
-        string: The property name of the document.
+    @param field {string} string: The property name of the document.
     @param operation {object}
         key: [
             '!=', 'unequal'
@@ -411,7 +407,7 @@ union: (field, operation) ->
 orderBy: (field, descending=no) ->
     ###
     Append the order query.
-    @param field {Property|string} The property name of the document.
+    @param field {string} The property name of the document.
     @param descending {bool} Is sorted by descending?
     @returns {Query}
     ###
@@ -447,14 +443,14 @@ sum: (field) ->
     ###
     Sum the field of documents by the query.
     https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-sum-aggregation.html
-    @param field {Property|string} The property name of the document.
+    @param field {string} The property name of the document.
     @returns {promise<number>}
     ###
 ```
 ```coffee
 groupBy: (field, args) ->
     ###
-    @param field {Property|string} The property name of the document.
+    @param field {string} The property name of the document.
     @param args {object}
         limit: {number}  Default is 1,000.
         order: {string} "count|term"  Default is "term".
