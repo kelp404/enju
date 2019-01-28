@@ -1,5 +1,6 @@
 exceptions = require './exceptions'
 properties = require './properties'
+utils = require './utils'
 
 
 class QueryOperation
@@ -507,17 +508,6 @@ module.exports = class Query
         @param queryCell: {QueryCell}
         @returns {object}
         ###
-        bleachRegexCode = (value = '') ->
-            value = "#{value}"
-            table = '^$*+?{}.[]()\\|/'
-            result = []
-            for word in value
-                if word in table
-                    result.push "\\#{word}"
-                else
-                    result.push word
-            result.join ''
-
         switch queryCell.operation
             when QueryOperation.equal
                 if queryCell.value?
@@ -569,7 +559,7 @@ module.exports = class Query
                     minimum_should_match: queryCell.value.length
                     should: ({bool: {must_not: {match: {"#{queryCell.dbField}": {query: x, operator: 'and'}}}}} for x in queryCell.value)
             when QueryOperation.like
-                value = bleachRegexCode queryCell.value
+                value = utils.bleachRegexWords queryCell.value
                 bool:
                     should: [
                         {
@@ -584,7 +574,7 @@ module.exports = class Query
                         }
                     ]
             when QueryOperation.unlike
-                value = bleachRegexCode queryCell.value
+                value = utils.bleachRegexWords queryCell.value
                 bool:
                     minimum_should_match: 2
                     should: [

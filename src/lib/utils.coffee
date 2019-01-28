@@ -17,3 +17,19 @@ module.exports =
         @returns {string}
         ###
         config.enju.indexPrefix ? ''
+
+    bleachRegexWords: (value = '') ->
+        ###
+        Let regex words not work.
+        @params value {string}
+        @returns {string}
+        ###
+        value = "#{value}"
+        table = '^$*+?{}.[]()\\|/'
+        result = []
+        for word in value
+            if word in table
+                result.push "\\#{word}"
+            else
+                result.push word
+        result.join ''

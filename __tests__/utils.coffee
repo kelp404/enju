@@ -19,3 +19,7 @@ test 'Get elasticsearch client.', ->
 
 test 'Get index prefix.', ->
     expect(utils.getIndexPrefix()).toBe config.enju.indexPrefix
+
+test 'Bleach regex words.', ->
+    result = utils.bleachRegexWords '^$*+?{}.[]()\\hello|/'
+    expect(result).toMatchSnapshot()
