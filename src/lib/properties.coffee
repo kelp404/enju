@@ -181,7 +181,7 @@ class ListProperty extends Property
                 when BooleanProperty
                     value = ((if x? then Boolean(x) else null) for x in value)
                 when DateProperty
-                    value = ((if x? then x.toJSON() else null) for x in value)
+                    value = ((if x? then new Date(x) else null) for x in value)
                 when ListProperty, ObjectProperty, ReferenceProperty
                     value = ((if x? then x else null) for x in value)
                 else
