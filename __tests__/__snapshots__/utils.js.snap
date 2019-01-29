@@ -2,6 +2,19 @@
 
 exports[`Bleach regex words. 1`] = `"\\\\^\\\\$\\\\*\\\\+\\\\?\\\\{\\\\}\\\\.\\\\[\\\\]\\\\(\\\\)\\\\\\\\hello\\\\|\\\\/"`;
 
+exports[`Fetch the reference property of the document. 1`] = `
+ArticleModel {
+  "content": null,
+  "id": null,
+  "user": UserModel {
+    "id": "AWiYXbY_SjjuUM2b1CGI",
+    "name": "enju",
+    "version": null,
+  },
+  "version": null,
+}
+`;
+
 exports[`Get elasticsearch client. 1`] = `
 Object {
   "apiVersion": "5.6",

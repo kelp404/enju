@@ -119,7 +119,7 @@ module.exports = class Document
 
                 # call resolve()
                 if fetchReference
-                    Query.updateReferenceProperties(result).then ->
+                    utils.updateReferenceProperties(result).then ->
                         resolve result
                     .catch (error) ->
                         reject error
@@ -148,7 +148,7 @@ module.exports = class Document
             # call resolve()
             document = new @(args)
             if fetchReference
-                Query.updateReferenceProperties([document]).then ->
+                utils.updateReferenceProperties([document]).then ->
                     resolve document
                 .catch (error) ->
                     reject error
