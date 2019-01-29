@@ -330,14 +330,59 @@ test 'Throw an error when the required list property get null.', ->
     expect(-> property.toJs null).toThrow exceptions.ValueRequiredError
     expect(-> property.toDb property: null).toThrow exceptions.ValueRequiredError
 
-test 'Convert the value of the list property to the list.', ->
+test 'Convert the value of the string list property to the list.', ->
     property = new properties.ListProperty
         itemClass: properties.StringProperty
     property.propertyName = 'property'
     instance =
-        property: ['item']
-    expect(property.toJs(['item'])).toEqual ['item']
-    expect(property.toDb(instance)).toEqual ['item']
+        property: ['itemA', 'itemB']
+    expect(property.toJs(['itemA', 'itemB'])).toEqual ['itemA', 'itemB']
+    expect(property.toDb(instance)).toEqual ['itemA', 'itemB']
+
+test 'Convert the value of the integer list property to the list.', ->
+    property = new properties.ListProperty
+        itemClass: properties.IntegerProperty
+    property.propertyName = 'property'
+    instance =
+        property: [2, 3]
+    expect(property.toJs([2, 3])).toEqual [2, 3]
+    expect(property.toDb(instance)).toEqual [2, 3]
+
+test 'Convert the value of the float list property to the list.', ->
+    property = new properties.ListProperty
+        itemClass: properties.FloatProperty
+    property.propertyName = 'property'
+    instance =
+        property: [3.1, 3.3]
+    expect(property.toJs([3.1, 3.3])).toEqual [3.1, 3.3]
+    expect(property.toDb(instance)).toEqual [3.1, 3.3]
+
+test 'Convert the value of the boolean list property to the list.', ->
+    property = new properties.ListProperty
+        itemClass: properties.BooleanProperty
+    property.propertyName = 'property'
+    instance =
+        property: [yes, no]
+    expect(property.toJs([yes, no])).toEqual [yes, no]
+    expect(property.toDb(instance)).toEqual [yes, no]
+
+test 'Convert the value of the date list property to the list.', ->
+    property = new properties.ListProperty
+        itemClass: properties.DateProperty
+    property.propertyName = 'property'
+    instance =
+        property: [new Date('2019-01-29T06:01:00.000Z')]
+    expect(property.toJs(['2019-01-29T06:01:00.000Z'])).toEqual [new Date('2019-01-29T06:01:00.000Z')]
+    expect(property.toDb(instance)).toEqual ['2019-01-29T06:01:00.000Z']
+
+test 'Direct pass the value of object list properties to the list.', ->
+    property = new properties.ListProperty
+        itemClass: properties.ObjectProperty
+    property.propertyName = 'property'
+    instance =
+        property: [{a: yes}]
+    expect(property.toJs([{a: yes}])).toEqual [{a: yes}]
+    expect(property.toDb(instance)).toEqual [{a: yes}]
 
 
 # Object property
