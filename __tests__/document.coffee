@@ -27,7 +27,7 @@ generateDataModel = ->
 
 beforeEach ->
     DataModel = generateDataModel()
-    Query.updateReferenceProperties.mockClear?()
+    utils.updateReferenceProperties.mockClear?()
     utils.getIndexPrefix.mockClear?()
 
 test 'Define model.', ->
@@ -129,11 +129,11 @@ test 'Get the document by id with reference.', ->
             _version: 0
             _source:
                 name: 'enju'
-    Query.updateReferenceProperties = jest.fn (documents) -> new Promise (resolve) ->
+    utils.updateReferenceProperties = jest.fn (documents) -> new Promise (resolve) ->
         expect(documents).toMatchSnapshot()
         resolve()
     DataModel.get('id').then ->
-        expect(Query.updateReferenceProperties).toBeCalled()
+        expect(utils.updateReferenceProperties).toBeCalled()
 
 test 'Get documents by ids without reference.', ->
     class DataModel extends enju.Document
@@ -168,11 +168,11 @@ test 'Get documents by ids with reference.', ->
                 _source:
                     name: 'enju'
             ]
-    Query.updateReferenceProperties = jest.fn (documents) -> new Promise (resolve) ->
+    utils.updateReferenceProperties = jest.fn (documents) -> new Promise (resolve) ->
         expect(documents).toMatchSnapshot()
         resolve()
     DataModel.get(['id']).then ->
-        expect(Query.updateReferenceProperties).toBeCalled()
+        expect(utils.updateReferenceProperties).toBeCalled()
 
 test 'Is the document exists.', ->
     class DataModel extends enju.Document
