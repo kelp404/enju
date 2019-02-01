@@ -11,6 +11,83 @@ Object {
 }
 `;
 
+exports[`Fetch data with empty contains query. 1`] = `
+Object {
+  "items": Array [],
+  "total": 0,
+}
+`;
+
+exports[`Fetch data without reference properties. 1`] = `
+Object {
+  "body": Object {
+    "query": Object {
+      "match": Object {
+        "name": Object {
+          "operator": "and",
+          "query": "enju",
+        },
+      },
+    },
+    "sort": Array [],
+  },
+  "from": 0,
+  "index": "index",
+  "size": 1000,
+  "version": true,
+}
+`;
+
+exports[`Fetch data without reference properties. 2`] = `
+Object {
+  "items": Array [
+    DataModel {
+      "age": null,
+      "createTime": null,
+      "id": "id",
+      "name": "enju",
+      "version": 1,
+    },
+  ],
+  "total": 1,
+}
+`;
+
+exports[`Fetch data. 1`] = `
+Object {
+  "body": Object {
+    "query": Object {
+      "match": Object {
+        "name": Object {
+          "operator": "and",
+          "query": "enju",
+        },
+      },
+    },
+    "sort": Array [],
+  },
+  "from": 0,
+  "index": "index",
+  "size": 1000,
+  "version": true,
+}
+`;
+
+exports[`Fetch data. 2`] = `
+Object {
+  "items": Array [
+    DataModel {
+      "age": null,
+      "createTime": null,
+      "id": "id",
+      "name": "enju",
+      "version": 1,
+    },
+  ],
+  "total": 1,
+}
+`;
+
 exports[`Fetch the first item of the query then get null. 1`] = `
 Object {
   "fetchReference": true,
@@ -45,41 +122,6 @@ Object {
     },
   },
   "index": "index",
-}
-`;
-
-exports[`Test query fetch. 1`] = `
-Object {
-  "body": Object {
-    "query": Object {
-      "match": Object {
-        "name": Object {
-          "operator": "and",
-          "query": "enju",
-        },
-      },
-    },
-    "sort": Array [],
-  },
-  "from": 0,
-  "index": "index",
-  "size": 1000,
-  "version": true,
-}
-`;
-
-exports[`Test query fetch. 2`] = `
-Object {
-  "items": Array [
-    DataModel {
-      "age": null,
-      "createTime": null,
-      "id": "id",
-      "name": "enju",
-      "version": 1,
-    },
-  ],
-  "total": 1,
 }
 `;
 

@@ -155,7 +155,15 @@ test 'Get an error when the union query field is not exist.', ->
         query.union 'hello', equal: 'hello'
     expect(func).toThrow exceptions.SyntaxError
 
-test 'Test query fetch.', ->
+test 'Fetch data with empty contains query.', ->
+    query = new Query(DataModel)
+    DataModel._es.search = jest.fn ->
+    query.where 'name', contains: []
+    query.fetch().then (result) ->
+        expect(DataModel._es.search).not.toBeCalled()
+        expect(result).toMatchSnapshot()
+
+test 'Fetch data.', ->
     query = new Query(DataModel)
     query.where 'name', equal: 'enju'
     DataModel._es.search = jest.fn (args, callback) ->
@@ -170,6 +178,24 @@ test 'Test query fetch.', ->
                 ]
                 total: 1
     query.fetch().then (result) ->
+        expect(result).toMatchSnapshot()
+    expect(DataModel._es.search).toBeCalled()
+
+test 'Fetch data without reference properties.', ->
+    query = new Query(DataModel)
+    query.where 'name', equal: 'enju'
+    DataModel._es.search = jest.fn (args, callback) ->
+        expect(args).toMatchSnapshot()
+        callback null,
+            hits:
+                hits: [
+                    _id: 'id'
+                    _version: 1
+                    _source:
+                        name: 'enju'
+                ]
+                total: 1
+    query.fetch(fetchReference: no).then (result) ->
         expect(result).toMatchSnapshot()
     expect(DataModel._es.search).toBeCalled()
 
