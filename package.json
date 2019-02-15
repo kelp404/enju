@@ -32,13 +32,13 @@
     "grunt-contrib-clean": "2.0.0",
     "grunt-contrib-coffee": "2.0.0",
     "grunt-contrib-watch": "1.1.0",
-    "jest": "23.6.0",
+    "jest": "24.1.0",
     "load-grunt-tasks": "4.0.0",
-    "npm-check-updates": "2.14.2",
+    "npm-check-updates": "2.15.0",
     "time-grunt": "2.0.0"
   },
   "dependencies": {
-    "config": "2.0.1",
-    "elasticsearch": "15.2.0"
+    "config": "3.0.1",
+    "elasticsearch": "15.4.1"
   }
 }
