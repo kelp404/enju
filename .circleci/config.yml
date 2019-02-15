@@ -34,7 +34,7 @@ jobs:
   node10:
     working_directory: ~/enju
     docker:
-      - image: node:10.15.0
+      - image: node:10.15.1
     steps:
       - checkout
       - run: npm install -g grunt-cli
@@ -45,7 +45,7 @@ jobs:
   node11:
     working_directory: ~/enju
     docker:
-      - image: node:11.6.0
+      - image: node:11.9.0
     steps:
       - checkout
       - run: npm install -g grunt-cli
