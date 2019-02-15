@@ -5,7 +5,7 @@
   
 
 An elasticsearch client on node.js written in CoffeeScript.  
-[tina](https://github.com/kelp404/tina) is the Python version.
+Enju provides a simple way to define mapping and access data.
 
 
   enju  |  Elasticsearch
