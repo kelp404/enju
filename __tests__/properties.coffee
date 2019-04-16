@@ -2,11 +2,8 @@ properties = require '../lib/properties'
 exceptions = require '../lib/exceptions'
 
 
-
-beforeEach ->
-    global.parseInt.mockClear?()
-    global.parseFloat.mockClear?()
-    global.Boolean.mockClear?()
+afterEach ->
+    jest.restoreAllMocks()
 
 test 'Initial property.', ->
     property = new properties.StringProperty
@@ -92,7 +89,7 @@ test 'Throw an error when the required integer property get null.', ->
 
 test 'Convert the value of the integer property to the integer.', ->
     property = new properties.IntegerProperty()
-    global.parseInt = jest.fn parseInt
+    jest.spyOn global, 'parseInt'
     property.propertyName = 'property'
     instance =
         property: 2
@@ -131,7 +128,7 @@ test 'Throw an error when the required float property get null.', ->
 
 test 'Convert the value of the float property to the float.', ->
     property = new properties.FloatProperty()
-    global.parseFloat = jest.fn parseFloat
+    jest.spyOn global, 'parseFloat'
     property.propertyName = 'property'
     instance =
         property: 3.2
@@ -170,7 +167,7 @@ test 'Throw an error when the required boolean property get null.', ->
 
 test 'Convert the value of the boolean property to the boolean.', ->
     property = new properties.BooleanProperty()
-    global.Boolean = jest.fn Boolean
+    jest.spyOn global, 'Boolean'
     property.propertyName = 'property'
     instance =
         property: yes

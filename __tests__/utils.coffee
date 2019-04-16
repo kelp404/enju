@@ -4,13 +4,13 @@ utils = require '../lib/utils'
 enju = require '../'
 
 
-jest.mock 'elasticsearch'
-
 beforeEach ->
-    elasticsearch.Client.mockClear()
+    jest.mock 'elasticsearch'
+afterEach ->
+    jest.restoreAllMocks()
 
 test 'Get elasticsearch client.', ->
-    elasticsearch.Client = jest.fn (args) ->
+    jest.spyOn(elasticsearch, 'Client').mockImplementation (args) ->
         {
             host
             apiVersion
@@ -36,8 +36,7 @@ test 'Fetch the reference property of the document.', ->
             content: new enju.StringProperty()
             user: new enju.ReferenceProperty
                 referenceClass: UserModel
-    UserModel.get = jest.fn (ids) -> new Promise (resolve) ->
-        expect(ids).toEqual ['AWiYXbY_SjjuUM2b1CGI']
+    jest.spyOn(UserModel, 'get').mockImplementation (ids) -> new Promise (resolve) ->
         resolve [
             new UserModel
                 id: 'AWiYXbY_SjjuUM2b1CGI'
@@ -46,5 +45,5 @@ test 'Fetch the reference property of the document.', ->
     article = new ArticleModel
         user: 'AWiYXbY_SjjuUM2b1CGI'
     utils.updateReferenceProperties([article]).then ->
-        expect(UserModel.get).toBeCalled()
+        expect(UserModel.get).toBeCalledWith ['AWiYXbY_SjjuUM2b1CGI'], no
         expect(article).toMatchSnapshot()

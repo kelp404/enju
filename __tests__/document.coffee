@@ -27,8 +27,8 @@ generateDataModel = ->
 
 beforeEach ->
     DataModel = generateDataModel()
-    utils.updateReferenceProperties.mockClear?()
-    utils.getIndexPrefix.mockClear?()
+afterEach ->
+    jest.restoreAllMocks()
 
 test 'Define model.', ->
     class DataModelA extends enju.Document
@@ -80,7 +80,7 @@ test 'Update the model mapping.', ->
         expect(DataModel._es.indices.open).toBeCalled()
 
 test 'Get the index prefix of the model.', ->
-    utils.getIndexPrefix = jest.fn -> config.enju.indexPrefix
+    jest.spyOn(utils, 'getIndexPrefix').mockImplementation -> config.enju.indexPrefix
     result = DataModel.getIndexName()
     expect(result).toBe "#{config.enju.indexPrefix}index"
     expect(utils.getIndexPrefix).toBeCalled()
@@ -129,7 +129,7 @@ test 'Get the document by id with reference.', ->
             _version: 0
             _source:
                 name: 'enju'
-    utils.updateReferenceProperties = jest.fn (documents) -> new Promise (resolve) ->
+    jest.spyOn(utils, 'updateReferenceProperties').mockImplementation (documents) -> new Promise (resolve) ->
         expect(documents).toMatchSnapshot()
         resolve()
     DataModel.get('id').then ->
@@ -168,7 +168,7 @@ test 'Get documents by ids with reference.', ->
                 _source:
                     name: 'enju'
             ]
-    utils.updateReferenceProperties = jest.fn (documents) -> new Promise (resolve) ->
+    jest.spyOn(utils, 'updateReferenceProperties').mockImplementation (documents) -> new Promise (resolve) ->
         expect(documents).toMatchSnapshot()
         resolve()
     DataModel.get(['id']).then ->
