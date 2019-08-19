@@ -10,7 +10,7 @@ jobs:
   node8:
     working_directory: ~/enju
     docker:
-      - image: node:8.16.0
+      - image: node:8.16.1
     steps:
       - checkout
       - run: npm install -g grunt-cli
@@ -21,7 +21,18 @@ jobs:
   node10:
     working_directory: ~/enju
     docker:
-      - image: node:10.15.3
+      - image: node:10.16.3
+    steps:
+      - checkout
+      - run: npm install -g grunt-cli
+      - run: npm install
+      - run: npm run build
+      - run: npm test
+
+  node12:
+    working_directory: ~/enju
+    docker:
+      - image: node:12.8.1
     steps:
       - checkout
       - run: npm install -g grunt-cli
@@ -29,14 +40,3 @@ jobs:
       - run: npm run build
       - run: npm test
       - run: npm run coveralls
-
-  node12:
-    working_directory: ~/enju
-    docker:
-      - image: node:12.0.0
-    steps:
-      - checkout
-      - run: npm install -g grunt-cli
-      - run: npm install
-      - run: npm run build
-      - run: npm test
