@@ -6,6 +6,7 @@
   "scripts": {
     "build": "grunt build",
     "test": "grunt coffee:test && ./node_modules/jest/bin/jest.js --coverage",
+    "changelog": "node_modules/conventional-changelog-cli/cli.js -n changelog.config/index.js",
     "coveralls": "./node_modules/coveralls/bin/coveralls.js < ./coverage/lcov.info",
     "ncu": "./node_modules/npm-check-updates/bin/ncu"
   },
@@ -27,6 +28,7 @@
   "homepage": "https://github.com/kelp404/enju",
   "devDependencies": {
     "coffeescript": "2.3.2",
+    "conventional-changelog-cli": "2.2.2",
     "coveralls": "3.0.3",
     "grunt": "1.0.4",
     "grunt-contrib-clean": "2.0.0",
