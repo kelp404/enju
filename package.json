@@ -20,6 +20,10 @@
     "database",
     "ORM"
   ],
+  "files": [
+    "index.js",
+    "lib"
+  ],
   "author": "Kelp <kelp@phate.org> (https://github.com/kelp404)",
   "license": "MIT",
   "bugs": {
