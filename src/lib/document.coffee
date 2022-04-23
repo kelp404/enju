@@ -99,13 +99,16 @@ module.exports = class Document
 
         # fetch documents
         if ids.constructor is Array
+            previousError = new Error('From previous stack')
             @_es.mget
                 index: @getIndexName()
                 type: @getDocumentType()
                 body:
                     ids: ids
             , (error, response) =>
-                return reject(error) if error
+                if error
+                    error.stack += previousError.stack
+                    return reject(error)
                 result = []
                 for doc in response.docs when doc.found
                     item =
@@ -128,12 +131,14 @@ module.exports = class Document
             return
 
         # fetch the document
+        previousError = new Error('From previous stack')
         @_es.get
             index: @getIndexName()
             type: @getDocumentType()
             id: ids
         , (error, response) =>
             if error
+                error.stack += previousError.stack
                 if error.status is 404
                     return resolve(null)
                 return reject(error)
@@ -161,12 +166,15 @@ module.exports = class Document
         @param id {string} The documents' id.
         @returns {promise<bool>}
         ###
+        previousError = new Error('From previous stack')
         @_es.exists
             index: @getIndexName()
             type: @getDocumentType()
             id: id
         , (error, response) ->
-            return reject(error) if error
+            if error
+                error.stack += previousError.stack
+                return reject(error)
             resolve(response)
 
 
@@ -193,8 +201,11 @@ module.exports = class Document
         @returns {promise}
         ###
         args.index = @getIndexName()
+        previousError = new Error('From previous stack')
         @_es.indices.refresh args, (error) ->
-            return reject(error) if error
+            if error
+                error.stack += previousError.stack
+                return reject(error)
             resolve()
 
     @updateMapping = ->
@@ -205,32 +216,40 @@ module.exports = class Document
         @returns {promise}
         ###
         createIndex = => new Promise (resolve, reject) =>
+            previousError = new Error('From previous stack')
             @_es.indices.create
                 index: @getIndexName()
             , (error, response) ->
                 if error and error.status isnt 400
+                    error.stack += previousError.stack
                     return reject(error)
                 setTimeout ->
                     resolve response
                 , 1000
 
         closeIndex = => new Promise (resolve, reject) =>
+            previousError = new Error('From previous stack')
             @_es.indices.close
                 index: @getIndexName()
             , (error, response) ->
-                return reject(error) if error
+                if error
+                    error.stack += previousError.stack
+                    return reject(error)
                 resolve response
 
         putSettings = => new Promise (resolve, reject) =>
             if not @_settings
                 return resolve()
+            previousError = new Error('From previous stack')
             @_es.indices.putSettings
                 index: @getIndexName()
                 body:
                     settings:
                         index: @_settings
             , (error, response) ->
-                return reject(error) if error
+                if error
+                    error.stack += previousError.stack
+                    return reject(error)
                 resolve response
 
         putMapping = => new Promise (resolve, reject) =>
@@ -296,20 +315,26 @@ module.exports = class Document
                 if Object.keys(field).length
                     mapping[property.dbField ? propertyName] = field
 
+            previousError = new Error('From previous stack')
             @_es.indices.putMapping
                 index: @getIndexName()
                 type: @getDocumentType()
                 body:
                     properties: mapping
             , (error, response) ->
-                return reject(error) if error
+                if error
+                    error.stack += previousError.stack
+                    return reject(error)
                 resolve response
 
         openIndex = => new Promise (resolve, reject) =>
+            previousError = new Error('From previous stack')
             @_es.indices.open
                 index: @getIndexName()
             , (error, response) ->
-                return reject(error) if error
+                if error
+                    error.stack += previousError.stack
+                    return reject(error)
                 resolve response
 
         createIndex()
@@ -357,8 +382,11 @@ module.exports = class Document
                 refresh: refresh
                 body: document
 
+        previousError = new Error('From previous stack')
         @constructor._es.index args, (error, response) =>
-            return reject(error) if error
+            if error
+                error.stack += previousError.stack
+                return reject(error)
             @id = response._id
             @version = response._version
             resolve @
@@ -368,11 +396,14 @@ module.exports = class Document
         Delete this document.
         @returns {promise<Document>}
         ###
+        previousError = new Error('From previous stack')
         @constructor._es.delete
             index: @constructor.getIndexName()
             type: @constructor.getDocumentType()
             refresh: refresh
             id: @id
         , (error) =>
-            return reject(error) if error
+            if error
+                error.stack += previousError.stack
+                return reject(error)
             resolve @

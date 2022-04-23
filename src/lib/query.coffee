@@ -217,6 +217,7 @@ module.exports = class Query
                 total: 0
             return
 
+        previousError = new Error('From previous stack')
         @documentClass._es.search
             index: @documentClass.getIndexName()
             body:
@@ -226,7 +227,9 @@ module.exports = class Query
             size: args.limit
             version: yes
         , (error, response) =>
-            return reject(error) if error
+            if error
+                error.stack += previousError.stack
+                return reject(error)
             items = do =>
                 result = []
                 for hit in response.hits.hits
@@ -271,12 +274,15 @@ module.exports = class Query
         @returns {promise<number>}
         ###
         queryObject = @compileQueries()
+        previousError = new Error('From previous stack')
         @documentClass._es.count
             index: @documentClass.getIndexName()
             body:
                 query: queryObject.query
         , (error, response) ->
-            return reject(error) if error
+            if error
+                error.stack += previousError.stack
+                return reject(error)
             resolve response.count
 
     sum: (field) -> new Promise (resolve, reject) =>
@@ -299,6 +305,7 @@ module.exports = class Query
         if queryObject.isContainsEmpty
             return resolve(0)
 
+        previousError = new Error('From previous stack')
         @documentClass._es.search
             index: @documentClass.getIndexName()
             body:
@@ -309,7 +316,9 @@ module.exports = class Query
                             field: dbField
             size: 0
         , (error, response) =>
-            return reject(error) if error
+            if error
+                error.stack += previousError.stack
+                return reject(error)
             resolve response.aggregations.intraday_return.value
 
     groupBy: (field, args = {}) -> new Promise (resolve, reject) =>
@@ -342,6 +351,7 @@ module.exports = class Query
         queryObject = @compileQueries()
         if queryObject.isContainsEmpty
             return resolve([])
+        previousError = new Error('From previous stack')
         @documentClass._es.search
             index: @documentClass.getIndexName()
             body:
@@ -355,7 +365,9 @@ module.exports = class Query
                                 "_#{args.order}": if args.descending then 'desc' else 'asc'
             size: 0
         , (error, response) =>
-            return reject(error) if error
+            if error
+                error.stack += previousError.stack
+                return reject(error)
             resolve response.aggregations.genres.buckets
 
 
