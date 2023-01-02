@@ -444,10 +444,14 @@ module.exports = class Query
         switch queryCell.operation
             when QueryOperation.equal
                 if queryCell.value?
-                    match:
-                        "#{queryCell.dbField}":
-                            query: queryCell.value
-                            operator: 'and'
+                    if queryCell.value.constructor is RegExp
+                        regexp:
+                            "#{queryCell.dbField}": queryCell.value.toString().slice(1, -1)
+                    else
+                        match:
+                            "#{queryCell.dbField}":
+                                query: queryCell.value
+                                operator: 'and'
                 else
                     bool:
                         must_not:
@@ -455,12 +459,18 @@ module.exports = class Query
                                 field: queryCell.dbField
             when QueryOperation.unequal
                 if queryCell.value?
-                    bool:
-                        must_not:
-                            match:
-                                "#{queryCell.dbField}":
-                                    query: queryCell.value
-                                    operator: 'and'
+                    if queryCell.value.constructor is RegExp
+                        bool:
+                            must_not:
+                                regexp:
+                                    "#{queryCell.dbField}": queryCell.value.toString().slice(1, -1)
+                    else
+                        bool:
+                            must_not:
+                                match:
+                                    "#{queryCell.dbField}":
+                                        query: queryCell.value
+                                        operator: 'and'
                 else
                     bool:
                         must:
