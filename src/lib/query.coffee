@@ -491,36 +491,11 @@ module.exports = class Query
                     should: ({bool: {must_not: {match: {"#{queryCell.dbField}": {query: x, operator: 'and'}}}}} for x in queryCell.value)
             when QueryOperation.like
                 value = utils.bleachRegexWords queryCell.value
-                bool:
-                    should: [
-                        {
-                            match:
-                                "#{queryCell.dbField}":
-                                    query: queryCell.value
-                                    operator: 'and'
-                        }
-                        {
-                            regexp:
-                                "#{queryCell.dbField}": ".*#{value}.*"
-                        }
-                    ]
+                regexp:
+                    "#{queryCell.dbField}": ".*#{value}.*"
             when QueryOperation.unlike
                 value = utils.bleachRegexWords queryCell.value
                 bool:
-                    minimum_should_match: 2
-                    should: [
-                        {
-                            bool:
-                                must_not:
-                                    match:
-                                        "#{queryCell.dbField}":
-                                            query: queryCell.value
-                                            operator: 'and'
-                        }
-                        {
-                            bool:
-                                must_not:
-                                    regexp:
-                                        "#{queryCell.dbField}": ".*#{value}.*"
-                        }
-                    ]
+                    must_not:
+                        regexp:
+                            "#{queryCell.dbField}": ".*#{value}.*"
